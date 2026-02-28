@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="RetroSesler.com — Kayıt ol veya giriş yap. 2000'lerin efsanevi sohbet kültürü geri döndü!">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎙️</text></svg>">
+    <title>RetroSesler.com — Giriş / Kayıt</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Tahoma&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Tahoma, Verdana, sans-serif;
+            font-size: 13px;
+            background: #3A6EA5;
+            background-image:
+                radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.08), transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(0, 60, 120, 0.15), transparent 50%),
+                linear-gradient(180deg, #3A6EA5 0%, #2B5A8C 50%, #1E4070 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #222;
+        }
+
+        .auth-container {
+            width: 420px;
+            max-width: 95vw;
+        }
+
+        /* Logo */
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .auth-logo a {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            color: #fff;
+            text-shadow: 2px 2px 0 #C0392B, 4px 4px 0 rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .auth-logo a span {
+            color: #85C1E9;
+        }
+
+        .auth-subtitle {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 6px;
+        }
+
+        /* Window */
+        .auth-window {
+            background: linear-gradient(180deg, #F5F3EE 0%, #E8E4D9 100%);
+            border: 2px outset #D4CFBF;
+            box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .auth-titlebar {
+            background: linear-gradient(180deg, #0A246A, #3A6EA5);
+            color: #fff;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+        }
+
+        .auth-titlebar-btns {
+            display: flex;
+            gap: 3px;
+        }
+
+        .win-btn {
+            width: 16px;
+            height: 14px;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            border-radius: 2px;
+            font-size: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #E8E4D9, #C8C4B8);
+            cursor: pointer;
+            color: #333;
+        }
+
+        .win-btn:hover {
+            background: linear-gradient(180deg, #FFD0D0, #FFB0B0);
+        }
+
+        /* Tabs */
+        .auth-tabs {
+            display: flex;
+            border-bottom: 2px solid #A09880;
+            background: #E0DCD0;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 8px 0;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            border-right: 1px solid #C8C3B5;
+            transition: background 0.2s;
+        }
+
+        .auth-tab:last-child {
+            border-right: none;
+        }
+
+        .auth-tab:hover {
+            background: #F0EDE4;
+        }
+
+        .auth-tab.active {
+            background: #F5F3EE;
+            border-bottom: 2px solid #F5F3EE;
+            margin-bottom: -2px;
+            color: #0A246A;
+        }
+
+        /* Form */
+        .auth-body {
+            padding: 20px;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 4px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 7px 10px;
+            border: 2px inset #b0b0b0;
+            font-family: inherit;
+            font-size: 13px;
+            background: #fff;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #3A6EA5;
+            box-shadow: 0 0 4px rgba(58, 110, 165, 0.3);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(180deg, #4A8AD4, #2E6AB0);
+            color: #fff;
+            border: 2px outset #5A9AE4;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+
+        .auth-btn:hover {
+            background: linear-gradient(180deg, #5A9AE4, #3A7AC0);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .auth-btn:active {
+            transform: translateY(0);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .auth-msg {
+            text-align: center;
+            font-size: 11px;
+            margin-top: 12px;
+            padding: 6px;
+            border-radius: 3px;
+            display: none;
+        }
+
+        .auth-msg.error {
+            display: block;
+            background: #FDEDEC;
+            color: #C0392B;
+            border: 1px solid #E6B0AA;
+        }
+
+        .auth-msg.success {
+            display: block;
+            background: #E8F8F5;
+            color: #1E8449;
+            border: 1px solid #A2D9CE;
+        }
+
+        /* Dialup animation */
+        .auth-loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .auth-loading.active {
+            display: block;
+        }
+
+        .auth-loading .modem-text {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #0A246A;
+            line-height: 1.8;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .blink {
+            animation: blink 0.8s infinite;
+        }
+
+        /* Footer */
+        .auth-footer {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .auth-footer a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+        }
+
+        .auth-footer a:hover {
+            color: #fff;
+        }
+
+        /* Guest link */
+        .guest-link {
+            display: block;
+            text-align: center;
+            margin-top: 12px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .guest-link a {
+            color: #2E86C1;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .guest-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <!-- Logo -->
+        <div class="auth-logo">
+            <a href="index.html">Retro<span>Sesler</span>.com</a>
+            <div class="auth-subtitle">🎙️ sesli & görüntülü sohbet — 2000'lerin ruhu, modern teknoloji</div>
+        </div>
+
+        <!-- Auth Window -->
+        <div class="auth-window">
+            <div class="auth-titlebar">
+                <span>🔐 Kullanıcı Girişi — RetroSesler.com</span>
+                <div class="auth-titlebar-btns">
+                    <div class="win-btn">—</div>
+                    <div class="win-btn" onclick="window.location.href='index.html'">×</div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="switchTab('login')">🔑 Giriş Yap</div>
+                <div class="auth-tab" onclick="switchTab('register')">📝 Kayıt Ol</div>
+            </div>
+
+            <div class="auth-body">
+                <!-- Login Form -->
+                <form class="auth-form active" id="login-form" onsubmit="doLogin(event)">
+                    <div class="form-group">
+                        <label>👤 Kullanıcı Adı (Nick)</label>
+                        <input type="text" id="login-nick" placeholder="Rumuzunuz" required maxlength="20"
+                            autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label>🔒 Şifre</label>
+                        <input type="password" id="login-pass" placeholder="Şifreniz" required minlength="4"
+                            autocomplete="current-password">
+                    </div>
+                    <button class="auth-btn" type="submit">GİRİŞ YAP ▶</button>
+                    <div class="auth-msg" id="login-msg"></div>
+                </form>
+
+                <!-- Register Form -->
+                <form class="auth-form" id="register-form" onsubmit="doRegister(event)">
+                    <div class="form-group">
+                        <label>👤 Kullanıcı Adı (Nick) — benzersiz olmalı</label>
+                        <input type="text" id="reg-nick" placeholder="Örn: retro_kaşif" required maxlength="20"
+                            pattern="[a-zA-Z0-9_çğıöşüÇĞİÖŞÜ]+" title="Sadece harf, rakam ve alt çizgi">
+                    </div>
+                    <div class="form-group">
+                        <label>🔒 Şifre (en az 4 karakter)</label>
+                        <input type="password" id="reg-pass" placeholder="Şifreniz" required minlength="4"
+                            autocomplete="new-password">
+                    </div>
+                    <div class="form-group">
+                        <label>🔒 Şifre Tekrar</label>
+                        <input type="password" id="reg-pass2" placeholder="Şifrenizi tekrar girin" required
+                            minlength="4" autocomplete="new-password">
+                    </div>
+                    <button class="auth-btn" type="submit">KAYIT OL ▶</button>
+                    <div class="auth-msg" id="reg-msg"></div>
+                </form>
+
+                <!-- Loading -->
+                <div class="auth-loading" id="auth-loading">
+                    <div class="modem-text" id="modem-text">
+                        Bağlanılıyor...<span class="blink">_</span>
+                    </div>
+                </div>
+
+                <div class="guest-link">
+                    veya <a href="index.html">misafir olarak devam et →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-footer">
+            © 2025 <a href="index.html">RetroSesler.com</a> — Tüm hakları saklıdır.
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach((t, i) => {
+                t.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'register' && i === 1));
+            });
+            document.getElementById('login-form').classList.toggle('active', tab === 'login');
+            document.getElementById('register-form').classList.toggle('active', tab === 'register');
+            document.querySelectorAll('.auth-msg').forEach(m => { m.className = 'auth-msg'; m.textContent = ''; });
+        }
+
+        function showMsg(id, text, type) {
+            const el = document.getElementById(id);
+            el.textContent = text;
+            el.className = 'auth-msg ' + type;
+        }
+
+        function showLoading(text) {
+            document.getElementById('auth-loading').classList.add('active');
+            const modem = document.getElementById('modem-text');
+            modem.innerHTML = text + '<span class="blink">_</span>';
+        }
+
+        function hideLoading() {
+            document.getElementById('auth-loading').classList.remove('active');
+        }
+
+        async function doLogin(e) {
+            e.preventDefault();
+            const nick = document.getElementById('login-nick').value.trim();
+            const pass = document.getElementById('login-pass').value;
+
+            showLoading('🔌 Sunucuya bağlanılıyor...');
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nick, password: pass })
+                });
+                const data = await res.json();
+                hideLoading();
+
+                if (data.success) {
+                    localStorage.setItem('retrosesler_token', data.token);
+                    localStorage.setItem('retrosesler_nick', data.nick);
+                    localStorage.setItem('retrosesler_role', data.role || 'user');
+                    showMsg('login-msg', '✅ Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
+                    setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+                } else {
+                    showMsg('login-msg', '❌ ' + (data.error || 'Giriş başarısız'), 'error');
+                }
+            } catch (err) {
+                hideLoading();
+                showMsg('login-msg', '❌ Sunucu hatası: ' + err.message, 'error');
+            }
+        }
+
+        async function doRegister(e) {
+            e.preventDefault();
+            const nick = document.getElementById('reg-nick').value.trim();
+            const pass = document.getElementById('reg-pass').value;
+            const pass2 = document.getElementById('reg-pass2').value;
+
+            if (pass !== pass2) {
+                showMsg('reg-msg', '❌ Şifreler uyuşmuyor!', 'error');
+                return;
+            }
+
+            showLoading('📝 Kayıt oluşturuluyor...');
+
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nick, password: pass })
+                });
+                const data = await res.json();
+                hideLoading();
+
+                if (data.success) {
+                    localStorage.setItem('retrosesler_token', data.token);
+                    localStorage.setItem('retrosesler_nick', data.nick);
+                    localStorage.setItem('retrosesler_role', data.role || 'user');
+                    showMsg('reg-msg', '✅ Kayıt başarılı! Yönlendiriliyorsunuz...', 'success');
+                    setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+                } else {
+                    showMsg('reg-msg', '❌ ' + (data.error || 'Kayıt başarısız'), 'error');
+                }
+            } catch (err) {
+                hideLoading();
+                showMsg('reg-msg', '❌ Sunucu hatası: ' + err.message, 'error');
+            }
+        }
+
+        // Zaten giriş yapmışsa lobiye yönlendir
+        const existingToken = localStorage.getItem('retrosesler_token');
+        if (existingToken) {
+            fetch('/api/me', {
+                headers: { 'Authorization': 'Bearer ' + existingToken }
+            }).then(r => r.json()).then(d => {
+                if (d.success) window.location.href = 'index.html';
+            }).catch(() => { });
+        }
+    </script>
+</body>
+
+</html>
