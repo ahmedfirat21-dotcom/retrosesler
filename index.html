@@ -834,11 +834,11 @@
                 </div>
                 <div class="win-body">
                     <div class="user-avatar">😎</div>
-                    <div class="user-name" id="profile-nick">RetroKullanıcı</div>
-                    <div class="user-status">● Çevrimiçi</div>
-                    <div class="user-actions">
-                        <button class="user-btn">✏️ Profil</button>
-                        <button class="user-btn">⚙️ Ayar</button>
+                    <div class="user-name" id="profile-nick">Misafir</div>
+                    <div class="user-status" id="profile-status">● Misafir</div>
+                    <div class="user-actions" id="profile-actions">
+                        <button class="user-btn" onclick="window.location.href='auth.html'">🔑 Giriş Yap</button>
+                        <button class="user-btn" onclick="window.location.href='auth.html'">📝 Kayıt Ol</button>
                     </div>
                 </div>
             </div>
@@ -1045,11 +1045,46 @@
         }
         setInterval(updateClock, 10000); updateClock();
 
-        /* ============ PROFIL NICK ============ */
-        const savedNickProfile = localStorage.getItem('retrosesler_nick');
-        if (savedNickProfile) {
-            document.getElementById('profile-nick').textContent = savedNickProfile;
+        /* ============ PROFIL — AUTH ENTEGRASYONU ============ */
+        async function initProfile() {
+            const token = localStorage.getItem('retrosesler_token');
+            const savedNick = localStorage.getItem('retrosesler_nick');
+
+            if (token) {
+                try {
+                    const res = await fetch('/api/me', {
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        document.getElementById('profile-nick').textContent = data.nick;
+                        document.getElementById('profile-status').innerHTML = '<span style="color:#27AE60">●</span> Çevrimiçi';
+                        document.getElementById('profile-actions').innerHTML =
+                            '<button class="user-btn" onclick="logout()">🚪 Çıkış Yap</button>';
+                        localStorage.setItem('retrosesler_nick', data.nick);
+                        return;
+                    }
+                } catch (e) { /* token geçersiz */ }
+            }
+
+            // Misafir veya geçersiz token
+            if (savedNick) {
+                document.getElementById('profile-nick').textContent = savedNick;
+                document.getElementById('profile-status').innerHTML = '<span style="color:#F39C12">●</span> Misafir';
+            }
         }
+
+        function logout() {
+            localStorage.removeItem('retrosesler_token');
+            localStorage.removeItem('retrosesler_role');
+            document.getElementById('profile-nick').textContent = 'Misafir';
+            document.getElementById('profile-status').innerHTML = '● Misafir';
+            document.getElementById('profile-actions').innerHTML =
+                '<button class="user-btn" onclick="window.location.href=\'auth.html\'">🔑 Giriş Yap</button>' +
+                '<button class="user-btn" onclick="window.location.href=\'auth.html\'">📝 Kayıt Ol</button>';
+        }
+
+        initProfile();
 
         /* ============ LIVE ROOM DATA (API) ============ */
         async function fetchRoomData() {
