@@ -2,6 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { AccessToken, RoomServiceClient } = require('livekit-server-sdk');
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const fs = require('fs');
 
 const path = require('path');
 
@@ -252,6 +255,98 @@ app.get('/health', (req, res) => {
         api_key_set: !!process.env.LIVEKIT_API_KEY,
         api_secret_set: !!process.env.LIVEKIT_API_SECRET
     });
+});
+
+// ============ Kullanıcı Deposu (JSON) ============
+const DATA_DIR = path.join(__dirname, 'data');
+const USERS_FILE = path.join(DATA_DIR, 'users.json');
+const JWT_SECRET = process.env.JWT_SECRET || 'retrosesler_jwt_secret_2024';
+
+function ensureDataDir() {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    if (!fs.existsSync(USERS_FILE)) fs.writeFileSync(USERS_FILE, '[]', 'utf8');
+}
+
+function loadUsers() {
+    ensureDataDir();
+    try {
+        return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+    } catch { return []; }
+}
+
+function saveUsers(users) {
+    ensureDataDir();
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
+}
+
+function hashPassword(password) {
+    return crypto.createHash('sha256').update(password).digest('hex');
+}
+
+// ============ Kayıt (Register) ============
+app.post('/api/register', (req, res) => {
+    const { nick, password } = req.body;
+    if (!nick || !password) {
+        return res.status(400).json({ success: false, error: 'Nick ve şifre gerekli' });
+    }
+    if (nick.length < 2 || nick.length > 20) {
+        return res.status(400).json({ success: false, error: 'Nick 2-20 karakter olmalı' });
+    }
+    if (password.length < 4) {
+        return res.status(400).json({ success: false, error: 'Şifre en az 4 karakter olmalı' });
+    }
+
+    const users = loadUsers();
+    const exists = users.find(u => u.nick.toLowerCase() === nick.toLowerCase());
+    if (exists) {
+        return res.status(409).json({ success: false, error: 'Bu nick zaten alınmış' });
+    }
+
+    const user = {
+        id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+        nick: nick,
+        password: hashPassword(password),
+        role: 'user',
+        createdAt: new Date().toISOString()
+    };
+    users.push(user);
+    saveUsers(users);
+
+    const token = jwt.sign({ id: user.id, nick: user.nick, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+    console.log(`[AUTH] Yeni kayıt: ${nick}`);
+    res.json({ success: true, token, nick: user.nick, role: user.role });
+});
+
+// ============ Giriş (Login) ============
+app.post('/api/login', (req, res) => {
+    const { nick, password } = req.body;
+    if (!nick || !password) {
+        return res.status(400).json({ success: false, error: 'Nick ve şifre gerekli' });
+    }
+
+    const users = loadUsers();
+    const user = users.find(u => u.nick.toLowerCase() === nick.toLowerCase());
+    if (!user || user.password !== hashPassword(password)) {
+        return res.status(401).json({ success: false, error: 'Nick veya şifre yanlış' });
+    }
+
+    const token = jwt.sign({ id: user.id, nick: user.nick, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+    console.log(`[AUTH] Giriş: ${nick}`);
+    res.json({ success: true, token, nick: user.nick, role: user.role });
+});
+
+// ============ Oturum Kontrolü (Me) ============
+app.get('/api/me', (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, error: 'Token gerekli' });
+    }
+    try {
+        const decoded = jwt.verify(authHeader.split(' ')[1], JWT_SECRET);
+        res.json({ success: true, nick: decoded.nick, role: decoded.role, id: decoded.id });
+    } catch {
+        res.status(401).json({ success: false, error: 'Geçersiz token' });
+    }
 });
 
 // ============ Sunucu başlat ============
