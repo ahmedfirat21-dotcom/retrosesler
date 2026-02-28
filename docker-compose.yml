@@ -1,0 +1,62 @@
+services:
+  # ============ RetroSesler Web Sunucusu ============
+  retrosesler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: retrosesler-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - LIVEKIT_URL=${LIVEKIT_URL}
+      - LIVEKIT_API_KEY=${LIVEKIT_API_KEY}
+      - LIVEKIT_API_SECRET=${LIVEKIT_API_SECRET}
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - retrosesler-net
+
+  # ============ Redis (gelecek için hazır) ============
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: retrosesler-redis
+  #   restart: unless-stopped
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis-data:/data
+  #   networks:
+  #     - retrosesler-net
+
+  # ============ PostgreSQL (gelecek için hazır) ============
+  # postgres:
+  #   image: postgres:16-alpine
+  #   container_name: retrosesler-db
+  #   restart: unless-stopped
+  #   environment:
+  #     - POSTGRES_USER=retrosesler
+  #     - POSTGRES_PASSWORD=${DB_PASSWORD}
+  #     - POSTGRES_DB=retrosesler
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data
+  #   networks:
+  #     - retrosesler-net
+
+networks:
+  retrosesler-net:
+    driver: bridge
+
+# volumes:
+#   redis-data:
+#   postgres-data:

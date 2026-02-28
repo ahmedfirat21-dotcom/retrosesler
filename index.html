@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetroSesler.com — Lobi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Tahoma&display=swap" rel="stylesheet">
+    <style>
+        /* ============ RESET & BASE ============ */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: Tahoma, Verdana, sans-serif;
+            font-size: 13px;
+            background: #3A6EA5;
+            background-image:
+                radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.08), transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(0, 60, 120, 0.15), transparent 50%),
+                linear-gradient(180deg, #3A6EA5 0%, #2B5A8C 50%, #1E4070 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #222;
+        }
+
+        /* ============ TOP BAR — Classic toolbar ============ */
+        .topbar {
+            background: linear-gradient(180deg, #E8E4D9 0%, #D4CFBF 100%);
+            border-bottom: 2px solid #A09880;
+            padding: 6px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .topbar-logo {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 14px;
+            color: #C0392B;
+            text-shadow: 2px 2px 0 #E74C3C, 3px 3px 0 rgba(0, 0, 0, 0.15);
+            letter-spacing: 1px;
+        }
+
+        .topbar-logo span {
+            color: #2E86C1
+        }
+
+        .topbar-subtitle {
+            font-size: 10px;
+            color: #666;
+            letter-spacing: 1px
+        }
+
+        .topbar-stats {
+            display: flex;
+            gap: 16px;
+            align-items: center
+        }
+
+        .topbar-stat {
+            font-size: 10px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #F5F3EE;
+            border: 1px solid #C8C3B5;
+            border-radius: 3px;
+            padding: 3px 8px;
+        }
+
+        .topbar-stat b {
+            color: #C0392B;
+            font-size: 12px
+        }
+
+        .topbar-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #27AE60;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+            display: inline-block
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1)
+            }
+
+            50% {
+                opacity: .5;
+                transform: scale(.8)
+            }
+        }
+
+        /* ============ WELCOME MARQUEE ============ */
+        .welcome-bar {
+            background: linear-gradient(90deg, #FFF9E6, #FFF3CC, #FFF9E6);
+            border-bottom: 1px solid #E0D5A0;
+            padding: 4px 0;
+            overflow: hidden;
+        }
+
+        .welcome-marquee {
+            display: flex;
+            white-space: nowrap;
+            animation: scroll-left 25s linear infinite;
+            font-size: 11px;
+            color: #8B6914;
+            font-weight: bold;
+        }
+
+        .welcome-marquee span {
+            margin-right: 60px
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0)
+            }
+
+            100% {
+                transform: translateX(-50%)
+            }
+        }
+
+        /* ============ MAIN LAYOUT ============ */
+        .main {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 16px;
+            display: flex;
+            gap: 16px
+        }
+
+        /* ============ SIDEBAR — User panel ============ */
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px
+        }
+
+        .win-panel {
+            background: linear-gradient(180deg, #FAFAF5 0%, #F0EDE4 100%);
+            border: 2px solid #A09880;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.18), inset 0 1px 0 #fff;
+        }
+
+        .win-titlebar {
+            background: linear-gradient(180deg, #4A90D9 0%, #2E6BBF 40%, #1E5AA8 100%);
+            color: #fff;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 5px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+            letter-spacing: .5px;
+        }
+
+        .win-titlebar-btns {
+            display: flex;
+            gap: 3px
+        }
+
+        .win-btn {
+            width: 16px;
+            height: 14px;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            border-radius: 2px;
+            font-size: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #fff;
+            background: linear-gradient(180deg, #6EAAEF 0%, #4A8AD4 100%);
+        }
+
+        .win-btn:hover {
+            background: linear-gradient(180deg, #FF6B6B 0%, #E74C3C 100%)
+        }
+
+        .win-body {
+            padding: 10px
+        }
+
+        /* User card */
+        .user-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 6px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            background: linear-gradient(135deg, #E8F4FD, #D5EAFF);
+            border: 2px solid #A0C4E8;
+            color: #2E86C1;
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .user-name {
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: #333
+        }
+
+        .user-status {
+            text-align: center;
+            font-size: 10px;
+            color: #27AE60;
+            margin-top: 2px
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px
+        }
+
+        .user-btn {
+            flex: 1;
+            padding: 5px;
+            font-size: 10px;
+            border: 1px solid #B0A890;
+            border-radius: 3px;
+            background: linear-gradient(180deg, #F5F2EA, #E8E4D5);
+            cursor: pointer;
+            text-align: center;
+            color: #444;
+            font-family: inherit;
+            transition: background .2s;
+        }
+
+        .user-btn:hover {
+            background: linear-gradient(180deg, #FFE0B2, #FFD180);
+            border-color: #E0A040
+        }
+
+        /* Online list */
+        .online-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background .15s;
+        }
+
+        .online-item:hover {
+            background: #E8F0FF
+        }
+
+        .online-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%
+        }
+
+        .online-dot.on {
+            background: #27AE60
+        }
+
+        .online-dot.away {
+            background: #F39C12
+        }
+
+        .online-dot.busy {
+            background: #E74C3C
+        }
+
+        .online-nick {
+            flex: 1;
+            color: #333
+        }
+
+        .online-badge {
+            font-size: 8px;
+            padding: 1px 5px;
+            border-radius: 2px;
+            font-weight: bold;
+            background: #F0E68C;
+            color: #8B6914;
+            border: 1px solid #D4C060;
+        }
+
+        /* ============ ROOM LIST — Main panel ============ */
+        .rooms-panel {
+            flex: 1;
+            min-width: 0
+        }
+
+        .rooms-panel .win-titlebar {
+            background: linear-gradient(180deg, #F5A623 0%, #E8920F 40%, #D4800A 100%);
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .rooms-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 8px
+        }
+
+        /* Single room row */
+        .room {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all .15s;
+            position: relative;
+        }
+
+        .room:hover {
+            background: #FFF8E8;
+            border-color: #E0D5A0;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08)
+        }
+
+        .room:nth-child(even) {
+            background: rgba(0, 0, 0, 0.015)
+        }
+
+        .room-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .room-icon.music {
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+            border-color: #A5D6A7
+        }
+
+        .room-icon.vip {
+            background: linear-gradient(135deg, #FFF8E1, #FFE082);
+            border-color: #FFD54F
+        }
+
+        .room-icon.cam {
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+            border-color: #90CAF9
+        }
+
+        .room-icon.free {
+            background: linear-gradient(135deg, #F3E5F5, #E1BEE7);
+            border-color: #CE93D8
+        }
+
+        .room-icon.hot {
+            background: linear-gradient(135deg, #FBE9E7, #FFCCBC);
+            border-color: #FF8A65
+        }
+
+        .room-info {
+            flex: 1;
+            min-width: 0
+        }
+
+        .room-title {
+            font-weight: bold;
+            font-size: 12px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .room-title.vip-title {
+            color: #B8860B;
+            text-shadow: 1px 1px 0 #FFD700, 2px 2px 0 rgba(0, 0, 0, 0.08);
+            font-size: 13px;
+        }
+
+        .room-desc {
+            font-size: 10px;
+            color: #777;
+            white-space: nowrap;
+            overflow: hidden;
+            margin-top: 2px;
+        }
+
+        .room-desc-marquee {
+            display: inline-block;
+            animation: scroll-left 15s linear infinite
+        }
+
+        /* Badges */
+        .badge {
+            font-size: 8px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .badge-vip {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #5D4E00;
+            border: 1px solid #DAA520
+        }
+
+        .badge-music {
+            background: #E8F5E9;
+            color: #2E7D32;
+            border: 1px solid #81C784
+        }
+
+        .badge-cam {
+            background: #E3F2FD;
+            color: #1565C0;
+            border: 1px solid #64B5F6
+        }
+
+        .badge-hot {
+            background: #FBE9E7;
+            color: #D84315;
+            border: 1px solid #FF8A65;
+            animation: badge-pulse 1.5s ease infinite
+        }
+
+        .badge-full {
+            background: #FFEBEE;
+            color: #C62828;
+            border: 1px solid #EF9A9A
+        }
+
+        .badge-new {
+            background: #E0F7FA;
+            color: #00695C;
+            border: 1px solid #4DD0E1
+        }
+
+        @keyframes badge-pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .6
+            }
+        }
+
+        .room-users {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: #666;
+            flex-shrink: 0;
+            min-width: 70px;
+            justify-content: flex-end;
+        }
+
+        .room-users b {
+            color: #C0392B;
+            font-size: 13px
+        }
+
+        .room-enter {
+            padding: 5px 14px;
+            border: 1px solid #4A8AD4;
+            border-radius: 4px;
+            background: linear-gradient(180deg, #6EAAEF, #4A8AD4);
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+            transition: transform .15s, box-shadow .15s;
+            letter-spacing: .5px;
+            animation: btn-wave 3s ease-in-out infinite;
+        }
+
+        .room-enter:hover {
+            transform: scale(1.06);
+            box-shadow: 0 2px 8px rgba(74, 138, 212, 0.4)
+        }
+
+        .room.is-full .room-enter {
+            background: linear-gradient(180deg, #CCC, #AAA);
+            border-color: #999;
+            cursor: not-allowed;
+            animation: none;
+            color: #777;
+        }
+
+        @keyframes btn-wave {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-2px)
+            }
+        }
+
+        /* ============ RETRO MODAL — Windows dialog ============ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 40, 0.45);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex
+        }
+
+        .modal {
+            width: 420px;
+            max-width: 92vw;
+            background: linear-gradient(180deg, #F0EDE4, #E8E4D9);
+            border: 2px solid #888;
+            border-radius: 6px;
+            box-shadow: 4px 6px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 #fff;
+            animation: modal-in .3s ease;
+        }
+
+        @keyframes modal-in {
+            from {
+                transform: scale(.85) translateY(20px);
+                opacity: 0
+            }
+
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1
+            }
+        }
+
+        .modal .win-titlebar {
+            background: linear-gradient(180deg, #4A90D9 0%, #2E6BBF 40%, #1E5AA8 100%);
+            border-radius: 4px 4px 0 0;
+            padding: 6px 10px;
+        }
+
+        .modal-body {
+            padding: 20px;
+            text-align: center
+        }
+
+        .modal-icon {
+            font-size: 40px;
+            margin-bottom: 10px
+        }
+
+        .modal-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 6px
+        }
+
+        .modal-status {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 16px
+        }
+
+        /* Progress bar */
+        .progress-wrap {
+            background: #D0D0D0;
+            border: 1px solid #A0A0A0;
+            border-radius: 3px;
+            height: 18px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            border-radius: 2px;
+            background: linear-gradient(180deg, #6EAAEF 0%, #4A8AD4 50%, #3A7BC0 100%);
+            background-size: 30px 18px;
+            animation: progress-anim 2.8s ease-in-out forwards, progress-stripe 0.6s linear infinite;
+            position: relative;
+        }
+
+        @keyframes progress-anim {
+            0% {
+                width: 0
+            }
+
+            30% {
+                width: 35%
+            }
+
+            60% {
+                width: 65%
+            }
+
+            85% {
+                width: 88%
+            }
+
+            100% {
+                width: 100%
+            }
+        }
+
+        @keyframes progress-stripe {
+            0% {
+                background-position: 0 0
+            }
+
+            100% {
+                background-position: 30px 0
+            }
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255, 255, 255, 0.12) 8px, rgba(255, 255, 255, 0.12) 16px);
+        }
+
+        .progress-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: bold;
+            color: #333;
+            z-index: 1;
+        }
+
+        .modal-steps {
+            margin-top: 14px;
+            text-align: left;
+            font-size: 11px;
+            color: #555
+        }
+
+        .modal-step {
+            padding: 3px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .modal-step .check {
+            color: #27AE60;
+            font-weight: bold
+        }
+
+        .modal-step .wait {
+            color: #CCC
+        }
+
+        .modal-step.done {
+            color: #333
+        }
+
+        .modal-step.active {
+            color: #2E86C1;
+            font-weight: bold
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 16px
+        }
+
+        .modal-btn {
+            padding: 6px 24px;
+            border: 1px solid #B0A890;
+            border-radius: 3px;
+            background: linear-gradient(180deg, #F5F2EA, #E8E4D5);
+            cursor: pointer;
+            font-size: 11px;
+            font-family: inherit;
+            font-weight: bold;
+            color: #444;
+            transition: background .2s;
+        }
+
+        .modal-btn:hover {
+            background: linear-gradient(180deg, #E0E0D0, #D0CFC0)
+        }
+
+        .modal-btn.primary {
+            background: linear-gradient(180deg, #6EAAEF, #4A8AD4);
+            color: #fff;
+            border-color: #3A7BC0;
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-btn.primary:hover {
+            background: linear-gradient(180deg, #82B8F5, #5A9AE4)
+        }
+
+        /* ============ FOOTER ============ */
+        .footer {
+            text-align: center;
+            padding: 12px;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 20px;
+        }
+
+        .footer a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media(max-width:768px) {
+            .main {
+                flex-direction: column
+            }
+
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap
+            }
+
+            .sidebar .win-panel {
+                flex: 1;
+                min-width: 200px
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============ TOP BAR ============ -->
+    <div class="topbar">
+        <div class="topbar-brand">
+            <div class="topbar-logo">Retro<span>Sesler</span>.com</div>
+            <div class="topbar-subtitle">sesli &amp; görüntülü sohbet</div>
+        </div>
+        <div class="topbar-stats">
+            <div class="topbar-stat"><span class="topbar-dot"></span> Çevrimiçi: <b id="total-online">847</b></div>
+            <div class="topbar-stat">Oda: <b>12</b></div>
+            <div class="topbar-stat">⏰ <span id="clock">22:13</span></div>
+        </div>
+    </div>
+
+    <!-- ============ WELCOME MARQUEE ============ -->
+    <div class="welcome-bar">
+        <div class="welcome-marquee">
+            <span>🎙️ RetroSesler.com'a Hoş Geldiniz! — 2000'lerin efsanevi sohbet kültürü geri döndü!</span>
+            <span>🎵 Müzik odalarında DJ'ler çalıyor — Hemen katıl!</span>
+            <span>⭐ VIP odalar yenilendi — Özel ayrıcalıklar seni bekliyor!</span>
+            <span>📢 Yeni kamera odaları açıldı — Arkadaşlarınla yüz yüze sohbet et!</span>
+            <span>🎙️ RetroSesler.com'a Hoş Geldiniz! — 2000'lerin efsanevi sohbet kültürü geri döndü!</span>
+            <span>🎵 Müzik odalarında DJ'ler çalıyor — Hemen katıl!</span>
+            <span>⭐ VIP odalar yenilendi — Özel ayrıcalıklar seni bekliyor!</span>
+            <span>📢 Yeni kamera odaları açıldı — Arkadaşlarınla yüz yüze sohbet et!</span>
+        </div>
+    </div>
+
+    <!-- ============ MAIN LAYOUT ============ -->
+    <div class="main">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <!-- User Panel -->
+            <div class="win-panel">
+                <div class="win-titlebar">
+                    <span>👤 Profilim</span>
+                    <div class="win-titlebar-btns">
+                        <div class="win-btn">—</div>
+                        <div class="win-btn">×</div>
+                    </div>
+                </div>
+                <div class="win-body">
+                    <div class="user-avatar">😎</div>
+                    <div class="user-name" id="profile-nick">RetroKullanıcı</div>
+                    <div class="user-status">● Çevrimiçi</div>
+                    <div class="user-actions">
+                        <button class="user-btn">✏️ Profil</button>
+                        <button class="user-btn">⚙️ Ayar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Online Users -->
+            <div class="win-panel">
+                <div class="win-titlebar">
+                    <span>🟢 Çevrimiçi (8)</span>
+                    <div class="win-titlebar-btns">
+                        <div class="win-btn">—</div>
+                    </div>
+                </div>
+                <div class="win-body" style="max-height:220px;overflow-y:auto">
+                    <div class="online-item"><span class="online-dot on"></span><span
+                            class="online-nick">müzik_delisi</span><span class="online-badge">VIP</span></div>
+                    <div class="online-item"><span class="online-dot on"></span><span
+                            class="online-nick">gece_kuşu</span></div>
+                    <div class="online-item"><span class="online-dot away"></span><span
+                            class="online-nick">retro_fan42</span></div>
+                    <div class="online-item"><span class="online-dot on"></span><span
+                            class="online-nick">nostalji_avcısı</span><span class="online-badge">VIP</span></div>
+                    <div class="online-item"><span class="online-dot busy"></span><span
+                            class="online-nick">pixel_rüyacı</span></div>
+                    <div class="online-item"><span class="online-dot on"></span><span
+                            class="online-nick">eski_tüfek</span></div>
+                    <div class="online-item"><span class="online-dot on"></span><span
+                            class="online-nick">kaset_çalar</span></div>
+                    <div class="online-item"><span class="online-dot away"></span><span
+                            class="online-nick">dial_up_sesi</span></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ROOM LIST -->
+        <div class="rooms-panel">
+            <div class="win-panel">
+                <div class="win-titlebar">
+                    <span>📋 ODA LİSTESİ — Sesli &amp; Görüntülü Sohbet Odaları</span>
+                    <div class="win-titlebar-btns">
+                        <div class="win-btn">—</div>
+                        <div class="win-btn">□</div>
+                        <div class="win-btn">×</div>
+                    </div>
+                </div>
+                <div class="rooms-grid" id="rooms-grid">
+
+                    <div class="room" data-room="Genel Sohbet" onclick="openRoom(this)">
+                        <div class="room-icon free">💬</div>
+                        <div class="room-info">
+                            <div class="room-title">Genel Sohbet <span class="badge badge-hot">🔥 Popüler</span></div>
+                            <div class="room-desc"><span class="room-desc-marquee">Her konuda serbest sohbet — yeni
+                                    arkadaşlıklar burada başlıyor!</span></div>
+                        </div>
+                        <div class="room-users">👥 <b class="user-count">124</b>/200</div>
+                        <button class="room-enter">GİRİŞ ▶</button>
+                    </div>
+
+                    <div class="room" data-room="VIP Lounge" onclick="openRoom(this)">
+                        <div class="room-icon vip">👑</div>
+                        <div class="room-info">
+                            <div class="room-title vip-title">VIP Lounge <span class="badge badge-vip">⭐ VIP</span>
+                            </div>
+                            <div class="room-desc"><span class="room-desc-marquee">Sadece VIP üyelere özel — premium
+                                    sohbet deneyimi</span></div>
+                        </div>
+                        <div class="room-users">👥 <b class="user-count">38</b>/50</div>
+                        <button class="room-enter">GİRİŞ ▶</button>
+                    </div>
+
+                    <div class="room" data-room="Müzik Odası" onclick="openRoom(this)">
+                        <div class="room-icon music">🎵</div>
+                        <div class="room-info">
+                            <div class="room-title">Müzik Odası <span class="badge badge-music">♫ Müzik</span></div>
+                            <div class="room-desc"><span class="room-desc-marquee">DJ'ler çalıyor! İstek parça bırak,
+                                    birlikte dinleyelim 🎧</span></div>
+                        </div>
+                        <div class="room-users">👥 <b class="user-count">67</b>/100</div>
+                        <button class="room-enter">GİRİŞ ▶</button>
+                    </div>
+
+                    <div class="room" data-room="Kamera Odası 1" onclick="openRoom(this)">
+                        <div class="room-icon cam">📹</div>
+                        <div class="room-info">
+                            <div class="room-title">Kamera Odası 1 <span class="badge badge-cam">📷 Kamera</span></div>
+                            <div class="room-desc"><span class="room-desc-marquee">Yüz yüze sohbet — kameranı aç,
+                                    tanışalım!</span></div>
+                        </div>
+                        <div class="room-users">👥 <b class="user-count">23</b>/30</div>
+                        <button class="room-enter">GİRİŞ ▶</button>
+                    </div>
+
+                    <div class="room is-full" data-room="Gece Kulübü" onclick="openRoom(this)">
+                        <div class="room-icon hot">🌙</div>
+                        <div class="room-info">
+                            <div class="room-title">Gece Kulübü <span class="badge badge-full">DOLU</span></div>
+                            <div class="room-desc"><span class="room-desc-marquee">Bu oda şu an dolu — birazdan tekrar
+                                    dene!</span></div>
+                        </div>
+                        <div class="room-users">👥 <b class="user-count">50</b>/50</div>
+                        <button class="room-enter">DOLU</button>
+                    </div>
+
+                    <div class="room" data-room="VIP Gold" onclick="openRoom(this)">
+                        <div class="room-icon vip">💎</div>
+                        <div class="room-info">
+                            <div class="room-title vip-title">VIP Gold <span class="badge badge-vip">⭐ VIP</span><span
+                                    class="badge badge-new">✨ Yeni</span></div>
+                            <div class="room-desc"><span class="room-desc-marquee">Yepyeni VIP Gold oda — HD ses, özel
+                                    efektler, sınırsız ayrıcalık!</span></div>
+                        </div>
+                        <div class="room-users">👥 <b class="user-count">12</b>/30</div>
+                        <button class="room-enter">GİRİŞ ▶</button>
+                    </div>
+
+                    <div class="room" data-room="Müzik Odası 2" onclick="openRoom(this)">
+                        <div class="room-icon music">🎸</div>
+                        <div class="room-info">
+                            <div class="room-title">Rock & Metal <span class="badge badge-music">♫ Müzik</span></div>
+                            <div class="room-desc"><span class="room-desc-marquee">Ağır riffler, klasik rock — sahnede
+                                    sen varsın! 🤘</span></div>
+                        </div>
+                        <div class="room-users">👥 <b class="user-count">31</b>/60</div>
+                        <button class="room-enter">GİRİŞ ▶</button>
+                    </div>
+
+                    <div class="room" data-room="Kamera Odası 2" onclick="openRoom(this)">
+                        <div class="room-icon cam">🎥</div>
+                        <div class="room-info">
+                            <div class="room-title">Kamera Odası 2 <span class="badge badge-cam">📷 Kamera</span></div>
+                            <div class="room-desc"><span class="room-desc-marquee">Serbest kamera odası — gel, sohbete
+                                    katıl!</span></div>
+                        </div>
+                        <div class="room-users">👥 <b class="user-count">15</b>/30</div>
+                        <button class="room-enter">GİRİŞ ▶</button>
+                    </div>
+
+                    <div class="room" data-room="Nostalji Köşesi" onclick="openRoom(this)">
+                        <div class="room-icon free">📻</div>
+                        <div class="room-info">
+                            <div class="room-title">Nostalji Köşesi <span class="badge badge-new">✨ Yeni</span></div>
+                            <div class="room-desc"><span class="room-desc-marquee">2000'lerin altın çağını yeniden yaşa
+                                    — eski günleri konuşalım!</span></div>
+                        </div>
+                        <div class="room-users">👥 <b class="user-count">44</b>/80</div>
+                        <button class="room-enter">GİRİŞ ▶</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ MODAL ============ -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="win-titlebar">
+                <span id="modal-win-title">🔌 Bağlantı</span>
+                <div class="win-titlebar-btns">
+                    <div class="win-btn" onclick="closeModal()">×</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-icon" id="modal-icon">🔌</div>
+                <div class="modal-title" id="modal-title">Odaya Bağlanılıyor...</div>
+                <div class="modal-status" id="modal-status">Lütfen bekleyin</div>
+                <div class="progress-wrap">
+                    <div class="progress-bar" id="progress-bar"></div>
+                    <div class="progress-text" id="progress-text">0%</div>
+                </div>
+                <div class="modal-steps" id="modal-steps">
+                    <div class="modal-step active" id="step-1"><span class="wait">○</span> Sunucuya bağlanılıyor...
+                    </div>
+                    <div class="modal-step" id="step-2"><span class="wait">○</span> Mikrofon erişimi kontrol ediliyor...
+                    </div>
+                    <div class="modal-step" id="step-3"><span class="wait">○</span> Kamera erişimi kontrol ediliyor...
+                    </div>
+                    <div class="modal-step" id="step-4"><span class="wait">○</span> Odaya giriş yapılıyor...</div>
+                </div>
+                <div class="modal-btns" id="modal-btns" style="display:none">
+                    <div style="width:100%;margin-bottom:10px;">
+                        <label style="display:block;font-size:11px;color:#555;margin-bottom:4px;font-weight:bold;">👤
+                            Rumuzunuz (Nick):</label>
+                        <input type="text" id="nick-input" maxlength="20" placeholder="Örn: retro_kaşif"
+                            style="width:100%;box-sizing:border-box;padding:6px 10px;border:2px inset #b0b0b0;font-family:'Tahoma',sans-serif;font-size:13px;background:#fff;border-radius:0;outline:none;">
+                    </div>
+                    <button class="modal-btn" onclick="closeModal()">İptal</button>
+                    <button class="modal-btn primary" onclick="enterRoom()">Giriş Yap ▶</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <div class="footer">
+        © 2025 <a href="#">RetroSesler.com</a> — 2000'lerin ruhu, modern teknoloji. Tüm hakları saklıdır.
+    </div>
+
+    <script>
+        /* ============ CLOCK ============ */
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent =
+                now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+        }
+        setInterval(updateClock, 10000); updateClock();
+
+        /* ============ PROFIL NICK ============ */
+        const savedNickProfile = localStorage.getItem('retrosesler_nick');
+        if (savedNickProfile) {
+            document.getElementById('profile-nick').textContent = savedNickProfile;
+        }
+
+        /* ============ LIVE USER COUNTS ============ */
+        const counts = document.querySelectorAll('.user-count');
+        const maxUsers = [200, 50, 100, 30, 50, 30, 60, 30, 80];
+
+        function updateUserCounts() {
+            let total = 0;
+            counts.forEach((el, i) => {
+                let current = parseInt(el.textContent);
+                let change = Math.floor(Math.random() * 7) - 3; // -3 to +3
+                current = Math.max(5, Math.min(maxUsers[i], current + change));
+                el.textContent = current;
+                total += current;
+
+                // Update full status
+                const room = el.closest('.room');
+                if (room && current >= maxUsers[i]) {
+                    room.classList.add('is-full');
+                    room.querySelector('.room-enter').textContent = 'DOLU';
+                } else if (room) {
+                    room.classList.remove('is-full');
+                    room.querySelector('.room-enter').textContent = 'GİRİŞ ▶';
+                }
+            });
+            document.getElementById('total-online').textContent = total;
+        }
+        setInterval(updateUserCounts, 3000);
+
+        /* ============ ROOM MODAL ============ */
+        let modalTimer = null;
+        let currentRoomName = '';
+
+        function openRoom(el) {
+            if (el.classList.contains('is-full')) return;
+            const roomName = el.dataset.room;
+            currentRoomName = roomName;
+            const overlay = document.getElementById('modal-overlay');
+            overlay.classList.add('active');
+
+            document.getElementById('modal-title').textContent = '"' + roomName + '" odasına bağlanılıyor...';
+            document.getElementById('modal-win-title').textContent = '🔌 ' + roomName + ' — Bağlantı';
+            document.getElementById('modal-status').textContent = 'Lütfen bekleyin';
+            document.getElementById('modal-icon').textContent = '🔌';
+            document.getElementById('modal-btns').style.display = 'none';
+            document.getElementById('progress-text').textContent = '0%';
+
+            // Reset progress bar
+            const bar = document.getElementById('progress-bar');
+            bar.style.animation = 'none'; bar.offsetHeight;
+            bar.style.animation = 'progress-anim 2.8s ease-in-out forwards,progress-stripe 0.6s linear infinite';
+
+            // Reset steps
+            for (let i = 1; i <= 4; i++) {
+                const s = document.getElementById('step-' + i);
+                s.className = 'modal-step' + (i === 1 ? ' active' : '');
+                s.querySelector('span').className = 'wait';
+                s.querySelector('span').textContent = '○';
+            }
+
+            // Animate steps
+            const steps = [
+                { id: 1, text: 'Sunucuya bağlanıldı', delay: 700 },
+                { id: 2, text: 'Mikrofon erişimi sağlandı', delay: 1400 },
+                { id: 3, text: 'Kamera erişimi sağlandı', delay: 2100 },
+                { id: 4, text: 'Odaya giriş başarılı!', delay: 2800 }
+            ];
+
+            const timers = [];
+            let pct = 0;
+            const pctTimer = setInterval(() => {
+                pct = Math.min(100, pct + Math.floor(Math.random() * 8) + 2);
+                document.getElementById('progress-text').textContent = pct + '%';
+                if (pct >= 100) clearInterval(pctTimer);
+            }, 100);
+            timers.push(pctTimer);
+
+            steps.forEach((step, idx) => {
+                const t = setTimeout(() => {
+                    const s = document.getElementById('step-' + step.id);
+                    s.className = 'modal-step done';
+                    s.querySelector('span').className = 'check';
+                    s.querySelector('span').textContent = '✓';
+                    if (idx < steps.length - 1) {
+                        const next = document.getElementById('step-' + (step.id + 1));
+                        next.className = 'modal-step active';
+                    }
+                    if (idx === steps.length - 1) {
+                        document.getElementById('progress-text').textContent = '100%';
+                        document.getElementById('modal-status').textContent = 'Bağlantı başarılı!';
+                        document.getElementById('modal-icon').textContent = '✅';
+                        document.getElementById('modal-btns').style.display = 'flex';
+                        // localStorage'dan önceki nick'i yükle
+                        const savedNick = localStorage.getItem('retrosesler_nick');
+                        if (savedNick) document.getElementById('nick-input').value = savedNick;
+                        document.getElementById('nick-input').focus();
+                    }
+                }, step.delay);
+                timers.push(t);
+            });
+
+            modalTimer = timers;
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+            if (modalTimer) { modalTimer.forEach(t => clearTimeout(t)); modalTimer = null }
+        }
+
+        function enterRoom() {
+            const nickInput = document.getElementById('nick-input');
+            let nick = nickInput.value.trim();
+            if (!nick) nick = 'Misafir_' + Math.floor(Math.random() * 9999);
+            // Kaydet
+            localStorage.setItem('retrosesler_nick', nick);
+            closeModal();
+            window.location.href = 'room.html?room=' + encodeURIComponent(currentRoomName) + '&nick=' + encodeURIComponent(nick);
+        }
+
+        document.getElementById('modal-overlay').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+</body>
+
+</html>

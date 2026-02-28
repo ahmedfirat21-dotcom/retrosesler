@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Environment variables (hassas bilgiler)
+.env
+
+# Logs
+npm-debug.log*
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Docker
+docker-compose.override.yml
