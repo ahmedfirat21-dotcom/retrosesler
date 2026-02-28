@@ -1060,6 +1060,131 @@
                 font-size: 9px;
             }
         }
+
+        /* ============ MODERATION: CONTEXT MENU ============ */
+        .ctx-menu {
+            display: none;
+            position: fixed;
+            background: linear-gradient(180deg, #F5F3EE 0%, #E8E4D9 100%);
+            border: 2px outset #D4CFBF;
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+            min-width: 160px;
+            z-index: 9999;
+            font-size: 12px;
+            padding: 3px 0;
+        }
+
+        .ctx-menu.active {
+            display: block;
+        }
+
+        .ctx-item {
+            padding: 5px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ctx-item:hover {
+            background: #316AC5;
+            color: #fff;
+        }
+
+        .ctx-sep {
+            height: 1px;
+            background: #C8C3B5;
+            margin: 3px 8px;
+        }
+
+        /* ============ MODERATION: ADMIN MODAL ============ */
+        .admin-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-modal-overlay.active {
+            display: flex;
+        }
+
+        .admin-modal {
+            background: linear-gradient(180deg, #F5F3EE 0%, #E8E4D9 100%);
+            border: 2px outset #D4CFBF;
+            width: 320px;
+            box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .admin-modal .modal-titlebar {
+            background: linear-gradient(180deg, #0A246A, #3A6EA5);
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-modal .modal-body {
+            padding: 16px;
+        }
+
+        .admin-modal input[type="password"] {
+            width: 100%;
+            padding: 6px 8px;
+            border: 2px inset #b0b0b0;
+            font-family: inherit;
+            font-size: 13px;
+            margin: 8px 0;
+        }
+
+        .admin-modal .modal-btns {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+
+        .admin-modal .modal-btns button {
+            padding: 4px 16px;
+            border: 2px outset #D4CFBF;
+            background: linear-gradient(180deg, #F5F3EE, #E0DCD0);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+        }
+
+        .admin-modal .modal-btns button:hover {
+            background: linear-gradient(180deg, #E0DCD0, #D4CFBF);
+        }
+
+        /* Admin badge */
+        .admin-key {
+            cursor: pointer;
+            font-size: 14px;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+
+        .admin-key:hover {
+            opacity: 1;
+        }
+
+        .admin-key.active {
+            opacity: 1;
+            color: #C0392B;
+        }
+
+        /* Profanity filtered msg */
+        .msg-filtered .msg-text {
+            color: #999;
+            font-style: italic;
+        }
     </style>
     <!-- LiveKit Client SDK (yerel sunucu) -->
     <script src="/livekit-sdk/livekit-client.umd.js"></script>
@@ -1159,7 +1284,7 @@
             <div class="panel" style="flex:1;">
                 <div class="panel-titlebar">
                     <span>👥 Odadakiler (<span id="sidebar-user-count">18</span>)</span>
-                    <div class="win-btn">—</div>
+                    <span class="admin-key" id="admin-key" onclick="showAdminLogin()" title="Admin Girişi">🔑</span>
                 </div>
                 <div class="panel-body">
                     <div class="user-list" id="user-list">
@@ -1464,6 +1589,11 @@
                     ${badgeHTML}
                     <span class="user-icons">${iconsHTML}</span>
                 `;
+                // Sağ-tık menüsü (moderation)
+                if (!p.isLocal) {
+                    div.addEventListener('contextmenu', (e) => showCtxMenu(e, p.identity));
+                    div.style.cursor = 'context-menu';
+                }
                 list.appendChild(div);
             });
 
@@ -1684,8 +1814,9 @@
             const time = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
 
             if (type === 'chat') {
-                div.className = 'msg';
-                div.innerHTML = `<span class="msg-time">[${time}]</span><span class="msg-nick ${getNickColor(data.nick)}">${escapeHTML(data.nick)}:</span> <span class="msg-text">${escapeHTML(data.text)}</span>`;
+                const filteredText = filterProfanity(data.text);
+                div.className = 'msg' + (filteredText !== data.text ? ' msg-filtered' : '');
+                div.innerHTML = `<span class="msg-time">[${time}]</span><span class="msg-nick ${getNickColor(data.nick)}">${escapeHTML(data.nick)}:</span> <span class="msg-text">${escapeHTML(filteredText)}</span>`;
             } else if (type === 'system') {
                 div.className = 'msg msg-system ' + (data.subtype || '');
                 div.innerHTML = `<span class="msg-time">[${time}]</span> ${data.text}`;
@@ -1711,8 +1842,11 @@
         const inputEl = document.getElementById('chat-input');
 
         async function sendMessage() {
-            const text = inputEl.value.trim();
+            let text = inputEl.value.trim();
             if (!text) return;
+
+            // Küfür filtresi uygula
+            text = filterProfanity(text);
 
             // Mesajı kendi ekranına ekle
             addMessage('chat', { nick: userIdentity, text: text });
@@ -1888,7 +2022,144 @@
         window.addEventListener('beforeunload', () => {
             disconnectFromLiveKit();
         });
+        /* ============ MODERATION: CONTEXT MENU ============ */
+        let isAdmin = false;
+        let adminToken = '';
+        let profanityWords = [];
+        let ctxTarget = null; // sağ-tıklanan kullanıcı
+
+        // Küfür listesini yükle
+        fetch('/api/profanity').then(r => r.json()).then(d => { profanityWords = d.words || []; }).catch(() => { });
+
+        function filterProfanity(text) {
+            if (profanityWords.length === 0) return text;
+            let filtered = text;
+            profanityWords.forEach(word => {
+                const regex = new RegExp('\\b' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'gi');
+                filtered = filtered.replace(regex, '***');
+            });
+            return filtered;
+        }
+
+        // Admin login modal
+        function showAdminLogin() {
+            if (isAdmin) {
+                isAdmin = false;
+                adminToken = '';
+                document.getElementById('admin-key').classList.remove('active');
+                addMessage('system', { text: '🔓 Admin modundan çıkıldı.', subtype: '' });
+                return;
+            }
+            document.getElementById('admin-modal-overlay').classList.add('active');
+            document.getElementById('admin-password').value = '';
+            document.getElementById('admin-password').focus();
+        }
+
+        async function verifyAdmin() {
+            const pw = document.getElementById('admin-password').value;
+            try {
+                const res = await fetch('/api/admin/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: pw })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    isAdmin = true;
+                    adminToken = pw;
+                    document.getElementById('admin-key').classList.add('active');
+                    addMessage('system', { text: '🔐 Admin modu aktif! Kullanıcılara sağ tıklayarak moderasyon yapabilirsiniz.', subtype: 'join' });
+                } else {
+                    addMessage('system', { text: '❌ Yanlış admin şifresi!', subtype: 'leave' });
+                }
+            } catch (e) {
+                addMessage('system', { text: '❌ Admin doğrulama hatası', subtype: 'leave' });
+            }
+            document.getElementById('admin-modal-overlay').classList.remove('active');
+        }
+
+        // Context menu
+        function showCtxMenu(e, identity) {
+            e.preventDefault();
+            if (identity === userIdentity) return; // Kendi üzerinde menü açma
+            ctxTarget = identity;
+            const menu = document.getElementById('ctx-menu');
+            menu.style.left = e.clientX + 'px';
+            menu.style.top = e.clientY + 'px';
+            menu.classList.add('active');
+            // Admin değilse kick/mute gizle
+            document.querySelectorAll('.ctx-admin').forEach(el => {
+                el.style.display = isAdmin ? 'flex' : 'none';
+            });
+        }
+
+        document.addEventListener('click', () => {
+            document.getElementById('ctx-menu').classList.remove('active');
+        });
+
+        async function ctxKick() {
+            if (!ctxTarget || !isAdmin) return;
+            try {
+                await fetch('/api/kick', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Admin-Token': adminToken },
+                    body: JSON.stringify({ room: roomName, identity: ctxTarget })
+                });
+                addMessage('system', { text: `🚫 ${ctxTarget} odadan atıldı.`, subtype: 'leave' });
+            } catch (e) {
+                addMessage('system', { text: '❌ Kick hatası', subtype: 'leave' });
+            }
+        }
+
+        async function ctxMute() {
+            if (!ctxTarget || !isAdmin) return;
+            try {
+                await fetch('/api/mute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Admin-Token': adminToken },
+                    body: JSON.stringify({ room: roomName, identity: ctxTarget })
+                });
+                addMessage('system', { text: `🔇 ${ctxTarget} susturuldu.`, subtype: '' });
+            } catch (e) {
+                addMessage('system', { text: '❌ Mute hatası', subtype: 'leave' });
+            }
+        }
+
+        function ctxReport() {
+            if (!ctxTarget) return;
+            addMessage('system', { text: `📢 ${ctxTarget} şikayet edildi. Teşekkürler!`, subtype: '' });
+        }
     </script>
+
+    <!-- Context Menu -->
+    <div class="ctx-menu" id="ctx-menu">
+        <div class="ctx-item ctx-admin" onclick="ctxKick()">🚫 Odadan At</div>
+        <div class="ctx-item ctx-admin" onclick="ctxMute()">🔇 Sustur</div>
+        <div class="ctx-sep ctx-admin"></div>
+        <div class="ctx-item" onclick="ctxReport()">📢 Şikayet Et</div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div class="admin-modal-overlay" id="admin-modal-overlay"
+        onclick="if(event.target===this)this.classList.remove('active')">
+        <div class="admin-modal">
+            <div class="modal-titlebar">
+                <span>🔑 Admin Girişi</span>
+                <div class="win-btn"
+                    onclick="document.getElementById('admin-modal-overlay').classList.remove('active')">×</div>
+            </div>
+            <div class="modal-body">
+                <div style="font-size:12px;">Admin şifresini girin:</div>
+                <input type="password" id="admin-password" placeholder="Şifre..."
+                    onkeydown="if(event.key==='Enter')verifyAdmin()">
+                <div class="modal-btns">
+                    <button
+                        onclick="document.getElementById('admin-modal-overlay').classList.remove('active')">İptal</button>
+                    <button onclick="verifyAdmin()">Giriş</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
