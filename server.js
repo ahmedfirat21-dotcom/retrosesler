@@ -7,6 +7,7 @@ const path = require('path');
 
 const app = express();
 app.use(cors());
+app.use(express.json()); // Moderation API için JSON body parser
 
 // ============ Statik dosya sunumu ============
 // index.html, room.html vb. doğrudan sunulur
@@ -157,6 +158,89 @@ app.get('/api/rooms', async (req, res) => {
     } catch (err) {
         console.error('[API] /api/rooms hatası:', err);
         res.status(500).json({ error: 'Oda verisi alınamadı' });
+    }
+});
+
+// ============ Moderasyon: Admin Doğrulama ============
+function checkAdmin(req, res) {
+    const adminSecret = process.env.ADMIN_SECRET || 'retro2024admin';
+    const token = req.headers['x-admin-token'] || req.body?.adminToken;
+    if (token !== adminSecret) {
+        res.status(403).json({ error: 'Yetkisiz erişim' });
+        return false;
+    }
+    return true;
+}
+
+// ============ Moderasyon: Kullanıcı At ============
+app.post('/api/kick', async (req, res) => {
+    if (!checkAdmin(req, res)) return;
+    const { room, identity, reason } = req.body;
+    if (!room || !identity) {
+        return res.status(400).json({ error: 'room ve identity gerekli' });
+    }
+    const svc = getRoomServiceClient();
+    if (!svc) return res.status(500).json({ error: 'LiveKit bağlantısı yok' });
+    try {
+        await svc.removeParticipant(room, identity);
+        console.log(`[MOD] ${identity} odadan atıldı: ${room} (Sebep: ${reason || 'belirtilmedi'})`);
+        roomCache.ts = 0; // Cache'i invalidate et
+        res.json({ success: true, message: `${identity} odadan atıldı` });
+    } catch (err) {
+        console.error('[MOD] Kick hatası:', err.message);
+        res.status(500).json({ error: 'Kullanıcı atılamadı: ' + err.message });
+    }
+});
+
+// ============ Moderasyon: Kullanıcı Sustur ============
+app.post('/api/mute', async (req, res) => {
+    if (!checkAdmin(req, res)) return;
+    const { room, identity, trackSid } = req.body;
+    if (!room || !identity) {
+        return res.status(400).json({ error: 'room ve identity gerekli' });
+    }
+    const svc = getRoomServiceClient();
+    if (!svc) return res.status(500).json({ error: 'LiveKit bağlantısı yok' });
+    try {
+        // Kullanıcının tüm audio track'lerini bul ve sustur
+        const participants = await svc.listParticipants(room);
+        const target = participants.find(p => p.identity === identity);
+        if (!target) return res.status(404).json({ error: 'Kullanıcı bulunamadı' });
+
+        for (const track of target.tracks) {
+            if (track.type === 1) { // AUDIO
+                await svc.mutePublishedTrack(room, identity, track.sid, true);
+            }
+        }
+        console.log(`[MOD] ${identity} susturuldu: ${room}`);
+        roomCache.ts = 0;
+        res.json({ success: true, message: `${identity} susturuldu` });
+    } catch (err) {
+        console.error('[MOD] Mute hatası:', err.message);
+        res.status(500).json({ error: 'Susturma başarısız: ' + err.message });
+    }
+});
+
+// ============ Küfür Filtresi Kelime Listesi ============
+const PROFANITY_LIST = [
+    'amk', 'aq', 'oç', 'orospu', 'piç', 'sik', 'yarrak', 'göt',
+    'meme', 'am', 'taşak', 'ibne', 'pezevenk', 'kahpe', 'puşt',
+    'gavat', 'dangalak', 'gerizekalı', 'salak', 'aptal', 'mal',
+    'fuck', 'shit', 'bitch', 'ass', 'dick', 'pussy'
+];
+
+app.get('/api/profanity', (req, res) => {
+    res.json({ words: PROFANITY_LIST });
+});
+
+// ============ Admin Login Doğrulama ============
+app.post('/api/admin/verify', (req, res) => {
+    const adminSecret = process.env.ADMIN_SECRET || 'retro2024admin';
+    const { token } = req.body;
+    if (token === adminSecret) {
+        res.json({ success: true, role: 'admin' });
+    } else {
+        res.status(403).json({ success: false, error: 'Yanlış şifre' });
     }
 });
 
