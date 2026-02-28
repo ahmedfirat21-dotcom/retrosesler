@@ -76,14 +76,15 @@ app.get('/health', (req, res) => {
 
 // ============ Sunucu başlat ============
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const HOST = '0.0.0.0'; // Cloud container'lar için gerekli
+app.listen(PORT, HOST, () => {
     console.log('');
     console.log('  ╔══════════════════════════════════════════╗');
     console.log('  ║   🎙️  RetroSesler.com — Sunucu Aktif     ║');
     console.log('  ╠══════════════════════════════════════════╣');
-    console.log(`  ║   🌐  http://localhost:${PORT}              ║`);
-    console.log(`  ║   🔑  LiveKit URL: ${process.env.LIVEKIT_URL || 'tanımsız'}  ║`);
-    console.log(`  ║   📡  API Key: ${process.env.LIVEKIT_API_KEY ? '✅ tanımlı' : '❌ eksik'}            ║`);
+    console.log(`  ║   🌐  http://${HOST}:${PORT}                  ║`);
+    console.log(`  ║   🔑  LiveKit: ${process.env.LIVEKIT_URL ? '✅' : '❌'}  API: ${process.env.LIVEKIT_API_KEY ? '✅' : '❌'}             ║`);
+    console.log(`  ║   🌍  ENV: ${process.env.NODE_ENV || 'development'}                    ║`);
     console.log('  ╚══════════════════════════════════════════╝');
     console.log('');
 });
