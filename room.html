@@ -905,6 +905,113 @@
             color: #333;
         }
 
+        /* ============ VIDEO GRID ============ */
+        .video-panel {
+            flex-shrink: 0;
+            margin-bottom: 4px;
+        }
+
+        .video-panel-titlebar {
+            background: linear-gradient(180deg, #3B82C4 0%, #2468A2 40%, #1B5694 100%);
+            color: #fff;
+            font-weight: bold;
+            font-size: 11px;
+            padding: 3px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px 5px 0 0;
+            border: 1px solid #1a4f7a;
+            border-bottom: none;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .video-panel-titlebar:hover {
+            background: linear-gradient(180deg, #4A92D4 0%, #3078B2 40%, #266AA4 100%);
+        }
+
+        .video-panel-toggle {
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        .video-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 6px;
+            background: #2a5a8a;
+            border: 1px solid #1a4f7a;
+            border-top: none;
+            border-radius: 0 0 3px 3px;
+            min-height: 30px;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+
+        .video-grid:empty::after {
+            content: '📹 Hen\00FCz kimse kameras\0131n\0131 a\00E7mad\0131. Kamera butonuna t\0131klay\0131n!';
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 12px;
+        }
+
+        .video-grid.collapsed {
+            display: none;
+        }
+
+        .video-tile {
+            flex: 1 1 180px;
+            max-width: 240px;
+            background: #1a1a2e;
+            border-radius: 3px;
+            overflow: hidden;
+            box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+            border: 1px solid #3a3a5a;
+        }
+
+        .video-tile-header {
+            background: linear-gradient(180deg, #444 0%, #333 100%);
+            color: #ddd;
+            font-size: 10px;
+            padding: 2px 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .video-tile-header .tile-nick {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 160px;
+        }
+
+        .video-tile-header .tile-badge {
+            background: #f39c12;
+            color: #000;
+            font-size: 8px;
+            padding: 1px 4px;
+            border-radius: 2px;
+            margin-left: 4px;
+        }
+
+        .video-tile video {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #000;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+        }
+
         /* ============ CHAT WRAPPER (relative for emoji) ============ */
         .chat-bottom-wrap {
             position: relative;
@@ -930,6 +1037,15 @@
 
             .user-list {
                 max-height: 120px;
+            }
+
+            .video-tile {
+                flex: 1 1 140px;
+                max-width: 100%;
+            }
+
+            .video-grid {
+                max-height: 180px;
             }
 
             .topbar-room-name {
@@ -988,6 +1104,17 @@
 
         <!-- CHAT AREA -->
         <div class="chat-area">
+            <!-- VIDEO GRID -->
+            <div class="video-panel" id="video-panel">
+                <div class="video-panel-titlebar" onclick="toggleVideoPanel()">
+                    <span>📹 Video Yayınları (<span id="video-count">0</span>)</span>
+                    <span class="video-panel-toggle" id="video-toggle">▼</span>
+                </div>
+                <div class="video-grid" id="video-grid">
+                    <!-- Video tiles injected by JS -->
+                </div>
+            </div>
+
             <div class="chat-window">
                 <div class="chat-titlebar">
                     <span>💬 Sohbet — <span id="chat-room-title">Genel Sohbet</span></span>
@@ -1209,32 +1336,34 @@
                 sfxLeave();
                 const el = document.getElementById('media-' + participant.identity);
                 if (el) el.remove();
+                removeVideoTile(participant.identity);
                 renderParticipantList();
             });
 
             // Track abone olundu (ses/video geldi)
             room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
                 console.log('[LiveKit] Track alındı:', track.kind, 'from', participant.identity);
-                const element = track.attach();
-                element.id = 'track-' + participant.identity + '-' + track.kind;
-                element.style.display = track.kind === 'audio' ? 'none' : 'block';
-                if (track.kind === 'audio' && !soundEnabled) {
-                    element.muted = true;
+
+                if (track.kind === 'video') {
+                    // Video track'i grid'e ekle
+                    addVideoTile(participant.identity, track, false);
+                } else if (track.kind === 'audio') {
+                    // Audio track'i gizli ekle
+                    const element = track.attach();
+                    element.id = 'audio-' + participant.identity;
+                    element.style.display = 'none';
+                    if (!soundEnabled) element.muted = true;
+                    document.body.appendChild(element);
                 }
-                let container = document.getElementById('media-' + participant.identity);
-                if (!container) {
-                    container = document.createElement('div');
-                    container.id = 'media-' + participant.identity;
-                    container.style.cssText = 'position:absolute;top:-9999px;';
-                    document.body.appendChild(container);
-                }
-                container.appendChild(element);
-                renderParticipantList(); // Mic/cam durumu güncellensin
+                renderParticipantList();
             });
 
             // Track aboneliği bitti
             room.on(RoomEvent.TrackUnsubscribed, (track, publication, participant) => {
                 console.log('[LiveKit] Track kaldırıldı:', track.kind, 'from', participant.identity);
+                if (track.kind === 'video') {
+                    removeVideoTile(participant.identity);
+                }
                 track.detach().forEach(el => el.remove());
                 renderParticipantList();
             });
@@ -1361,6 +1490,70 @@
                 console.error('[LiveKit] Mesaj gönderme hatası:', err);
                 return false;
             }
+        }
+
+        /* ============ VIDEO GRID YÖNETİMİ ============ */
+        function addVideoTile(identity, track, isLocal) {
+            const grid = document.getElementById('video-grid');
+            // Zaten varsa ekleme
+            if (document.getElementById('vtile-' + identity)) return;
+
+            const tile = document.createElement('div');
+            tile.className = 'video-tile';
+            tile.id = 'vtile-' + identity;
+
+            // Header
+            const header = document.createElement('div');
+            header.className = 'video-tile-header';
+            const nickSpan = document.createElement('span');
+            nickSpan.className = 'tile-nick';
+            nickSpan.textContent = (isLocal ? '👤 ' : '🟢 ') + identity;
+            header.appendChild(nickSpan);
+            if (isLocal) {
+                const badge = document.createElement('span');
+                badge.className = 'tile-badge';
+                badge.textContent = 'SEN';
+                header.appendChild(badge);
+            }
+
+            // Video element
+            const videoEl = track.attach();
+            videoEl.style.width = '100%';
+            videoEl.style.height = 'auto';
+            videoEl.style.display = 'block';
+            if (isLocal) videoEl.style.transform = 'scaleX(-1)'; // Ayna efekti
+
+            tile.appendChild(header);
+            tile.appendChild(videoEl);
+            grid.appendChild(tile);
+
+            updateVideoCount();
+            console.log('[Video Grid] Tile eklendi:', identity);
+        }
+
+        function removeVideoTile(identity) {
+            const tile = document.getElementById('vtile-' + identity);
+            if (tile) {
+                // Video element'i detach et
+                const videos = tile.querySelectorAll('video');
+                videos.forEach(v => v.srcObject = null);
+                tile.remove();
+                updateVideoCount();
+                console.log('[Video Grid] Tile kaldırıldı:', identity);
+            }
+        }
+
+        function updateVideoCount() {
+            const grid = document.getElementById('video-grid');
+            const count = grid.querySelectorAll('.video-tile').length;
+            document.getElementById('video-count').textContent = count;
+        }
+
+        function toggleVideoPanel() {
+            const grid = document.getElementById('video-grid');
+            const toggle = document.getElementById('video-toggle');
+            grid.classList.toggle('collapsed');
+            toggle.textContent = grid.classList.contains('collapsed') ? '▶' : '▼';
         }
 
         /* ============ YAZIYOR GÖSTERGESİ ============ */
@@ -1633,8 +1826,26 @@
                 try {
                     await livekitRoom.localParticipant.setCameraEnabled(camEnabled);
                     console.log('[LiveKit] Kamera:', camEnabled ? 'açık' : 'kapalı');
+
+                    // Video Grid — local preview
+                    if (camEnabled) {
+                        // Kamera açıldı → local video track'i grid'e ekle
+                        const camTrack = livekitRoom.localParticipant.getTrackPublication(LivekitClient.Track.Source.Camera);
+                        if (camTrack && camTrack.track) {
+                            addVideoTile(userIdentity, camTrack.track, true);
+                        }
+                    } else {
+                        // Kamera kapatıldı → tile'ı kaldır
+                        removeVideoTile(userIdentity);
+                    }
+                    renderParticipantList();
                 } catch (err) {
                     console.error('[LiveKit] Kamera hatası:', err);
+                    // Kamera yoksa geri al
+                    camEnabled = false;
+                    btn.classList.remove('active');
+                    btn.classList.add('muted');
+                    btn.querySelector('.ctrl-icon').textContent = '📵';
                 }
             }
         }
