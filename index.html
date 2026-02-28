@@ -4,12 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RetroSesler.com — 2000'lerin efsanevi sesli & görüntülü sohbet platformu geri döndü! Retro WinXP tarzı arayüz, canlı sohbet odaları.">
+    <meta name="description"
+        content="RetroSesler.com — 2000'lerin efsanevi sesli & görüntülü sohbet platformu geri döndü! Retro WinXP tarzı arayüz, canlı sohbet odaları.">
     <meta name="keywords" content="sesli sohbet, görüntülü sohbet, retro, winxp, chat, oda, Türkçe">
     <meta property="og:title" content="RetroSesler.com — Sesli & Görüntülü Sohbet">
-    <meta property="og:description" content="2000'lerin efsanevi sohbet kültürü geri döndü! Retro WinXP arayüzü ile sesli & görüntülü sohbet.">
+    <meta property="og:description"
+        content="2000'lerin efsanevi sohbet kültürü geri döndü! Retro WinXP arayüzü ile sesli & görüntülü sohbet.">
     <meta property="og:type" content="website">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎙️</text></svg>">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎙️</text></svg>">
     <title>RetroSesler.com — Lobi</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Tahoma&display=swap" rel="stylesheet">
     <style>
@@ -950,7 +953,7 @@
                         <button class="room-enter">GİRİŞ ▶</button>
                     </div>
 
-                    <div class="room" data-room="Müzik Odası 2" onclick="openRoom(this)">
+                    <div class="room" data-room="Rock &amp; Metal" onclick="openRoom(this)">
                         <div class="room-icon music">🎸</div>
                         <div class="room-info">
                             <div class="room-title">Rock & Metal <span class="badge badge-music">♫ Müzik</span></div>
@@ -1048,32 +1051,74 @@
             document.getElementById('profile-nick').textContent = savedNickProfile;
         }
 
-        /* ============ LIVE USER COUNTS ============ */
-        const counts = document.querySelectorAll('.user-count');
-        const maxUsers = [200, 50, 100, 30, 50, 30, 60, 30, 80];
+        /* ============ LIVE ROOM DATA (API) ============ */
+        async function fetchRoomData() {
+            try {
+                const res = await fetch('/api/rooms');
+                if (!res.ok) return;
+                const data = await res.json();
 
-        function updateUserCounts() {
-            let total = 0;
-            counts.forEach((el, i) => {
-                let current = parseInt(el.textContent);
-                let change = Math.floor(Math.random() * 7) - 3; // -3 to +3
-                current = Math.max(5, Math.min(maxUsers[i], current + change));
-                el.textContent = current;
-                total += current;
+                // Oda kartlarını güncelle
+                const rooms = document.querySelectorAll('.room[data-room]');
+                rooms.forEach(roomEl => {
+                    const roomName = roomEl.dataset.room;
+                    const roomData = data.rooms.find(r => r.name === roomName);
+                    if (!roomData) return;
 
-                // Update full status
-                const room = el.closest('.room');
-                if (room && current >= maxUsers[i]) {
-                    room.classList.add('is-full');
-                    room.querySelector('.room-enter').textContent = 'DOLU';
-                } else if (room) {
-                    room.classList.remove('is-full');
-                    room.querySelector('.room-enter').textContent = 'GİRİŞ ▶';
-                }
-            });
-            document.getElementById('total-online').textContent = total;
+                    // Kullanıcı sayısını güncelle
+                    const countEl = roomEl.querySelector('.user-count');
+                    if (countEl) countEl.textContent = roomData.participants;
+
+                    // Dolu/açık durumunu güncelle
+                    if (roomData.isFull) {
+                        roomEl.classList.add('is-full');
+                        const btn = roomEl.querySelector('.room-enter');
+                        if (btn) btn.textContent = 'DOLU';
+                    } else {
+                        roomEl.classList.remove('is-full');
+                        const btn = roomEl.querySelector('.room-enter');
+                        if (btn) btn.textContent = 'GİRİŞ ▶';
+                    }
+                });
+
+                // Toplam online sayısını güncelle
+                document.getElementById('total-online').textContent = data.totalOnline;
+
+                // Sidebar online listesini güncelle
+                updateSidebar(data.allUsers);
+
+            } catch (err) {
+                console.log('[Lobi] Oda verisi alınamadı:', err.message);
+            }
         }
-        setInterval(updateUserCounts, 3000);
+
+        function updateSidebar(users) {
+            const container = document.querySelector('.sidebar .win-body[style]');
+            if (!container) return;
+
+            // Sidebar başlığını güncelle
+            const titlebar = container.closest('.win-panel')?.querySelector('.win-titlebar span');
+            if (titlebar) titlebar.textContent = '🟢 Çevrimiçi (' + users.length + ')';
+
+            if (users.length === 0) {
+                container.innerHTML = '<div style="text-align:center;color:#999;font-size:11px;padding:12px;">Henüz kimse çevrimiçi değil</div>';
+                return;
+            }
+
+            container.innerHTML = users.map(nick => {
+                return '<div class="online-item"><span class="online-dot on"></span><span class="online-nick">' + escapeHTML(nick) + '</span></div>';
+            }).join('');
+        }
+
+        function escapeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // İlk yükleme + her 5 saniyede güncelle
+        fetchRoomData();
+        setInterval(fetchRoomData, 5000);
 
         /* ============ ROOM MODAL ============ */
         let modalTimer = null;
