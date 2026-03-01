@@ -336,6 +336,33 @@
             text-decoration: underline;
         }
 
+        .msg-avatar {
+            font-size: 14px;
+            margin-right: 3px;
+            vertical-align: middle;
+        }
+
+        .msg-badge {
+            font-size: 10px;
+            margin-right: 3px;
+            vertical-align: middle;
+        }
+
+        .msg-badge-admin {
+            color: #E74C3C;
+            text-shadow: 0 0 4px rgba(231, 76, 60, 0.4);
+        }
+
+        .msg-badge-mod {
+            color: #F1C40F;
+            text-shadow: 0 0 4px rgba(241, 196, 15, 0.4);
+        }
+
+        .msg-badge-vip {
+            color: #9B59B6;
+            text-shadow: 0 0 4px rgba(155, 89, 182, 0.4);
+        }
+
         .msg-text {
             color: #333;
         }
@@ -2064,7 +2091,7 @@
                     const senderNick = participant ? participant.identity : 'Bilinmeyen';
 
                     if (json.type === 'chat') {
-                        addMessage('chat', { nick: senderNick, text: json.text });
+                        addMessage('chat', { nick: senderNick, text: json.text, avatar: json.avatar, role: json.role });
                         sfxMessageIn();
                         clearTypingIndicator(senderNick);
                     } else if (json.type === 'typing') {
@@ -2195,6 +2222,8 @@
                 const data = encoder.encode(JSON.stringify({
                     type: 'chat',
                     text: text,
+                    avatar: localStorage.getItem('retrosesler_avatar') || '',
+                    role: localStorage.getItem('retrosesler_role') || 'user',
                     timestamp: Date.now()
                 }));
                 await livekitRoom.localParticipant.publishData(data, { reliable: true });
@@ -2388,6 +2417,18 @@
             return div.innerHTML;
         }
 
+        const avatarEmojis = {
+            retro_tv: '📺', retro_radio: '📻', retro_phone: '☎️', retro_gameboy: '🎮',
+            retro_cassette: '📼', retro_floppy: '💾', retro_cd: '💿', retro_camera: '📷',
+            retro_vhs: '🎥', retro_boombox: '🔊'
+        };
+        const roleBadgeLabels = { admin: '🛡️', mod: '⭐', vip: '💎' };
+
+        // Flood koruması
+        let msgTimestamps = [];
+        const FLOOD_LIMIT = 3; // max mesaj
+        const FLOOD_WINDOW = 5000; // ms içinde
+
         function addMessage(type, data) {
             const div = document.createElement('div');
             const now = new Date();
@@ -2395,8 +2436,10 @@
 
             if (type === 'chat') {
                 const filteredText = filterProfanity(data.text);
+                const avatar = avatarEmojis[data.avatar] || '😎';
+                const badge = roleBadgeLabels[data.role] || '';
                 div.className = 'msg' + (filteredText !== data.text ? ' msg-filtered' : '');
-                div.innerHTML = `<span class="msg-time">[${time}]</span><span class="msg-nick ${getNickColor(data.nick)}">${escapeHTML(data.nick)}:</span> <span class="msg-text">${escapeHTML(filteredText)}</span>`;
+                div.innerHTML = `<span class="msg-time">[${time}]</span><span class="msg-avatar">${avatar}</span>${badge ? `<span class="msg-badge msg-badge-${data.role}">${badge}</span>` : ''}<span class="msg-nick ${getNickColor(data.nick)}">${escapeHTML(data.nick)}:</span> <span class="msg-text">${escapeHTML(filteredText)}</span>`;
             } else if (type === 'system') {
                 div.className = 'msg msg-system ' + (data.subtype || '');
                 div.innerHTML = `<span class="msg-time">[${time}]</span> ${data.text}`;
@@ -2420,9 +2463,19 @@
         /* ============ SEND MESSAGE — Data Channel ============ */
         const inputEl = document.getElementById('chat-input');
 
+        // Flood koruması ile mesaj gönder
         async function sendMessage() {
             let text = inputEl.value.trim();
             if (!text) return;
+
+            // Flood kontrolü
+            const now = Date.now();
+            msgTimestamps = msgTimestamps.filter(t => now - t < FLOOD_WINDOW);
+            if (msgTimestamps.length >= FLOOD_LIMIT) {
+                addMessage('system', { text: '⚠️ Çok hızlı yazıyorsun! Lütfen birkaç saniye bekle.', subtype: '' });
+                return;
+            }
+            msgTimestamps.push(now);
 
             // === KOMUT KONTROLÜ ===
             // /slap @nick
@@ -2476,7 +2529,7 @@
 
             // Normal mesaj
             text = filterProfanity(text);
-            addMessage('chat', { nick: userIdentity, text: text });
+            addMessage('chat', { nick: userIdentity, text: text, avatar: localStorage.getItem('retrosesler_avatar') || '', role: localStorage.getItem('retrosesler_role') || 'user' });
             sfxMessageOut();
 
             const sent = await sendDataMessage(text);
