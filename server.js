@@ -647,39 +647,22 @@ app.get('/api/admin/stats', requireAuth, requireRole('admin'), async (req, res) 
     });
 });
 
-// ============ DJ RADİO SİSTEMİ - 90'lar/2000'ler Türkçe Pop ============
-const RADIO_PLAYLIST = [
-    { artist: 'Tarkan', title: 'Şımarık', year: 1997, duration: 234 },
-    { artist: 'Tarkan', title: 'Kuzu Kuzu', year: 2001, duration: 256 },
-    { artist: 'Tarkan', title: 'Dudu', year: 2003, duration: 248 },
-    { artist: 'Tarkan', title: 'Hüp', year: 2006, duration: 230 },
-    { artist: 'Tarkan', title: 'Kış Güneşi', year: 2008, duration: 265 },
-    { artist: 'Sezen Aksu', title: 'Hadi Bakalım', year: 1998, duration: 240 },
-    { artist: 'Sezen Aksu', title: 'Kaçın Kurası', year: 2000, duration: 225 },
-    { artist: 'Mustafa Sandal', title: 'Araba', year: 2003, duration: 218 },
-    { artist: 'Mustafa Sandal', title: 'Aya Benzer', year: 1998, duration: 236 },
-    { artist: 'Mustafa Sandal', title: 'Ateş Et ve Unut', year: 2004, duration: 242 },
-    { artist: 'Cartel', title: 'Cartel', year: 1995, duration: 280 },
-    { artist: 'Yıldız Tilbe', title: 'Delikanlım', year: 1998, duration: 252 },
-    { artist: 'Yıldız Tilbe', title: 'Yürü Anca Gidersin', year: 2000, duration: 238 },
-    { artist: 'Kenan Doğulu', title: 'Çakkıdı', year: 2006, duration: 210 },
-    { artist: 'Kenan Doğulu', title: 'Shake It Up Şekerim', year: 2004, duration: 222 },
-    { artist: 'Şebnem Ferah', title: 'Sigara', year: 1996, duration: 268 },
-    { artist: 'Şebnem Ferah', title: 'Sil Baştan', year: 2000, duration: 254 },
-    { artist: 'Athena', title: 'Fırtına', year: 2002, duration: 192 },
-    { artist: 'Athena', title: 'Holigan', year: 2004, duration: 205 },
-    { artist: 'MFÖ', title: 'Ele Güne Karşı', year: 1992, duration: 240 },
-    { artist: 'Teoman', title: 'İstanbul\'da Sonbahar', year: 2002, duration: 258 },
-    { artist: 'Teoman', title: 'Paramparça', year: 2001, duration: 232 },
-    { artist: 'Serdar Ortaç', title: 'Heyecan', year: 2004, duration: 215 },
-    { artist: 'Serdar Ortaç', title: 'No Problem', year: 2006, duration: 228 },
-    { artist: 'İzel Çeliköz', title: 'Bebek', year: 1997, duration: 245 },
-    { artist: 'Ajda Pekkan', title: 'Arada Sırada', year: 1999, duration: 235 },
-    { artist: 'Hande Yener', title: 'Acele Etme', year: 2004, duration: 220 },
-    { artist: 'Gülşen', title: 'Dan Dan', year: 2003, duration: 238 },
-    { artist: 'Manga', title: 'Beni Benimle Bırak', year: 2004, duration: 247 },
-    { artist: 'maNga', title: 'Cevapsız Sorular', year: 2005, duration: 260 }
-];
+// ============ DJ RADİO SİSTEMİ - playlist.json'dan yüklenir ============
+const fs = require('fs');
+let RADIO_PLAYLIST = [];
+try {
+    const playlistPath = require('path').join(__dirname, 'playlist.json');
+    RADIO_PLAYLIST = JSON.parse(fs.readFileSync(playlistPath, 'utf8'));
+    // Karıştır (Fisher-Yates shuffle)
+    for (let i = RADIO_PLAYLIST.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [RADIO_PLAYLIST[i], RADIO_PLAYLIST[j]] = [RADIO_PLAYLIST[j], RADIO_PLAYLIST[i]];
+    }
+    console.log(`[DJ] ${RADIO_PLAYLIST.length} şarkı yüklendi (playlist.json)`);
+} catch (e) {
+    console.error('[DJ] playlist.json yüklenemedi:', e.message);
+    RADIO_PLAYLIST = [{ artist: 'DJ_RetroBot', title: 'Test Yayını', year: 2024, duration: 180, ytId: 'dQw4w9WgXcQ' }];
+}
 
 // Radyo başlangıç zamanı (sunucu başlatıldığında)
 const RADIO_START_TIME = Date.now();
@@ -720,7 +703,9 @@ app.get('/api/radio/now-playing', (req, res) => {
             duration: np.song.duration,
             elapsed: np.elapsed,
             remaining: np.remaining,
-            progress: np.progress
+            progress: np.progress,
+            ytId: np.song.ytId || '',
+            searchQuery: np.song.artist + ' - ' + np.song.title
         },
         next: { artist: np.next.artist, title: np.next.title, year: np.next.year },
         trackIndex: np.index,

@@ -2161,6 +2161,10 @@
                     <span class="dj-time" id="dj-vol-label">50%</span>
                 </div>
                 <div class="dj-next-info" id="dj-next-info">Sıradaki: yükleniyor...</div>
+                <div id="yt-player-wrap"
+                    style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none">
+                    <div id="yt-player"></div>
+                </div>
             </div>
 
             <div class="chat-window">
@@ -3580,6 +3584,51 @@
         }
 
         let lastSongIndex = -1;
+        let ytPlayer = null;
+        let ytReady = false;
+        let currentYtId = '';
+
+        // YouTube IFrame API yükle
+        (function loadYTAPI() {
+            if (!isMusicRoom) return;
+            const tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            document.head.appendChild(tag);
+        })();
+
+        window.onYouTubeIframeAPIReady = function () {
+            if (!isMusicRoom) return;
+            ytPlayer = new YT.Player('yt-player', {
+                height: '1',
+                width: '1',
+                playerVars: {
+                    autoplay: 0,
+                    controls: 0,
+                    disablekb: 1,
+                    fs: 0,
+                    modestbranding: 1,
+                    rel: 0
+                },
+                events: {
+                    onReady: () => {
+                        ytReady = true;
+                        ytPlayer.setVolume(50);
+                        console.log('[DJ] YouTube Player hazır');
+                    },
+                    onStateChange: (e) => {
+                        // Video bittiğinde sunucu zaten sıradaki şarkıya geçer
+                        if (e.data === YT.PlayerState.ENDED) {
+                            pollNowPlaying();
+                        }
+                    },
+                    onError: (e) => {
+                        console.warn('[DJ] YouTube hata:', e.data, '- sıradaki deneniyor');
+                        setTimeout(pollNowPlaying, 3000);
+                    }
+                }
+            });
+        };
+
         async function pollNowPlaying() {
             if (!isMusicRoom) return;
             try {
@@ -3596,13 +3645,30 @@
                 document.getElementById('dj-next-info').textContent =
                     '⏭ Sıradaki: ' + data.next.artist + ' - ' + data.next.title;
 
-                // Şarkı değiştiğinde chat'e bildir
+                // Şarkı değiştiğinde YouTube'da çal
                 if (lastSongIndex !== -1 && lastSongIndex !== data.trackIndex) {
                     addMessage('system', {
                         text: '🎵 DJ_RetroBot: Şimdi çalıyor → ' + c.artist + ' - ' + c.title + ' (' + c.year + ')',
                         subtype: 'dj'
                     });
                 }
+
+                // YouTube video yükle (şarkı değiştiyse)
+                if (c.ytId && c.ytId !== currentYtId && ytReady && ytPlayer) {
+                    currentYtId = c.ytId;
+                    if (radioPlaying) {
+                        ytPlayer.loadVideoById({
+                            videoId: c.ytId,
+                            startSeconds: c.elapsed
+                        });
+                    } else {
+                        ytPlayer.cueVideoById({
+                            videoId: c.ytId,
+                            startSeconds: c.elapsed
+                        });
+                    }
+                }
+
                 lastSongIndex = data.trackIndex;
             } catch (err) {
                 console.error('[DJ] Poll hatası:', err);
@@ -3617,15 +3683,18 @@
                 btn.textContent = '▶';
                 btn.classList.add('active');
                 vinyl.classList.add('playing');
+                if (ytReady && ytPlayer) ytPlayer.playVideo();
             } else {
                 btn.textContent = '⏸';
                 btn.classList.remove('active');
                 vinyl.classList.remove('playing');
+                if (ytReady && ytPlayer) ytPlayer.pauseVideo();
             }
         }
 
         function setRadioVolume(val) {
             document.getElementById('dj-vol-label').textContent = val + '%';
+            if (ytReady && ytPlayer) ytPlayer.setVolume(parseInt(val));
         }
 
         // DJ sistemi başlat
