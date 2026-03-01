@@ -1218,10 +1218,24 @@
                         document.getElementById('modal-status').textContent = 'Bağlantı başarılı!';
                         document.getElementById('modal-icon').textContent = '✅';
                         document.getElementById('modal-btns').style.display = 'flex';
-                        // localStorage'dan önceki nick'i yükle
+                        const nickEl = document.getElementById('nick-input');
                         const savedNick = localStorage.getItem('retrosesler_nick');
-                        if (savedNick) document.getElementById('nick-input').value = savedNick;
-                        document.getElementById('nick-input').focus();
+                        const token = localStorage.getItem('retrosesler_token');
+                        if (token && savedNick) {
+                            // Giriş yapmış kullanıcı — nick kilitli
+                            nickEl.value = savedNick;
+                            nickEl.disabled = true;
+                            nickEl.style.background = '#E8F8F5';
+                        } else if (savedNick) {
+                            nickEl.value = savedNick;
+                            nickEl.disabled = false;
+                            nickEl.style.background = '#fff';
+                        } else {
+                            nickEl.value = '';
+                            nickEl.disabled = false;
+                            nickEl.style.background = '#fff';
+                        }
+                        nickEl.focus();
                     }
                 }, step.delay);
                 timers.push(t);
@@ -1239,7 +1253,6 @@
             const nickInput = document.getElementById('nick-input');
             let nick = nickInput.value.trim();
             if (!nick) nick = 'Misafir_' + Math.floor(Math.random() * 9999);
-            // Kaydet
             localStorage.setItem('retrosesler_nick', nick);
             closeModal();
             window.location.href = 'room.html?room=' + encodeURIComponent(currentRoomName) + '&nick=' + encodeURIComponent(nick);
