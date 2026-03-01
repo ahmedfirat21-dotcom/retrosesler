@@ -770,20 +770,139 @@
         }
 
         /* ============ RESPONSIVE ============ */
+        /* ============ TABLET RESPONSIVE ============ */
         @media(max-width:768px) {
             .main {
-                flex-direction: column
+                flex-direction: column;
+                padding: 0 8px;
+                margin: 10px auto;
             }
 
             .sidebar {
                 width: 100%;
                 flex-direction: row;
-                flex-wrap: wrap
+                flex-wrap: wrap;
+                order: 2;
             }
 
             .sidebar .win-panel {
                 flex: 1;
-                min-width: 200px
+                min-width: 200px;
+            }
+
+            .topbar {
+                flex-wrap: wrap;
+                padding: 8px 12px;
+                gap: 6px;
+            }
+
+            .topbar-stats {
+                gap: 8px;
+                font-size: 10px;
+            }
+
+            .welcome-marquee {
+                font-size: 11px;
+            }
+        }
+
+        /* ============ MOBILE RESPONSIVE ============ */
+        @media(max-width:480px) {
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 8px 10px;
+            }
+
+            .topbar-brand {
+                margin-bottom: 4px;
+            }
+
+            .topbar-logo {
+                font-size: 16px;
+            }
+
+            .topbar-subtitle {
+                font-size: 9px;
+            }
+
+            .topbar-stats {
+                font-size: 9px;
+                gap: 6px;
+                align-self: flex-end;
+            }
+
+            .main {
+                padding: 0 6px;
+                margin: 8px auto;
+                gap: 8px;
+            }
+
+            .sidebar {
+                flex-direction: column;
+                order: 2;
+            }
+
+            .sidebar .win-panel {
+                min-width: 100%;
+            }
+
+            .room-grid {
+                grid-template-columns: 1fr !important;
+                gap: 8px !important;
+            }
+
+            .room-card {
+                padding: 10px !important;
+            }
+
+            .room-header {
+                font-size: 12px;
+            }
+
+            .room-desc {
+                font-size: 10px;
+            }
+
+            .room-enter {
+                padding: 4px 10px;
+                font-size: 10px;
+            }
+
+            .welcome-marquee {
+                font-size: 10px;
+                padding: 4px 0;
+            }
+
+            .footer {
+                font-size: 10px;
+                padding: 12px 8px;
+            }
+
+            .category-tabs {
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .category-tab {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+
+            /* Profil editör kompakt */
+            .profile-editor-overlay .profile-editor {
+                width: 95vw;
+                padding: 10px;
+            }
+
+            /* Modal giriş kompakt */
+            .room-enter-modal {
+                width: 90vw;
+            }
+
+            /* Win panel başlıklar */
+            .win-title {
+                font-size: 11px;
             }
         }
     </style>
