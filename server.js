@@ -13,6 +13,10 @@ app.use(cors());
 app.use(express.json()); // Moderation API için JSON body parser
 
 // ============ Statik dosya sunumu ============
+// admin.html'e doğrudan erişimi engelle
+app.get('/admin.html', (req, res) => res.status(404).send('Sayfa bulunamadı'));
+// Gizli admin yolu
+app.get('/yonetim-r3tro', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 // index.html, room.html vb. doğrudan sunulur
 app.use(express.static(__dirname));
 
