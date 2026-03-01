@@ -833,8 +833,11 @@
                     </div>
                 </div>
                 <div class="win-body">
-                    <div class="user-avatar">😎</div>
+                    <div class="user-avatar" id="profile-avatar">😎</div>
                     <div class="user-name" id="profile-nick">Misafir</div>
+                    <div class="user-badge-display" id="profile-badge"></div>
+                    <div class="user-bio" id="profile-bio"
+                        style="font-size:10px;color:#8B7D6B;font-style:italic;margin:4px 0"></div>
                     <div class="user-status" id="profile-status">● Misafir</div>
                     <div class="user-actions" id="profile-actions">
                         <button class="user-btn" onclick="window.location.href='auth.html'">🔑 Giriş Yap</button>
@@ -1057,15 +1060,37 @@
                     });
                     const data = await res.json();
                     if (data.success) {
+                        // Avatar emoji haritası
+                        const avatarEmojis = {
+                            'default': '😎', 'retro_tv': '📺', 'cassette': '📼', 'gameboy': '🎮',
+                            'floppy': '💾', 'headphones': '🎧', 'sunglasses': '🕶️', 'rocket': '🚀',
+                            'star': '⭐', 'crown': '👑', 'diamond': '💎', 'fire': '🔥',
+                            'robot': '🤖', 'alien': '👽', 'ghost': '👻', 'ninja': '🥷',
+                            'wizard': '🧙', 'pirate': '🏴‍☠️', 'cat': '🐱', 'dog': '🐶',
+                            'unicorn': '🦄', 'phoenix': '🦥'
+                        };
+                        const roleBadges = {
+                            'admin': '<span style="background:#E74C3C;color:#fff;padding:1px 6px;border-radius:8px;font-size:9px;font-weight:bold">👑 ADMIN</span>',
+                            'mod': '<span style="background:#F39C12;color:#fff;padding:1px 6px;border-radius:8px;font-size:9px;font-weight:bold">🛡️ MOD</span>',
+                            'vip': '<span style="background:#9B59B6;color:#fff;padding:1px 6px;border-radius:8px;font-size:9px;font-weight:bold">⭐ VIP</span>',
+                            'user': ''
+                        };
+
+                        document.getElementById('profile-avatar').textContent = avatarEmojis[data.avatar] || '😎';
                         document.getElementById('profile-nick').textContent = data.nick;
+                        document.getElementById('profile-badge').innerHTML = roleBadges[data.role] || '';
+                        document.getElementById('profile-bio').textContent = data.bio || '';
                         document.getElementById('profile-status').innerHTML = '<span style="color:#27AE60">●</span> Çevrimiçi';
-                        let actionsHtml = '<button class="user-btn" onclick="logout()">🚪 Çıkış Yap</button>';
+
+                        let actionsHtml = '<button class="user-btn" onclick="openProfileEditor()">✏️ Profili Düzenle</button>';
+                        actionsHtml += '<button class="user-btn" onclick="logout()">🚪 Çıkış Yap</button>';
                         if (data.role === 'admin' || data.role === 'mod') {
                             actionsHtml += '<button class="user-btn" onclick="window.location.href=\'admin.html\'" style="background:linear-gradient(180deg,#C0392B,#922B21);color:#fff;border-color:#E74C3C">🛡️ Admin Paneli</button>';
                         }
                         document.getElementById('profile-actions').innerHTML = actionsHtml;
                         localStorage.setItem('retrosesler_nick', data.nick);
                         localStorage.setItem('retrosesler_role', data.role);
+                        localStorage.setItem('retrosesler_avatar', data.avatar || 'default');
                         return;
                     }
                 } catch (e) { /* token geçersiz */ }
@@ -1292,6 +1317,212 @@
         document.getElementById('modal-overlay').addEventListener('click', function (e) {
             if (e.target === this) closeModal();
         });
+    </script>
+
+    <!-- Profil Düzenleme Modali -->
+    <style>
+        .profile-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-modal-overlay.active {
+            display: flex;
+        }
+
+        .profile-modal {
+            width: 440px;
+            max-width: 95vw;
+            background: linear-gradient(180deg, #F5F3EE, #E8E4D9);
+            border: 2px outset #D4CFBF;
+            box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.5);
+            border-radius: 6px;
+        }
+
+        .profile-modal .pm-titlebar {
+            background: linear-gradient(180deg, #0A246A, #3A6EA5);
+            color: #fff;
+            padding: 7px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .profile-modal .pm-body {
+            padding: 16px;
+        }
+
+        .pm-section {
+            margin-bottom: 14px;
+        }
+
+        .pm-section-title {
+            font-size: 11px;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 6px;
+        }
+
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+        }
+
+        .avatar-option {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            border: 2px solid #C8C3B5;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #fff;
+            transition: all 0.2s;
+        }
+
+        .avatar-option:hover {
+            border-color: #3A6EA5;
+            background: #E8F4FD;
+        }
+
+        .avatar-option.selected {
+            border-color: #E74C3C;
+            background: #FDEDEC;
+            box-shadow: 0 0 6px rgba(231, 76, 60, 0.3);
+        }
+
+        .pm-input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 2px inset #b0b0b0;
+            font-family: inherit;
+            font-size: 13px;
+            background: #fff;
+            outline: none;
+            border-radius: 3px;
+        }
+
+        .pm-input:focus {
+            border-color: #3A6EA5;
+        }
+
+        .pm-save {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(180deg, #27AE60, #1E8449);
+            color: #fff;
+            border: 2px outset #2ECC71;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 3px;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+
+        .pm-save:hover {
+            background: linear-gradient(180deg, #2ECC71, #27AE60);
+            transform: translateY(-1px);
+        }
+    </style>
+
+    <div class="profile-modal-overlay" id="profile-modal-overlay" onclick="if(event.target===this)closeProfileEditor()">
+        <div class="profile-modal">
+            <div class="pm-titlebar">
+                <span>✏️ Profili Düzenle</span>
+                <div class="win-btn" onclick="closeProfileEditor()">×</div>
+            </div>
+            <div class="pm-body">
+                <div class="pm-section">
+                    <div class="pm-section-title">🎨 Avatar Seç</div>
+                    <div class="avatar-grid" id="avatar-grid"></div>
+                </div>
+                <div class="pm-section">
+                    <div class="pm-section-title">📝 Hakkımda (max 60 karakter)</div>
+                    <input type="text" class="pm-input" id="bio-input"
+                        placeholder="Örn: ~ İsyanlardayım ~ veya ♫ Tarkan - Kış Güneşi" maxlength="60">
+                </div>
+                <button class="pm-save" onclick="saveProfile()">💾 KAYDET</button>
+                <div id="profile-save-msg" style="text-align:center;font-size:11px;margin-top:8px"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const avatarMap = {
+            'default': '😎', 'retro_tv': '📺', 'cassette': '📼', 'gameboy': '🎮',
+            'floppy': '💾', 'headphones': '🎧', 'sunglasses': '🕶️', 'rocket': '🚀',
+            'star': '⭐', 'crown': '👑', 'diamond': '💎', 'fire': '🔥',
+            'robot': '🤖', 'alien': '👽', 'ghost': '👻', 'ninja': '🥷',
+            'wizard': '🧙', 'pirate': '🏴‍☠️', 'cat': '🐱', 'dog': '🐶',
+            'unicorn': '🦄', 'phoenix': '🦥'
+        };
+        let selectedAvatar = localStorage.getItem('retrosesler_avatar') || 'default';
+
+        function openProfileEditor() {
+            const grid = document.getElementById('avatar-grid');
+            grid.innerHTML = '';
+            Object.entries(avatarMap).forEach(([key, emoji]) => {
+                const div = document.createElement('div');
+                div.className = 'avatar-option' + (key === selectedAvatar ? ' selected' : '');
+                div.textContent = emoji;
+                div.title = key;
+                div.onclick = () => {
+                    grid.querySelectorAll('.avatar-option').forEach(a => a.classList.remove('selected'));
+                    div.classList.add('selected');
+                    selectedAvatar = key;
+                };
+                grid.appendChild(div);
+            });
+            // Bio
+            document.getElementById('bio-input').value = document.getElementById('profile-bio').textContent || '';
+            document.getElementById('profile-save-msg').textContent = '';
+            document.getElementById('profile-modal-overlay').classList.add('active');
+        }
+
+        function closeProfileEditor() {
+            document.getElementById('profile-modal-overlay').classList.remove('active');
+        }
+
+        async function saveProfile() {
+            const token = localStorage.getItem('retrosesler_token');
+            if (!token) { alert('Giriş yapmalısınız!'); return; }
+            const bio = document.getElementById('bio-input').value.trim();
+            try {
+                const res = await fetch('/api/profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify({ avatar: selectedAvatar, bio })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('profile-save-msg').innerHTML = '<span style="color:#27AE60">✅ Profil kaydedildi!</span>';
+                    document.getElementById('profile-avatar').textContent = avatarMap[selectedAvatar] || '😎';
+                    document.getElementById('profile-bio').textContent = bio;
+                    localStorage.setItem('retrosesler_avatar', selectedAvatar);
+                    setTimeout(closeProfileEditor, 1000);
+                } else {
+                    document.getElementById('profile-save-msg').innerHTML = '<span style="color:#E74C3C">❌ ' + data.error + '</span>';
+                }
+            } catch (err) {
+                document.getElementById('profile-save-msg').innerHTML = '<span style="color:#E74C3C">❌ Hata: ' + err.message + '</span>';
+            }
+        }
     </script>
 </body>
 
