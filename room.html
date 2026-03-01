@@ -2162,7 +2162,7 @@
                 </div>
                 <div class="dj-next-info" id="dj-next-info">Sıradaki: yükleniyor...</div>
                 <div id="yt-player-wrap"
-                    style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none">
+                    style="position:fixed;left:-9999px;top:-9999px;width:200px;height:200px;overflow:hidden">
                     <div id="yt-player"></div>
                 </div>
             </div>
@@ -3599,15 +3599,16 @@
         window.onYouTubeIframeAPIReady = function () {
             if (!isMusicRoom) return;
             ytPlayer = new YT.Player('yt-player', {
-                height: '1',
-                width: '1',
+                height: '200',
+                width: '200',
                 playerVars: {
                     autoplay: 0,
                     controls: 0,
                     disablekb: 1,
                     fs: 0,
                     modestbranding: 1,
-                    rel: 0
+                    rel: 0,
+                    playsinline: 1
                 },
                 events: {
                     onReady: () => {
@@ -3680,12 +3681,29 @@
             const btn = document.getElementById('dj-play-btn');
             const vinyl = document.getElementById('dj-vinyl');
             if (radioPlaying) {
-                btn.textContent = '▶';
+                btn.textContent = '⏸';
                 btn.classList.add('active');
                 vinyl.classList.add('playing');
-                if (ytReady && ytPlayer) ytPlayer.playVideo();
+                if (ytReady && ytPlayer) {
+                    // Eğer henüz video yüklenmemişse, API'den al ve yükle
+                    if (!currentYtId) {
+                        fetch('/api/radio/now-playing')
+                            .then(r => r.json())
+                            .then(data => {
+                                if (data.success && data.current.ytId) {
+                                    currentYtId = data.current.ytId;
+                                    ytPlayer.loadVideoById({
+                                        videoId: data.current.ytId,
+                                        startSeconds: data.current.elapsed
+                                    });
+                                }
+                            }).catch(() => { });
+                    } else {
+                        ytPlayer.playVideo();
+                    }
+                }
             } else {
-                btn.textContent = '⏸';
+                btn.textContent = '▶';
                 btn.classList.remove('active');
                 vinyl.classList.remove('playing');
                 if (ytReady && ytPlayer) ytPlayer.pauseVideo();
@@ -3701,7 +3719,11 @@
         function initDJ() {
             if (!isMusicRoom) return;
             document.getElementById('dj-panel').classList.add('active');
-            document.getElementById('dj-vinyl').classList.add('playing');
+            // Vinyl dönmesin başlangıçta — kullanıcı ▶ tıklayacak
+            radioPlaying = false;
+            const btn = document.getElementById('dj-play-btn');
+            btn.textContent = '▶';
+            btn.classList.remove('active');
 
             // İlk poll
             pollNowPlaying();
@@ -3710,7 +3732,7 @@
 
             // DJ giriş mesajı
             addMessage('system', {
-                text: '🎙️ DJ_RetroBot odaya katıldı! 7/24 Nostalji FM yayında 📻',
+                text: '🎤️ DJ_RetroBot odaya katıldı! ▶ butonuna tıklayın müzik başlasın 📻',
                 subtype: 'join'
             });
         }
