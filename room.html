@@ -2116,6 +2116,9 @@
         </div>
     </div>
 
+    <!-- Mic Queue Indicator -->
+    <div class="mic-queue-bar" id="mic-queue-bar"></div>
+
     <!-- ============ MAIN LAYOUT ============ -->
     <div class="main-layout">
 
@@ -2238,8 +2241,8 @@
 
     <!-- ============ CONTROL BAR ============ -->
     <div class="control-bar">
-        <button class="ctrl-btn muted" id="btn-mic" onclick="toggleMic()">
-            <span class="ctrl-icon">🔇</span> Mikrofon
+        <button class="ctrl-btn" id="btn-mic" onclick="toggleMic()">
+            <span class="ctrl-icon">✋</span> <span id="btn-mic-text">Söz İste</span>
             <span class="speaking-anim">
                 <span class="speaking-bar"></span>
                 <span class="speaking-bar"></span>
@@ -2272,13 +2275,18 @@
         /* ============ LIVEKIT YAPILANDIRMA ============ */
         const TOKEN_SERVER = window.location.origin + '/getToken';
         let livekitRoom = null;
-        let micEnabled = false; // Mikrofon varsayılan KAPALI — kullanıcı manuel açmalı
+        let micEnabled = false;
         let camEnabled = false;
         let soundEnabled = true;
-        const userStatuses = {}; // nick -> status text
+        const userStatuses = {};
         let myStatus = '';
         let nudgeCooldown = false;
         let radioPlaying = true;
+
+        // === MİKROFON SIRA SİSTEMİ ===
+        let micQueue = [];       // [nick1, nick2, ...]
+        let currentSpeaker = ''; // aktif konuşmacı
+        let speakerTimer = null; // 60sn auto-release timer
 
         // Oda kategorisi ve yetenek haritası
         const roomName = new URLSearchParams(window.location.search).get('room') || '';
@@ -2471,6 +2479,16 @@
                     } else if (json.type === 'status') {
                         userStatuses[senderNick] = json.text;
                         renderParticipantList();
+                    } else if (json.type === 'mic_request') {
+                        if (!micQueue.includes(senderNick)) micQueue.push(senderNick);
+                        updateMicQueue();
+                    } else if (json.type === 'mic_release') {
+                        micQueue = micQueue.filter(n => n !== senderNick);
+                        updateMicQueue();
+                    } else if (json.type === 'mic_queue_sync') {
+                        micQueue = json.queue || [];
+                        currentSpeaker = json.speaker || '';
+                        updateMicQueueUI();
                     }
                 } catch (err) {
                     console.error('[Sistem] Data parse hatası:', err);
@@ -2966,29 +2984,116 @@
 
         /* ============ CONTROL TOGGLES — LiveKit Entegre ============ */
         async function toggleMic() {
+            if (!roomCapabilities.mic) return;
             const btn = document.getElementById('btn-mic');
-            micEnabled = !micEnabled;
+            const textEl = document.getElementById('btn-mic-text');
+            const inQueue = micQueue.includes(userIdentity);
 
-            // UI güncelle
-            if (micEnabled) {
-                btn.classList.remove('muted');
-                btn.classList.add('active');
-                btn.querySelector('.ctrl-icon').textContent = '🎤';
+            if (inQueue) {
+                // Sıradan çık
+                micQueue = micQueue.filter(n => n !== userIdentity);
+                micEnabled = false;
+                if (livekitRoom && livekitRoom.localParticipant) {
+                    try { await livekitRoom.localParticipant.setMicrophoneEnabled(false); } catch { }
+                }
+                btn.classList.remove('active', 'muted');
+                btn.querySelector('.ctrl-icon').textContent = '✋';
+                textEl.textContent = 'Söz İste';
+                addMessage('system', { text: '🎤 Sıradan çıktınız.', subtype: '' });
+                broadcastMicAction('mic_release');
+                if (speakerTimer) { clearTimeout(speakerTimer); speakerTimer = null; }
             } else {
-                btn.classList.remove('active');
+                // Sıraya gir
+                micQueue.push(userIdentity);
                 btn.classList.add('muted');
-                btn.querySelector('.ctrl-icon').textContent = '🔇';
+                btn.querySelector('.ctrl-icon').textContent = '⏳';
+                textEl.textContent = 'Sırada...';
+                const pos = micQueue.indexOf(userIdentity) + 1;
+                addMessage('system', { text: `🎤 Söz istediniz! Sıra: ${pos}. sıra`, subtype: '' });
+                broadcastMicAction('mic_request');
             }
+            updateMicQueue();
+        }
 
-            // LiveKit API
-            if (livekitRoom && livekitRoom.localParticipant) {
-                try {
-                    await livekitRoom.localParticipant.setMicrophoneEnabled(micEnabled);
-                    console.log('[Sistem] Mikrofon:', micEnabled ? 'açık' : 'kapalı');
-                } catch (err) {
-                    console.error('[Sistem] Mikrofon hatası:', err);
+        async function broadcastMicAction(type) {
+            if (!livekitRoom || !livekitRoom.localParticipant) return;
+            try {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(JSON.stringify({ type }));
+                await livekitRoom.localParticipant.publishData(data, { reliable: true });
+            } catch { }
+        }
+
+        async function broadcastQueueSync() {
+            if (!livekitRoom || !livekitRoom.localParticipant) return;
+            try {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(JSON.stringify({
+                    type: 'mic_queue_sync',
+                    queue: micQueue,
+                    speaker: currentSpeaker
+                }));
+                await livekitRoom.localParticipant.publishData(data, { reliable: true });
+            } catch { }
+        }
+
+        async function updateMicQueue() {
+            const newSpeaker = micQueue.length > 0 ? micQueue[0] : '';
+
+            if (newSpeaker !== currentSpeaker) {
+                // Konuşmacı değişti
+                if (currentSpeaker === userIdentity) {
+                    // Biz konuşmayı bıraktık
+                    micEnabled = false;
+                    if (livekitRoom && livekitRoom.localParticipant) {
+                        try { await livekitRoom.localParticipant.setMicrophoneEnabled(false); } catch { }
+                    }
+                    if (speakerTimer) { clearTimeout(speakerTimer); speakerTimer = null; }
+                }
+                currentSpeaker = newSpeaker;
+                if (currentSpeaker === userIdentity) {
+                    // Sıra bize geldi!
+                    micEnabled = true;
+                    if (livekitRoom && livekitRoom.localParticipant) {
+                        try { await livekitRoom.localParticipant.setMicrophoneEnabled(true); } catch { }
+                    }
+                    const btn = document.getElementById('btn-mic');
+                    btn.classList.remove('muted');
+                    btn.classList.add('active');
+                    btn.querySelector('.ctrl-icon').textContent = '🎤';
+                    document.getElementById('btn-mic-text').textContent = 'Konuşuyorsun';
+                    addMessage('system', { text: '🎤 Sıra sende! Konuşabilirsin. (60sn)', subtype: 'join' });
+                    // 60sn timer
+                    speakerTimer = setTimeout(() => {
+                        addMessage('system', { text: '⏰ 60 saniye doldu, sıra bir sonraki kişiye geçiyor.', subtype: '' });
+                        toggleMic(); // Sıradan çık
+                    }, 60000);
+                }
+                if (currentSpeaker && currentSpeaker !== userIdentity) {
+                    addMessage('system', { text: `🎤 ${escapeHTML(currentSpeaker)} konuşuyor...`, subtype: '' });
                 }
             }
+            updateMicQueueUI();
+            broadcastQueueSync();
+        }
+
+        function updateMicQueueUI() {
+            const bar = document.getElementById('mic-queue-bar');
+            if (!bar) return;
+            if (micQueue.length === 0) {
+                bar.style.display = 'none';
+                return;
+            }
+            bar.style.display = 'flex';
+            let html = '<span class="mq-label">🎤 Konuşmacı:</span>';
+            html += `<span class="mq-speaker">${escapeHTML(micQueue[0])}</span>`;
+            if (micQueue.length > 1) {
+                html += '<span class="mq-sep">|</span><span class="mq-label">Sıra:</span>';
+                micQueue.slice(1).forEach((nick, i) => {
+                    html += `<span class="mq-waiting">${i + 1}. ${escapeHTML(nick)}</span>`;
+                });
+            }
+            bar.innerHTML = html;
         }
 
         async function toggleCam() {
