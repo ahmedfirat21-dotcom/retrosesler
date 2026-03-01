@@ -20,36 +20,73 @@
         body {
             font-family: Tahoma, Verdana, sans-serif;
             font-size: 13px;
-            background: #3A6EA5;
+            background: #1a1a2e;
             background-image:
-                radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.08), transparent 50%),
-                radial-gradient(ellipse at 70% 80%, rgba(0, 60, 120, 0.15), transparent 50%),
-                linear-gradient(180deg, #3A6EA5 0%, #2B5A8C 50%, #1E4070 100%);
+                radial-gradient(ellipse at 20% 30%, rgba(58, 110, 165, 0.3), transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(192, 57, 43, 0.15), transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0), transparent);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #222;
+            overflow: hidden;
+        }
+
+        /* Animated stars */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(1px 1px at 10% 10%, rgba(255, 255, 255, 0.5), transparent),
+                radial-gradient(1px 1px at 20% 40%, rgba(255, 255, 255, 0.3), transparent),
+                radial-gradient(1px 1px at 40% 20%, rgba(255, 255, 255, 0.4), transparent),
+                radial-gradient(1px 1px at 60% 50%, rgba(255, 255, 255, 0.3), transparent),
+                radial-gradient(1px 1px at 80% 30%, rgba(255, 255, 255, 0.5), transparent),
+                radial-gradient(1px 1px at 90% 70%, rgba(255, 255, 255, 0.3), transparent),
+                radial-gradient(1px 1px at 30% 80%, rgba(255, 255, 255, 0.4), transparent),
+                radial-gradient(1px 1px at 70% 90%, rgba(255, 255, 255, 0.3), transparent),
+                radial-gradient(2px 2px at 50% 15%, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(2px 2px at 15% 65%, rgba(255, 255, 255, 0.5), transparent);
+            animation: twinkle 4s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes twinkle {
+            from {
+                opacity: 0.6;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .auth-container {
-            width: 420px;
+            width: 520px;
             max-width: 95vw;
+            z-index: 1;
+            position: relative;
         }
 
         /* Logo */
         .auth-logo {
             text-align: center;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
         }
 
         .auth-logo a {
             font-family: 'Press Start 2P', monospace;
-            font-size: 16px;
+            font-size: 22px;
             color: #fff;
-            text-shadow: 2px 2px 0 #C0392B, 4px 4px 0 rgba(0, 0, 0, 0.3);
+            text-shadow: 2px 2px 0 #C0392B, 4px 4px 0 rgba(0, 0, 0, 0.4);
             text-decoration: none;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
         }
 
         .auth-logo a span {
@@ -57,28 +94,38 @@
         }
 
         .auth-subtitle {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .auth-tagline {
             font-size: 11px;
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.5);
             margin-top: 6px;
+            font-style: italic;
         }
 
         /* Window */
         .auth-window {
             background: linear-gradient(180deg, #F5F3EE 0%, #E8E4D9 100%);
             border: 2px outset #D4CFBF;
-            box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.4);
+            box-shadow: 6px 6px 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border-radius: 6px 6px 4px 4px;
         }
 
         .auth-titlebar {
             background: linear-gradient(180deg, #0A246A, #3A6EA5);
             color: #fff;
-            padding: 6px 10px;
-            font-size: 12px;
+            padding: 8px 12px;
+            font-size: 13px;
             font-weight: bold;
             display: flex;
             justify-content: space-between;
             align-items: center;
             text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+            border-radius: 4px 4px 0 0;
         }
 
         .auth-titlebar-btns {
@@ -87,11 +134,11 @@
         }
 
         .win-btn {
-            width: 16px;
-            height: 14px;
+            width: 18px;
+            height: 16px;
             border: 1px solid rgba(0, 0, 0, 0.3);
             border-radius: 2px;
-            font-size: 8px;
+            font-size: 9px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -104,6 +151,45 @@
             background: linear-gradient(180deg, #FFD0D0, #FFB0B0);
         }
 
+        /* Welcome banner */
+        .auth-banner {
+            background: linear-gradient(135deg, #0A246A, #1a3a6e, #2C5F96);
+            padding: 20px 24px;
+            text-align: center;
+            color: #fff;
+            border-bottom: 2px solid #A09880;
+        }
+
+        .banner-icon {
+            font-size: 48px;
+            margin-bottom: 8px;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .banner-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .banner-desc {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
         /* Tabs */
         .auth-tabs {
             display: flex;
@@ -113,13 +199,14 @@
 
         .auth-tab {
             flex: 1;
-            padding: 8px 0;
+            padding: 10px 0;
             text-align: center;
             cursor: pointer;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 13px;
             border-right: 1px solid #C8C3B5;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            letter-spacing: 0.5px;
         }
 
         .auth-tab:last-child {
@@ -139,7 +226,7 @@
 
         /* Form */
         .auth-body {
-            padding: 20px;
+            padding: 24px 28px;
         }
 
         .auth-form {
@@ -151,50 +238,52 @@
         }
 
         .form-group {
-            margin-bottom: 14px;
+            margin-bottom: 16px;
         }
 
         .form-group label {
             display: block;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: bold;
             color: #444;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
         .form-group input {
             width: 100%;
-            padding: 7px 10px;
+            padding: 10px 12px;
             border: 2px inset #b0b0b0;
             font-family: inherit;
-            font-size: 13px;
+            font-size: 14px;
             background: #fff;
             outline: none;
+            border-radius: 3px;
         }
 
         .form-group input:focus {
             border-color: #3A6EA5;
-            box-shadow: 0 0 4px rgba(58, 110, 165, 0.3);
+            box-shadow: 0 0 6px rgba(58, 110, 165, 0.3);
         }
 
         .auth-btn {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background: linear-gradient(180deg, #4A8AD4, #2E6AB0);
             color: #fff;
             border: 2px outset #5A9AE4;
             font-family: inherit;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
             letter-spacing: 1px;
             transition: all 0.2s;
+            border-radius: 3px;
         }
 
         .auth-btn:hover {
             background: linear-gradient(180deg, #5A9AE4, #3A7AC0);
             transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
         }
 
         .auth-btn:active {
@@ -208,9 +297,9 @@
 
         .auth-msg {
             text-align: center;
-            font-size: 11px;
-            margin-top: 12px;
-            padding: 6px;
+            font-size: 12px;
+            margin-top: 14px;
+            padding: 8px;
             border-radius: 3px;
             display: none;
         }
@@ -229,11 +318,11 @@
             border: 1px solid #A2D9CE;
         }
 
-        /* Dialup animation */
+        /* Loading */
         .auth-loading {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 24px;
         }
 
         .auth-loading.active {
@@ -242,7 +331,7 @@
 
         .auth-loading .modem-text {
             font-family: 'Courier New', monospace;
-            font-size: 10px;
+            font-size: 11px;
             color: #0A246A;
             line-height: 1.8;
         }
@@ -263,30 +352,38 @@
             animation: blink 0.8s infinite;
         }
 
-        /* Footer */
-        .auth-footer {
+        /* Features showcase */
+        .auth-features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #D0CCC0;
+        }
+
+        .feature-item {
             text-align: center;
-            margin-top: 12px;
+            padding: 8px 4px;
             font-size: 10px;
-            color: rgba(255, 255, 255, 0.5);
+            color: #666;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 4px;
         }
 
-        .auth-footer a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-        }
-
-        .auth-footer a:hover {
-            color: #fff;
+        .feature-icon {
+            font-size: 20px;
+            display: block;
+            margin-bottom: 4px;
         }
 
         /* Guest link */
         .guest-link {
             display: block;
             text-align: center;
-            margin-top: 12px;
-            font-size: 11px;
-            color: #666;
+            margin-top: 14px;
+            font-size: 12px;
+            color: #555;
         }
 
         .guest-link a {
@@ -297,6 +394,54 @@
 
         .guest-link a:hover {
             text-decoration: underline;
+            color: #1B6AA5;
+        }
+
+        /* Footer */
+        .auth-footer {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .auth-footer a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+        }
+
+        .auth-footer a:hover {
+            color: #fff;
+        }
+
+        /* Password strength */
+        .pass-strength {
+            height: 3px;
+            margin-top: 4px;
+            border-radius: 2px;
+            background: #ddd;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .pass-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+
+        /* Decorative retro elements */
+        .retro-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            font-size: 10px;
+            background: linear-gradient(180deg, #E74C3C, #C0392B);
+            color: #fff;
+            border-radius: 10px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            margin-top: 8px;
         }
     </style>
 </head>
@@ -306,7 +451,9 @@
         <!-- Logo -->
         <div class="auth-logo">
             <a href="index.html">Retro<span>Sesler</span>.com</a>
-            <div class="auth-subtitle">🎙️ sesli & görüntülü sohbet — 2000'lerin ruhu, modern teknoloji</div>
+            <div class="auth-subtitle">🎙️ Sesli & Görüntülü Sohbet — 2000'lerin Ruhu, Modern Teknoloji</div>
+            <div class="auth-tagline">"Her bağlantı bir nostalji, her sohbet bir macera"</div>
+            <div class="retro-badge">🔥 ÜCRETSİZ ÜYELİK</div>
         </div>
 
         <!-- Auth Window -->
@@ -317,6 +464,13 @@
                     <div class="win-btn">—</div>
                     <div class="win-btn" onclick="window.location.href='index.html'">×</div>
                 </div>
+            </div>
+
+            <!-- Welcome Banner -->
+            <div class="auth-banner">
+                <span class="banner-icon">🎙️</span>
+                <div class="banner-title">Hoş Geldin, Retro Kaşif!</div>
+                <div class="banner-desc">Giriş yap veya ücretsiz kayıt ol — 9 farklı sohbet odası seni bekliyor</div>
             </div>
 
             <!-- Tabs -->
@@ -330,12 +484,12 @@
                 <form class="auth-form active" id="login-form" onsubmit="doLogin(event)">
                     <div class="form-group">
                         <label>👤 Kullanıcı Adı (Nick)</label>
-                        <input type="text" id="login-nick" placeholder="Rumuzunuz" required maxlength="20"
+                        <input type="text" id="login-nick" placeholder="Rumuzunuzu girin..." required maxlength="20"
                             autocomplete="username">
                     </div>
                     <div class="form-group">
                         <label>🔒 Şifre</label>
-                        <input type="password" id="login-pass" placeholder="Şifreniz" required minlength="4"
+                        <input type="password" id="login-pass" placeholder="Şifrenizi girin..." required minlength="4"
                             autocomplete="current-password">
                     </div>
                     <button class="auth-btn" type="submit">GİRİŞ YAP ▶</button>
@@ -346,17 +500,20 @@
                 <form class="auth-form" id="register-form" onsubmit="doRegister(event)">
                     <div class="form-group">
                         <label>👤 Kullanıcı Adı (Nick) — benzersiz olmalı</label>
-                        <input type="text" id="reg-nick" placeholder="Örn: retro_kaşif" required maxlength="20"
-                            pattern="[a-zA-Z0-9_çğıöşüÇĞİÖŞÜ]+" title="Sadece harf, rakam ve alt çizgi">
+                        <input type="text" id="reg-nick" placeholder="Örn: retro_kaşif, dj_nostalji" required
+                            maxlength="20" pattern="[a-zA-Z0-9_çğıöşüÇĞİÖŞÜ]+" title="Sadece harf, rakam ve alt çizgi">
                     </div>
                     <div class="form-group">
                         <label>🔒 Şifre (en az 4 karakter)</label>
-                        <input type="password" id="reg-pass" placeholder="Şifreniz" required minlength="4"
-                            autocomplete="new-password">
+                        <input type="password" id="reg-pass" placeholder="Güçlü bir şifre seçin..." required
+                            minlength="4" autocomplete="new-password" oninput="checkStrength(this.value)">
+                        <div class="pass-strength">
+                            <div class="pass-strength-bar" id="strength-bar"></div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>🔒 Şifre Tekrar</label>
-                        <input type="password" id="reg-pass2" placeholder="Şifrenizi tekrar girin" required
+                        <input type="password" id="reg-pass2" placeholder="Şifrenizi tekrar girin..." required
                             minlength="4" autocomplete="new-password">
                     </div>
                     <button class="auth-btn" type="submit">KAYIT OL ▶</button>
@@ -370,8 +527,18 @@
                     </div>
                 </div>
 
+                <!-- Features -->
+                <div class="auth-features">
+                    <div class="feature-item"><span class="feature-icon">🎤</span>Sesli Sohbet</div>
+                    <div class="feature-item"><span class="feature-icon">📹</span>Kamera</div>
+                    <div class="feature-item"><span class="feature-icon">💬</span>Özel Mesaj</div>
+                    <div class="feature-item"><span class="feature-icon">📳</span>MSN Titreşim</div>
+                    <div class="feature-item"><span class="feature-icon">🛡️</span>Admin Panel</div>
+                    <div class="feature-item"><span class="feature-icon">📻</span>Nostalji</div>
+                </div>
+
                 <div class="guest-link">
-                    veya <a href="index.html">misafir olarak devam et →</a>
+                    veya <a href="index.html">👻 misafir olarak devam et →</a>
                 </div>
             </div>
         </div>
@@ -405,6 +572,19 @@
 
         function hideLoading() {
             document.getElementById('auth-loading').classList.remove('active');
+        }
+
+        function checkStrength(pass) {
+            const bar = document.getElementById('strength-bar');
+            let strength = 0;
+            if (pass.length >= 4) strength++;
+            if (pass.length >= 8) strength++;
+            if (/[A-Z]/.test(pass)) strength++;
+            if (/[0-9]/.test(pass)) strength++;
+            if (/[^a-zA-Z0-9]/.test(pass)) strength++;
+            const pct = Math.min(100, strength * 20);
+            bar.style.width = pct + '%';
+            bar.style.background = pct < 40 ? '#E74C3C' : pct < 70 ? '#F39C12' : '#27AE60';
         }
 
         async function doLogin(e) {

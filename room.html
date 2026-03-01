@@ -1418,6 +1418,111 @@
             }
         }
     </style>
+    <style>
+        /* ============ FAZ 6: NUDGE SHAKE ============ */
+        @keyframes msn-shake {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            10% {
+                transform: translate(-8px, -6px);
+            }
+
+            20% {
+                transform: translate(8px, 6px);
+            }
+
+            30% {
+                transform: translate(-6px, 4px);
+            }
+
+            40% {
+                transform: translate(6px, -4px);
+            }
+
+            50% {
+                transform: translate(-4px, 6px);
+            }
+
+            60% {
+                transform: translate(4px, -6px);
+            }
+
+            70% {
+                transform: translate(-6px, 2px);
+            }
+
+            80% {
+                transform: translate(6px, -2px);
+            }
+
+            90% {
+                transform: translate(-2px, 4px);
+            }
+        }
+
+        body.nudge-shake {
+            animation: msn-shake 0.5s ease-in-out;
+        }
+
+        .dm-window.nudge-shake {
+            animation: msn-shake 0.5s ease-in-out;
+        }
+
+        .btn-nudge {
+            padding: 4px 10px;
+            border: 2px solid #E67E22;
+            background: linear-gradient(180deg, #F39C12, #E67E22);
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .btn-nudge:hover {
+            background: linear-gradient(180deg, #F5B041, #F39C12);
+        }
+
+        .btn-nudge:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-nudge.dm-nudge {
+            padding: 3px 8px;
+            font-size: 10px;
+            margin-right: 4px;
+        }
+
+        /* Status message under nick */
+        .user-status-msg {
+            font-size: 10px;
+            color: #8B7D6B;
+            font-style: italic;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+            margin-top: 1px;
+        }
+
+        /* Slap action message */
+        .msg-action {
+            font-style: italic;
+            color: #8B4513;
+            padding: 4px 8px;
+            background: rgba(139, 69, 19, 0.05);
+            border-radius: 3px;
+            border-left: 3px solid #D4A574;
+        }
+    </style>
     <!-- LiveKit Client SDK (yerel sunucu) -->
     <script src="/livekit-sdk/livekit-client.umd.js"></script>
     <script>
@@ -1504,7 +1609,10 @@
 
                 <div class="chat-input-area">
                     <button class="btn-emoji" id="btn-emoji" onclick="toggleEmoji()" title="İfadeler">😀</button>
-                    <textarea class="chat-input" id="chat-input" placeholder="Mesajını yaz..." rows="1"></textarea>
+                    <textarea class="chat-input" id="chat-input"
+                        placeholder="Mesajını yaz... | /slap @nick | /status mesaj | /nudge" rows="1"></textarea>
+                    <button class="btn-nudge" id="btn-nudge" onclick="sendNudge()"
+                        title="MSN Titresim! (5sn bekleme)">📳 Titret</button>
                     <button class="btn-send" id="btn-send" onclick="sendMessage()">GÖNDER ▶</button>
                 </div>
             </div>
@@ -1591,6 +1699,9 @@
         let micEnabled = true;
         let camEnabled = false;
         let soundEnabled = true;
+        const userStatuses = {}; // nick -> status text
+        let myStatus = '';
+        let nudgeCooldown = false;
 
         // Nick: URL'den oku, yoksa localStorage, yoksa rastgele
         const _params = new URLSearchParams(window.location.search);
@@ -1740,12 +1851,22 @@
                         addMessage('chat', { nick: senderNick, text: json.text });
                         sfxMessageIn();
                         clearTypingIndicator(senderNick);
-                        console.log('[LiveKit] Mesaj alındı:', senderNick, '->', json.text);
                     } else if (json.type === 'typing') {
                         showTypingIndicator(senderNick);
                     } else if (json.type === 'dm') {
-                        // Özel mesaj alındı!
                         receiveDM(senderNick, json.text);
+                    } else if (json.type === 'nudge') {
+                        // MSN Titresim!
+                        addMessage('system', { text: '📳 ' + senderNick + ' seni titretti!!!', subtype: 'dj' });
+                        triggerNudgeEffect();
+                    } else if (json.type === 'dm_nudge') {
+                        receiveDMNudge(senderNick);
+                    } else if (json.type === 'slap') {
+                        addMessage('action', { nick: senderNick, target: json.target, text: json.text });
+                        sfxMessageIn();
+                    } else if (json.type === 'status') {
+                        userStatuses[senderNick] = json.text;
+                        renderParticipantList();
                     }
                 } catch (err) {
                     console.error('[LiveKit] Data parse hatası:', err);
@@ -1831,6 +1952,16 @@
                     div.style.cursor = 'pointer';
                     div.title = 'Tıkla → Özel mesaj gönder';
                 }
+
+                // Durum mesajı
+                const statusText = p.isLocal ? myStatus : (userStatuses[p.identity] || '');
+                if (statusText) {
+                    const statusEl = document.createElement('span');
+                    statusEl.className = 'user-status-msg';
+                    statusEl.textContent = '♫ ' + statusText;
+                    div.appendChild(statusEl);
+                }
+
                 list.appendChild(div);
             });
 
@@ -2060,15 +2191,14 @@
             } else if (type === 'pm') {
                 div.className = 'msg msg-pm';
                 div.innerHTML = `<span class="msg-time">[${time}]</span><span class="msg-nick nick-4">[PM] ${escapeHTML(data.nick)}:</span> <span class="msg-text">${escapeHTML(data.text)}</span>`;
+            } else if (type === 'action') {
+                div.className = 'msg msg-action';
+                div.innerHTML = `<span class="msg-time">[${time}]</span> ★ ${data.text}`;
             }
 
             chatEl.appendChild(div);
             chatEl.scrollTop = chatEl.scrollHeight;
-
-            // Keep max 200 messages
-            while (chatEl.children.length > 200) {
-                chatEl.removeChild(chatEl.firstChild);
-            }
+            while (chatEl.children.length > 200) chatEl.removeChild(chatEl.firstChild);
         }
 
         // Hoş geldin mesajı
@@ -2082,14 +2212,69 @@
             let text = inputEl.value.trim();
             if (!text) return;
 
-            // Küfür filtresi uygula
-            text = filterProfanity(text);
+            // === KOMUT KONTROLÜ ===
+            // /slap @nick
+            const slapMatch = text.match(/^\/slap\s+@?(\S+)/i);
+            if (slapMatch) {
+                const target = slapMatch[1];
+                const slapTexts = [
+                    `${userIdentity}, ${target} adlı kişiye büyük bir alabalıkla vurdu! 🐟`,
+                    `${userIdentity}, ${target}'in bilgisayarının fişini çekti! 🔌`,
+                    `${userIdentity}, ${target}'e 56K modemle saldırdı! 📡`,
+                    `${userIdentity}, ${target}'in MSN şifresini değiştirdi! 🔒`,
+                    `${userIdentity}, ${target}'e Windows XP CD'si fırlattı! 💿`,
+                    `${userIdentity}, ${target}'in Winamp'ını kapattı! 🎵`,
+                    `${userIdentity}, ${target}'e dev bir fırıldak hediye etti! 🎀`
+                ];
+                const slapText = slapTexts[Math.floor(Math.random() * slapTexts.length)];
+                addMessage('action', { nick: userIdentity, target, text: slapText });
 
-            // Mesajı kendi ekranına ekle
+                // Broadcast via DataChannel
+                if (livekitRoom && livekitRoom.localParticipant) {
+                    try {
+                        const encoder = new TextEncoder();
+                        const data = encoder.encode(JSON.stringify({ type: 'slap', target, text: slapText }));
+                        await livekitRoom.localParticipant.publishData(data, { reliable: true });
+                    } catch { }
+                }
+                inputEl.value = '';
+                inputEl.focus();
+                return;
+            }
+
+            // /status mesaj
+            const statusMatch = text.match(/^\/status\s+(.+)/i);
+            if (statusMatch) {
+                const statusText = statusMatch[1].substring(0, 40);
+                myStatus = statusText;
+                addMessage('system', { text: '📝 Durum mesajın güncellendi: ' + statusText, subtype: '' });
+                // Broadcast
+                if (livekitRoom && livekitRoom.localParticipant) {
+                    try {
+                        const encoder = new TextEncoder();
+                        const data = encoder.encode(JSON.stringify({ type: 'status', text: statusText }));
+                        await livekitRoom.localParticipant.publishData(data, { reliable: true });
+                    } catch { }
+                }
+                renderParticipantList();
+                inputEl.value = '';
+                inputEl.focus();
+                return;
+            }
+
+            // /nudge komutu
+            if (text.toLowerCase() === '/nudge') {
+                sendNudge();
+                inputEl.value = '';
+                inputEl.focus();
+                return;
+            }
+
+            // Normal mesaj
+            text = filterProfanity(text);
             addMessage('chat', { nick: userIdentity, text: text });
             sfxMessageOut();
 
-            // LiveKit Data Channel ile odadaki herkese gönder
             const sent = await sendDataMessage(text);
             if (!sent) {
                 console.warn('[Chat] LiveKit bağlantısı yok, mesaj sadece yerel gösterildi');
@@ -2426,6 +2611,7 @@
                     <div class="dm-input-area">
                         <input type="text" class="dm-input" id="dm-input-${targetNick}" placeholder="Mesaj yaz..." 
                             onkeydown="if(event.key==='Enter'){sendDM('${targetNick}');event.preventDefault()}">
+                        <button class="btn-nudge dm-nudge" onclick="sendDMNudge('${targetNick}')" title="Titret!">📳</button>
                         <button class="dm-send" onclick="sendDM('${targetNick}')">▶</button>
                     </div>
                 </div>
@@ -2593,6 +2779,99 @@
         function ctxDM() {
             if (!ctxTarget) return;
             openDMWindow(ctxTarget);
+        }
+
+        /* ============ FAZ 6: MSN NUDGE (TİTREŞİM) ============ */
+        function sfxNudge() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                // MSN titresim sesi — sert buzz
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(150, ctx.currentTime);
+                osc.frequency.linearRampToValueAtTime(80, ctx.currentTime + 0.5);
+                gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+                osc.connect(gain).connect(ctx.destination);
+                osc.start(); osc.stop(ctx.currentTime + 0.5);
+            } catch { }
+        }
+
+        function triggerNudgeEffect() {
+            sfxNudge();
+            document.body.classList.add('nudge-shake');
+            setTimeout(() => document.body.classList.remove('nudge-shake'), 600);
+        }
+
+        async function sendNudge() {
+            if (nudgeCooldown) return;
+            nudgeCooldown = true;
+            const btn = document.getElementById('btn-nudge');
+            btn.disabled = true;
+
+            // Kendi ekranda da titrelt
+            addMessage('system', { text: '📳 Herkese titresim gönderdin!', subtype: 'dj' });
+            triggerNudgeEffect();
+
+            // Broadcast
+            if (livekitRoom && livekitRoom.localParticipant) {
+                try {
+                    const encoder = new TextEncoder();
+                    const data = encoder.encode(JSON.stringify({ type: 'nudge' }));
+                    await livekitRoom.localParticipant.publishData(data, { reliable: true });
+                } catch { }
+            }
+
+            // 5sn cooldown
+            let cd = 5;
+            btn.textContent = '⏳ ' + cd + 's';
+            const timer = setInterval(() => {
+                cd--;
+                btn.textContent = '⏳ ' + cd + 's';
+                if (cd <= 0) {
+                    clearInterval(timer);
+                    btn.textContent = '📳 Titret';
+                    btn.disabled = false;
+                    nudgeCooldown = false;
+                }
+            }, 1000);
+        }
+
+        // DM için nudge
+        const dmNudgeCooldowns = {};
+        async function sendDMNudge(targetNick) {
+            if (dmNudgeCooldowns[targetNick]) return;
+            dmNudgeCooldowns[targetNick] = true;
+
+            appendDMMessage(targetNick, 'system', '📳 Titresim gönderdin!');
+
+            if (livekitRoom && livekitRoom.localParticipant) {
+                try {
+                    const encoder = new TextEncoder();
+                    const data = encoder.encode(JSON.stringify({ type: 'dm_nudge' }));
+                    await livekitRoom.localParticipant.publishData(data, {
+                        reliable: true, destinationIdentities: [targetNick]
+                    });
+                } catch { }
+            }
+
+            setTimeout(() => { dmNudgeCooldowns[targetNick] = false; }, 5000);
+        }
+
+        function receiveDMNudge(senderNick) {
+            if (!dmWindows[senderNick]) openDMWindow(senderNick);
+            const win = dmWindows[senderNick];
+            appendDMMessage(senderNick, 'system', '📳 ' + senderNick + ' seni titretti!!!');
+            sfxNudge();
+            // DM penceresini titrelt
+            win.element.classList.add('nudge-shake');
+            setTimeout(() => win.element.classList.remove('nudge-shake'), 600);
+            // Minimize ise blink
+            if (win.minimized) {
+                const btn = document.querySelector('.dm-taskbar-btn[data-nick="' + senderNick + '"]');
+                if (btn) btn.classList.add('blink');
+            }
         }
     </script>
 
