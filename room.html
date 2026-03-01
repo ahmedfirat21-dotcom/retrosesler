@@ -1796,9 +1796,7 @@
                 <div class="chat-input-area">
                     <button class="btn-emoji" id="btn-emoji" onclick="toggleEmoji()" title="İfadeler">😀</button>
                     <textarea class="chat-input" id="chat-input"
-                        placeholder="Mesajını yaz... | /slap @nick | /status mesaj | /nudge" rows="1"></textarea>
-                    <button class="btn-nudge" id="btn-nudge" onclick="sendNudge()"
-                        title="MSN Titresim! (5sn bekleme)">📳 Titret</button>
+                        placeholder="Mesajını yaz... | /slap @nick | /status mesaj" rows="1"></textarea>
                     <button class="btn-send" id="btn-send" onclick="sendMessage()">GÖNDER ▶</button>
                 </div>
             </div>
@@ -2048,10 +2046,6 @@
                         showTypingIndicator(senderNick);
                     } else if (json.type === 'dm') {
                         receiveDM(senderNick, json.text);
-                    } else if (json.type === 'nudge') {
-                        // MSN Titresim!
-                        addMessage('system', { text: '📳 ' + senderNick + ' seni titretti!!!', subtype: 'dj' });
-                        triggerNudgeEffect();
                     } else if (json.type === 'dm_nudge') {
                         receiveDMNudge(senderNick);
                     } else if (json.type === 'slap') {
@@ -2450,14 +2444,6 @@
                     } catch { }
                 }
                 renderParticipantList();
-                inputEl.value = '';
-                inputEl.focus();
-                return;
-            }
-
-            // /nudge komutu
-            if (text.toLowerCase() === '/nudge') {
-                sendNudge();
                 inputEl.value = '';
                 inputEl.focus();
                 return;
@@ -2997,39 +2983,8 @@
             setTimeout(() => document.body.classList.remove('nudge-shake'), 600);
         }
 
-        async function sendNudge() {
-            if (nudgeCooldown) return;
-            nudgeCooldown = true;
-            const btn = document.getElementById('btn-nudge');
-            btn.disabled = true;
 
-            // Kendi ekranda da titrelt
-            addMessage('system', { text: '📳 Herkese titresim gönderdin!', subtype: 'dj' });
-            triggerNudgeEffect();
-
-            // Broadcast
-            if (livekitRoom && livekitRoom.localParticipant) {
-                try {
-                    const encoder = new TextEncoder();
-                    const data = encoder.encode(JSON.stringify({ type: 'nudge' }));
-                    await livekitRoom.localParticipant.publishData(data, { reliable: true });
-                } catch { }
-            }
-
-            // 5sn cooldown
-            let cd = 5;
-            btn.textContent = '⏳ ' + cd + 's';
-            const timer = setInterval(() => {
-                cd--;
-                btn.textContent = '⏳ ' + cd + 's';
-                if (cd <= 0) {
-                    clearInterval(timer);
-                    btn.textContent = '📳 Titret';
-                    btn.disabled = false;
-                    nudgeCooldown = false;
-                }
-            }, 1000);
-        }
+        // Genel nudge kaldırıldı — sadece DM nudge var
 
         // DM için nudge
         const dmNudgeCooldowns = {};
