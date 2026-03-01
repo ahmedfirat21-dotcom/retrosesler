@@ -349,9 +349,219 @@ app.get('/api/me', (req, res) => {
     }
 });
 
+// ============ BAN SİSTEMİ ============
+const BANS_FILE = path.join(DATA_DIR, 'bans.json');
+const LOCKS_FILE = path.join(DATA_DIR, 'locks.json');
+
+function loadBans() {
+    ensureDataDir();
+    if (!fs.existsSync(BANS_FILE)) fs.writeFileSync(BANS_FILE, '[]', 'utf8');
+    try { return JSON.parse(fs.readFileSync(BANS_FILE, 'utf8')); } catch { return []; }
+}
+function saveBans(bans) {
+    ensureDataDir();
+    fs.writeFileSync(BANS_FILE, JSON.stringify(bans, null, 2), 'utf8');
+}
+function loadLocks() {
+    ensureDataDir();
+    if (!fs.existsSync(LOCKS_FILE)) fs.writeFileSync(LOCKS_FILE, '{}', 'utf8');
+    try { return JSON.parse(fs.readFileSync(LOCKS_FILE, 'utf8')); } catch { return {}; }
+}
+function saveLocks(locks) {
+    ensureDataDir();
+    fs.writeFileSync(LOCKS_FILE, JSON.stringify(locks, null, 2), 'utf8');
+}
+function isUserBanned(nick) {
+    const bans = loadBans();
+    const now = new Date();
+    return bans.find(b => b.nick.toLowerCase() === nick.toLowerCase() && (!b.expiresAt || new Date(b.expiresAt) > now));
+}
+
+// ============ JWT AUTH MIDDLEWARE ============
+function requireAuth(req, res, next) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, error: 'Token gerekli' });
+    }
+    try {
+        const decoded = jwt.verify(authHeader.split(' ')[1], JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch {
+        res.status(401).json({ success: false, error: 'Geçersiz token' });
+    }
+}
+
+function requireRole(...roles) {
+    return (req, res, next) => {
+        if (!req.user || !roles.includes(req.user.role)) {
+            return res.status(403).json({ success: false, error: 'Yetkiniz yok' });
+        }
+        next();
+    };
+}
+
+// ============ BAN KONTROLÜ (Token isterken) ============
+const originalGetToken = app._router.stack.find(r => r.route && r.route.path === '/getToken');
+
+// Ban kontrolü middleware — token isteyen kullanıcıyı kontrol et
+app.use('/getToken', (req, res, next) => {
+    const identity = req.query.identity;
+    if (identity) {
+        const ban = isUserBanned(identity);
+        if (ban) {
+            return res.status(403).json({
+                error: 'Yasaklandınız',
+                reason: ban.reason || 'Kural ihlali',
+                expiresAt: ban.expiresAt || 'Süresiz'
+            });
+        }
+    }
+    next();
+});
+
+// ============ ODA KİLİT KONTROLÜ ============
+app.get('/api/room/status', (req, res) => {
+    const { room } = req.query;
+    if (!room) return res.status(400).json({ error: 'room parametresi gerekli' });
+    const locks = loadLocks();
+    res.json({
+        room,
+        locked: !!locks[room],
+        lockedBy: locks[room]?.lockedBy || null,
+        lockedAt: locks[room]?.lockedAt || null
+    });
+});
+
+// ============ ADMIN API ============
+
+// Kullanıcı listesi
+app.get('/api/admin/users', requireAuth, requireRole('admin'), (req, res) => {
+    const users = loadUsers().map(u => ({
+        id: u.id,
+        nick: u.nick,
+        role: u.role,
+        createdAt: u.createdAt
+    }));
+    res.json({ success: true, users });
+});
+
+// Rol değiştir
+app.post('/api/admin/users/role', requireAuth, requireRole('admin'), (req, res) => {
+    const { userId, role } = req.body;
+    if (!userId || !['user', 'mod', 'admin'].includes(role)) {
+        return res.status(400).json({ success: false, error: 'userId ve geçerli role gerekli (user/mod/admin)' });
+    }
+    const users = loadUsers();
+    const user = users.find(u => u.id === userId);
+    if (!user) return res.status(404).json({ success: false, error: 'Kullanıcı bulunamadı' });
+    user.role = role;
+    saveUsers(users);
+    console.log(`[ADMIN] Rol değişikliği: ${user.nick} → ${role}`);
+    res.json({ success: true, nick: user.nick, role });
+});
+
+// Ban listesi
+app.get('/api/admin/bans', requireAuth, requireRole('admin', 'mod'), (req, res) => {
+    const bans = loadBans();
+    res.json({ success: true, bans });
+});
+
+// Ban ekle
+app.post('/api/admin/ban', requireAuth, requireRole('admin', 'mod'), async (req, res) => {
+    const { nick, reason, duration } = req.body;
+    if (!nick) return res.status(400).json({ success: false, error: 'Nick gerekli' });
+
+    let expiresAt = null;
+    if (duration && duration > 0) {
+        expiresAt = new Date(Date.now() + duration * 60 * 1000).toISOString(); // dakika cinsinden
+    }
+
+    const bans = loadBans();
+    // Zaten banlı mı?
+    const existing = bans.findIndex(b => b.nick.toLowerCase() === nick.toLowerCase());
+    if (existing >= 0) bans.splice(existing, 1);
+
+    bans.push({
+        nick,
+        reason: reason || 'Kural ihlali',
+        bannedBy: req.user.nick,
+        bannedAt: new Date().toISOString(),
+        expiresAt
+    });
+    saveBans(bans);
+
+    // LiveKit'ten de at (tüm odalardan)
+    try {
+        const livekitRooms = await svc.listRooms();
+        for (const room of livekitRooms) {
+            try { await svc.removeParticipant(room.name, nick); } catch { }
+        }
+    } catch { }
+
+    console.log(`[ADMIN] Ban: ${nick} by ${req.user.nick} — ${reason || 'sebep yok'}`);
+    res.json({ success: true, message: `${nick} yasaklandı` });
+});
+
+// Ban kaldır
+app.post('/api/admin/unban', requireAuth, requireRole('admin', 'mod'), (req, res) => {
+    const { nick } = req.body;
+    if (!nick) return res.status(400).json({ success: false, error: 'Nick gerekli' });
+
+    const bans = loadBans();
+    const idx = bans.findIndex(b => b.nick.toLowerCase() === nick.toLowerCase());
+    if (idx < 0) return res.status(404).json({ success: false, error: 'Ban kaydı bulunamadı' });
+
+    bans.splice(idx, 1);
+    saveBans(bans);
+    console.log(`[ADMIN] Unban: ${nick} by ${req.user.nick}`);
+    res.json({ success: true, message: `${nick} yasağı kaldırıldı` });
+});
+
+// Oda kilitle
+app.post('/api/admin/room/lock', requireAuth, requireRole('admin', 'mod'), (req, res) => {
+    const { room } = req.body;
+    if (!room) return res.status(400).json({ success: false, error: 'room gerekli' });
+    const locks = loadLocks();
+    locks[room] = { lockedBy: req.user.nick, lockedAt: new Date().toISOString() };
+    saveLocks(locks);
+    console.log(`[ADMIN] Oda kilitlendi: ${room} by ${req.user.nick}`);
+    res.json({ success: true, message: `${room} kilitlendi` });
+});
+
+// Oda kilidini aç
+app.post('/api/admin/room/unlock', requireAuth, requireRole('admin', 'mod'), (req, res) => {
+    const { room } = req.body;
+    if (!room) return res.status(400).json({ success: false, error: 'room gerekli' });
+    const locks = loadLocks();
+    delete locks[room];
+    saveLocks(locks);
+    console.log(`[ADMIN] Oda kilidi açıldı: ${room} by ${req.user.nick}`);
+    res.json({ success: true, message: `${room} kilidi açıldı` });
+});
+
+// İstatistikler
+app.get('/api/admin/stats', requireAuth, requireRole('admin'), async (req, res) => {
+    const users = loadUsers();
+    const bans = loadBans();
+    const locks = loadLocks();
+    let totalOnline = 0;
+    try {
+        const rooms = await svc.listRooms();
+        rooms.forEach(r => totalOnline += r.numParticipants);
+    } catch { }
+    res.json({
+        success: true,
+        totalUsers: users.length,
+        totalBans: bans.length,
+        lockedRooms: Object.keys(locks).length,
+        totalOnline
+    });
+});
+
 // ============ Sunucu başlat ============
 const PORT = process.env.PORT || 3000;
-const HOST = '0.0.0.0'; // Cloud container'lar için gerekli
+const HOST = '0.0.0.0';
 app.listen(PORT, HOST, () => {
     console.log('');
     console.log('  ╔══════════════════════════════════════════╗');
