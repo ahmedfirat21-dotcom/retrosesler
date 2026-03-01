@@ -69,7 +69,7 @@ app.get('/getToken', async (req, res) => {
 });
 
 // ============ Oda Tanımları ============
-const ROOM_DEFS = [
+let ROOM_DEFS = [
     { name: 'Genel Sohbet', max: 200, icon: '💬', category: 'free', badge: 'hot', desc: 'Her konuda serbest sohbet — yeni arkadaşlıklar burada başlıyor!' },
     { name: 'VIP Lounge', max: 50, icon: '👑', category: 'vip', badge: 'vip', desc: 'Sadece VIP üyelere özel — premium sohbet deneyimi' },
     { name: 'Müzik Odası', max: 100, icon: '🎵', category: 'music', badge: 'music', desc: "DJ'ler çalıyor! İstek parça bırak, birlikte dinleyelim 🎧" },
@@ -162,6 +162,44 @@ app.get('/api/rooms', async (req, res) => {
         console.error('[API] /api/rooms hatası:', err);
         res.status(500).json({ error: 'Oda verisi alınamadı' });
     }
+});
+
+// ============ Admin: Oda Yönetimi CRUD ============
+app.get('/api/admin/rooms', (req, res) => {
+    res.json({ success: true, rooms: ROOM_DEFS });
+});
+
+app.post('/api/admin/rooms', express.json(), (req, res) => {
+    if (!checkAdmin(req, res)) return;
+    const { name, max, icon, category, badge, desc } = req.body;
+    if (!name || !max || !category) return res.status(400).json({ error: 'name, max ve category gerekli' });
+    if (ROOM_DEFS.find(r => r.name === name)) return res.status(400).json({ error: 'Bu isimde oda zaten var' });
+    ROOM_DEFS.push({ name, max: parseInt(max), icon: icon || '💬', category, badge: badge || null, desc: desc || '' });
+    roomCache.ts = 0;
+    console.log(`[ADMIN] Oda eklendi: ${name}`);
+    res.json({ success: true, rooms: ROOM_DEFS });
+});
+
+app.put('/api/admin/rooms', express.json(), (req, res) => {
+    if (!checkAdmin(req, res)) return;
+    const { originalName, name, max, icon, category, badge, desc } = req.body;
+    const idx = ROOM_DEFS.findIndex(r => r.name === originalName);
+    if (idx === -1) return res.status(404).json({ error: 'Oda bulunamadı' });
+    ROOM_DEFS[idx] = { name: name || originalName, max: parseInt(max) || ROOM_DEFS[idx].max, icon: icon || ROOM_DEFS[idx].icon, category: category || ROOM_DEFS[idx].category, badge: badge || null, desc: desc || '' };
+    roomCache.ts = 0;
+    console.log(`[ADMIN] Oda düzenlendi: ${originalName} → ${name || originalName}`);
+    res.json({ success: true, rooms: ROOM_DEFS });
+});
+
+app.delete('/api/admin/rooms', express.json(), (req, res) => {
+    if (!checkAdmin(req, res)) return;
+    const { name } = req.body;
+    const idx = ROOM_DEFS.findIndex(r => r.name === name);
+    if (idx === -1) return res.status(404).json({ error: 'Oda bulunamadı' });
+    ROOM_DEFS.splice(idx, 1);
+    roomCache.ts = 0;
+    console.log(`[ADMIN] Oda silindi: ${name}`);
+    res.json({ success: true, rooms: ROOM_DEFS });
 });
 
 // ============ Moderasyon: Admin Doğrulama ============
