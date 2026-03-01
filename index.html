@@ -1632,10 +1632,10 @@
                     localStorage.setItem('retrosesler_avatar', selectedAvatar);
                     setTimeout(closeProfileEditor, 1000);
                 } else {
-                    document.getElementById('profile-save-msg').innerHTML = '<span style="color:#E74C3C">❌ ' + data.error + '</span>';
+                    document.getElementById('profile-save-msg').innerHTML = '<span style="color:#E74C3C">❌ ' + escapeHTML(data.error) + '</span>';
                 }
             } catch (err) {
-                document.getElementById('profile-save-msg').innerHTML = '<span style="color:#E74C3C">❌ Hata: ' + err.message + '</span>';
+                document.getElementById('profile-save-msg').innerHTML = '<span style="color:#E74C3C">❌ Hata: ' + escapeHTML(err.message) + '</span>';
             }
         }
 

@@ -2248,7 +2248,7 @@
 
                 div.innerHTML = `
                     <span class="user-dot on"></span>
-                    <span class="user-nick ${nickClass}">${p.identity}</span>
+                    <span class="user-nick ${nickClass}">${escapeHTML(p.identity)}</span>
                     ${badgeHTML}
                     <span class="user-icons">${iconsHTML}</span>
                 `;
@@ -2402,7 +2402,7 @@
             } else {
                 text = names.length + ' kişi yazıyor';
             }
-            typingEl.innerHTML = `${text}<span class="typing-dots"><span></span><span></span><span></span></span>`;
+            typingEl.innerHTML = `${escapeHTML(text)}<span class="typing-dots"><span></span><span></span><span></span></span>`;
         }
 
         // Typing event gönder (debounce)
