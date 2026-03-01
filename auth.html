@@ -450,7 +450,7 @@
     <div class="auth-container">
         <!-- Logo -->
         <div class="auth-logo">
-            <a href="index.html">Retro<span>Sesler</span>.com</a>
+            <a href="/">Retro<span>Sesler</span>.com</a>
             <div class="auth-subtitle">🎙️ Sesli & Görüntülü Sohbet — 2000'lerin Ruhu, Modern Teknoloji</div>
             <div class="auth-tagline">"Her bağlantı bir nostalji, her sohbet bir macera"</div>
             <div class="retro-badge">🔥 ÜCRETSİZ ÜYELİK</div>
@@ -462,7 +462,7 @@
                 <span>🔐 Kullanıcı Girişi — RetroSesler.com</span>
                 <div class="auth-titlebar-btns">
                     <div class="win-btn">—</div>
-                    <div class="win-btn" onclick="window.location.href='index.html'">×</div>
+                    <div class="win-btn" onclick="window.location.href='/'">×</div>
                 </div>
             </div>
 
@@ -538,13 +538,13 @@
                 </div>
 
                 <div class="guest-link">
-                    veya <a href="index.html">👻 misafir olarak devam et →</a>
+                    veya <a href="/">👻 misafir olarak devam et →</a>
                 </div>
             </div>
         </div>
 
         <div class="auth-footer">
-            © 2025 <a href="index.html">RetroSesler.com</a> — Tüm hakları saklıdır.
+            © 2025 <a href="/">RetroSesler.com</a> — Tüm hakları saklıdır.
         </div>
     </div>
 
@@ -608,7 +608,7 @@
                     localStorage.setItem('retrosesler_nick', data.nick);
                     localStorage.setItem('retrosesler_role', data.role || 'user');
                     showMsg('login-msg', '✅ Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
-                    setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+                    setTimeout(() => { window.location.href = '/'; }, 1000);
                 } else {
                     showMsg('login-msg', '❌ ' + (data.error || 'Giriş başarısız'), 'error');
                 }
@@ -645,7 +645,7 @@
                     localStorage.setItem('retrosesler_nick', data.nick);
                     localStorage.setItem('retrosesler_role', data.role || 'user');
                     showMsg('reg-msg', '✅ Kayıt başarılı! Yönlendiriliyorsunuz...', 'success');
-                    setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+                    setTimeout(() => { window.location.href = '/'; }, 1000);
                 } else {
                     showMsg('reg-msg', '❌ ' + (data.error || 'Kayıt başarısız'), 'error');
                 }
@@ -661,7 +661,7 @@
             fetch('/api/me', {
                 headers: { 'Authorization': 'Bearer ' + existingToken }
             }).then(r => r.json()).then(d => {
-                if (d.success) window.location.href = 'index.html';
+                if (d.success) window.location.href = '/';
             }).catch(() => { });
         }
     </script>
