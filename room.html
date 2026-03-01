@@ -2824,6 +2824,9 @@
         // Hoş geldin mesajı
         addMessage('system', { text: '🔌 Odaya bağlandınız — Hoş geldiniz!', subtype: 'join' });
         addMessage('system', { text: '📜 Oda kuralları: Saygılı olun, küfür yasaktır, eğlenin! /kurallar ile detaylar.' });
+        if (!roomCapabilities.cam) {
+            addMessage('system', { text: '📹 Bu oda kamerasız bir odadır — kamera özelliği aktif değil.', subtype: '' });
+        }
 
         /* ============ SEND MESSAGE — Data Channel ============ */
         const inputEl = document.getElementById('chat-input');
