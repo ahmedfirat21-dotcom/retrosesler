@@ -1185,6 +1185,238 @@
             color: #999;
             font-style: italic;
         }
+
+        /* ============ DM POPUP WINDOWS ============ */
+        #dm-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 900;
+        }
+
+        .dm-window {
+            position: absolute;
+            width: 340px;
+            min-height: 300px;
+            background: linear-gradient(180deg, #FAFAF5, #F0EDE4);
+            border: 2px solid #7B7B6E;
+            border-radius: 6px 6px 4px 4px;
+            box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            display: flex;
+            flex-direction: column;
+            pointer-events: all;
+            animation: dm-open 0.3s ease;
+        }
+
+        @keyframes dm-open {
+            from {
+                transform: scale(0.7);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .dm-titlebar {
+            background: linear-gradient(180deg, #6B8CC5, #3A6EA5, #2C5F96);
+            padding: 5px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 4px 4px 0 0;
+            cursor: move;
+            user-select: none;
+        }
+
+        .dm-title {
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+        }
+
+        .dm-titlebar-btns {
+            display: flex;
+            gap: 3px;
+        }
+
+        .dm-btn {
+            width: 18px;
+            height: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            border-radius: 2px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .dm-minimize {
+            background: linear-gradient(180deg, #C0C0C0, #A0A0A0);
+            color: #333;
+        }
+
+        .dm-minimize:hover {
+            background: #B0B0B0;
+        }
+
+        .dm-close {
+            background: linear-gradient(180deg, #E06050, #C04030);
+        }
+
+        .dm-close:hover {
+            background: #D03020;
+        }
+
+        .dm-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dm-messages {
+            flex: 1;
+            min-height: 180px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 8px;
+            font-size: 12px;
+            line-height: 1.5;
+            background: #fff;
+            border: 1px inset #C0C0C0;
+            margin: 6px;
+        }
+
+        .dm-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .dm-messages::-webkit-scrollbar-thumb {
+            background: #A0A090;
+            border-radius: 3px;
+        }
+
+        .dm-msg {
+            padding: 2px 0;
+            animation: msg-in 0.2s ease;
+        }
+
+        .dm-sent {
+            color: #2C3E50;
+        }
+
+        .dm-received {
+            color: #8B0000;
+        }
+
+        .dm-system {
+            color: #7F8C8D;
+            font-size: 11px;
+            font-style: italic;
+        }
+
+        .dm-time {
+            color: #999;
+            font-size: 10px;
+        }
+
+        .dm-input-area {
+            display: flex;
+            gap: 4px;
+            padding: 6px;
+            border-top: 1px solid #D0D0C0;
+            background: #F0EDE4;
+            border-radius: 0 0 4px 4px;
+        }
+
+        .dm-input {
+            flex: 1;
+            padding: 5px 8px;
+            border: 2px solid #A09880;
+            border-radius: 3px;
+            font-size: 12px;
+            font-family: inherit;
+            background: #fff;
+            outline: none;
+        }
+
+        .dm-input:focus {
+            border-color: #3498DB;
+        }
+
+        .dm-send {
+            padding: 4px 12px;
+            border: 2px solid #2980B9;
+            background: linear-gradient(180deg, #3498DB, #2980B9);
+            color: #fff;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .dm-send:hover {
+            background: linear-gradient(180deg, #5DADE2, #3498DB);
+        }
+
+        /* DM Taskbar */
+        #dm-taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            gap: 4px;
+            padding: 4px 8px;
+            background: linear-gradient(180deg, #3A6EA5, #2C5F96);
+            border-radius: 6px 6px 0 0;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+            z-index: 950;
+        }
+
+        .dm-taskbar-btn {
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            color: #fff;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dm-taskbar-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .dm-taskbar-btn.minimized {
+            background: rgba(255, 255, 255, 0.05);
+            opacity: 0.7;
+        }
+
+        .dm-taskbar-btn.blink {
+            animation: dm-blink 0.5s ease infinite;
+        }
+
+        @keyframes dm-blink {
+
+            0%,
+            100% {
+                background: rgba(255, 255, 255, 0.15);
+            }
+
+            50% {
+                background: #E74C3C;
+            }
+        }
     </style>
     <!-- LiveKit Client SDK (yerel sunucu) -->
     <script src="/livekit-sdk/livekit-client.umd.js"></script>
@@ -1497,7 +1729,7 @@
                 renderParticipantList();
             });
 
-            // Data Channel — Gerçek zamanlı sohbet mesajları + yazıyor göstergesi
+            // Data Channel — Gerçek zamanlı sohbet mesajları + yazıyor göstergesi + DM
             room.on(RoomEvent.DataReceived, (payload, participant, kind) => {
                 try {
                     const decoder = new TextDecoder();
@@ -1511,6 +1743,9 @@
                         console.log('[LiveKit] Mesaj alındı:', senderNick, '->', json.text);
                     } else if (json.type === 'typing') {
                         showTypingIndicator(senderNick);
+                    } else if (json.type === 'dm') {
+                        // Özel mesaj alındı!
+                        receiveDM(senderNick, json.text);
                     }
                 } catch (err) {
                     console.error('[LiveKit] Data parse hatası:', err);
@@ -1589,10 +1824,12 @@
                     ${badgeHTML}
                     <span class="user-icons">${iconsHTML}</span>
                 `;
-                // Sağ-tık menüsü (moderation)
+                // Sol-tık: DM aç | Sağ-tık: moderasyon menüsü
                 if (!p.isLocal) {
+                    div.addEventListener('click', (e) => { e.preventDefault(); openDMWindow(p.identity); });
                     div.addEventListener('contextmenu', (e) => showCtxMenu(e, p.identity));
-                    div.style.cursor = 'context-menu';
+                    div.style.cursor = 'pointer';
+                    div.title = 'Tıkla → Özel mesaj gönder';
                 }
                 list.appendChild(div);
             });
@@ -2129,10 +2366,239 @@
             if (!ctxTarget) return;
             addMessage('system', { text: `📢 ${ctxTarget} şikayet edildi. Teşekkürler!`, subtype: '' });
         }
+
+        /* ============ FAZ 5: ÖZEL MESAJ (DM / FISILDAMA) SİSTEMİ ============ */
+        const dmWindows = {}; // { nick: { element, messages[], minimized } }
+        let dmZIndex = 1000;
+        let dmWindowOffset = 0;
+
+        // DM ses efekti
+        function sfxDM() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                // MSN "nudge" benzeri ses
+                [523.25, 659.25, 783.99].forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(0.15, ctx.currentTime + i * 0.12);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.12 + 0.2);
+                    osc.connect(gain).connect(ctx.destination);
+                    osc.start(ctx.currentTime + i * 0.12);
+                    osc.stop(ctx.currentTime + i * 0.12 + 0.2);
+                });
+            } catch { }
+        }
+
+        // DM penceresi oluştur
+        function openDMWindow(targetNick) {
+            if (dmWindows[targetNick]) {
+                // Zaten açık — öne getir ve büyüt
+                const win = dmWindows[targetNick];
+                win.element.style.display = 'flex';
+                win.minimized = false;
+                win.element.style.zIndex = ++dmZIndex;
+                win.element.querySelector('.dm-input').focus();
+                updateDMTaskbar();
+                return;
+            }
+
+            const container = document.getElementById('dm-container');
+            const win = document.createElement('div');
+            win.className = 'dm-window';
+            win.style.zIndex = ++dmZIndex;
+            // Offset each new window
+            const offset = (dmWindowOffset++ % 5) * 30;
+            win.style.left = (200 + offset) + 'px';
+            win.style.top = (100 + offset) + 'px';
+
+            win.innerHTML = `
+                <div class="dm-titlebar" onmousedown="startDragDM(event, '${targetNick}')">
+                    <span class="dm-title">💬 ${escapeHTML(targetNick)} — Özel Mesaj</span>
+                    <div class="dm-titlebar-btns">
+                        <div class="dm-btn dm-minimize" onclick="minimizeDM('${targetNick}')">—</div>
+                        <div class="dm-btn dm-close" onclick="closeDM('${targetNick}')">×</div>
+                    </div>
+                </div>
+                <div class="dm-body">
+                    <div class="dm-messages" id="dm-msgs-${targetNick}"></div>
+                    <div class="dm-input-area">
+                        <input type="text" class="dm-input" id="dm-input-${targetNick}" placeholder="Mesaj yaz..." 
+                            onkeydown="if(event.key==='Enter'){sendDM('${targetNick}');event.preventDefault()}">
+                        <button class="dm-send" onclick="sendDM('${targetNick}')">▶</button>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(win);
+            dmWindows[targetNick] = { element: win, messages: [], minimized: false };
+
+            // Sistem mesajı
+            appendDMMessage(targetNick, 'system', '💬 ' + targetNick + ' ile özel mesajlaşma başladı. Mesajlarınız yalnızca aranızda görünür.');
+
+            updateDMTaskbar();
+            win.querySelector('.dm-input').focus();
+        }
+
+        // DM mesajı ekle
+        function appendDMMessage(targetNick, type, text, senderNick) {
+            if (!dmWindows[targetNick]) return;
+            const msgsEl = document.getElementById('dm-msgs-' + targetNick);
+            if (!msgsEl) return;
+            const div = document.createElement('div');
+            const now = new Date();
+            const time = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+            if (type === 'sent') {
+                div.className = 'dm-msg dm-sent';
+                div.innerHTML = `<span class="dm-time">[${time}]</span> <b style="color:#2980B9">Sen:</b> ${escapeHTML(text)}`;
+            } else if (type === 'received') {
+                div.className = 'dm-msg dm-received';
+                div.innerHTML = `<span class="dm-time">[${time}]</span> <b style="color:#E74C3C">${escapeHTML(senderNick || targetNick)}:</b> ${escapeHTML(text)}`;
+            } else if (type === 'system') {
+                div.className = 'dm-msg dm-system';
+                div.innerHTML = `<span class="dm-time">[${time}]</span> <i>${text}</i>`;
+            }
+
+            msgsEl.appendChild(div);
+            msgsEl.scrollTop = msgsEl.scrollHeight;
+        }
+
+        // DM gönder
+        async function sendDM(targetNick) {
+            const inputEl = document.getElementById('dm-input-' + targetNick);
+            if (!inputEl) return;
+            const text = inputEl.value.trim();
+            if (!text) return;
+
+            // Ekranda göster
+            appendDMMessage(targetNick, 'sent', text);
+            inputEl.value = '';
+            inputEl.focus();
+
+            // LiveKit DataChannel ile sadece o kullanıcıya gönder
+            if (livekitRoom && livekitRoom.localParticipant) {
+                try {
+                    const encoder = new TextEncoder();
+                    const data = encoder.encode(JSON.stringify({
+                        type: 'dm',
+                        text: text,
+                        timestamp: Date.now()
+                    }));
+                    await livekitRoom.localParticipant.publishData(data, {
+                        reliable: true,
+                        destinationIdentities: [targetNick]
+                    });
+                    console.log('[DM] Gönderildi:', targetNick, '->', text);
+                } catch (err) {
+                    console.error('[DM] Gönderme hatası:', err);
+                    appendDMMessage(targetNick, 'system', '❌ Mesaj gönderilemedi: ' + err.message);
+                }
+            } else {
+                appendDMMessage(targetNick, 'system', '⚠️ LiveKit bağlantısı yok, mesaj gönderilemedi.');
+            }
+        }
+
+        // DM al
+        function receiveDM(senderNick, text) {
+            // Pencere yoksa oluştur
+            if (!dmWindows[senderNick]) {
+                openDMWindow(senderNick);
+            }
+            appendDMMessage(senderNick, 'received', text, senderNick);
+            sfxDM();
+
+            // Minimize ise yanıp sönsün
+            if (dmWindows[senderNick].minimized) {
+                const btn = document.querySelector('.dm-taskbar-btn[data-nick="' + senderNick + '"]');
+                if (btn) btn.classList.add('blink');
+            }
+
+            // Ana chat'e bildirim
+            addMessage('pm', { nick: senderNick, text: text });
+        }
+
+        // Minimize
+        function minimizeDM(nick) {
+            if (!dmWindows[nick]) return;
+            dmWindows[nick].element.style.display = 'none';
+            dmWindows[nick].minimized = true;
+            updateDMTaskbar();
+        }
+
+        // Kapat
+        function closeDM(nick) {
+            if (!dmWindows[nick]) return;
+            dmWindows[nick].element.remove();
+            delete dmWindows[nick];
+            updateDMTaskbar();
+        }
+
+        // Taskbar güncelle
+        function updateDMTaskbar() {
+            const bar = document.getElementById('dm-taskbar');
+            const nicks = Object.keys(dmWindows);
+            if (nicks.length === 0) { bar.style.display = 'none'; return; }
+            bar.style.display = 'flex';
+            bar.innerHTML = nicks.map(nick => {
+                const win = dmWindows[nick];
+                return `<div class="dm-taskbar-btn ${win.minimized ? 'minimized' : ''}" data-nick="${nick}" onclick="toggleDMWindow('${nick}')">
+                    💬 ${escapeHTML(nick)}
+                </div>`;
+            }).join('');
+        }
+
+        function toggleDMWindow(nick) {
+            if (!dmWindows[nick]) return;
+            const win = dmWindows[nick];
+            if (win.minimized) {
+                win.element.style.display = 'flex';
+                win.minimized = false;
+                win.element.style.zIndex = ++dmZIndex;
+                win.element.querySelector('.dm-input').focus();
+                // blink kaldır
+                const btn = document.querySelector('.dm-taskbar-btn[data-nick="' + nick + '"]');
+                if (btn) btn.classList.remove('blink');
+            } else {
+                win.element.style.display = 'none';
+                win.minimized = true;
+            }
+            updateDMTaskbar();
+        }
+
+        // Drag & drop DM penceresi
+        let dragDM = null;
+        let dragOffsetX = 0, dragOffsetY = 0;
+
+        function startDragDM(e, nick) {
+            if (!dmWindows[nick]) return;
+            dragDM = dmWindows[nick].element;
+            dragDM.style.zIndex = ++dmZIndex;
+            const rect = dragDM.getBoundingClientRect();
+            dragOffsetX = e.clientX - rect.left;
+            dragOffsetY = e.clientY - rect.top;
+            e.preventDefault();
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            if (!dragDM) return;
+            dragDM.style.left = (e.clientX - dragOffsetX) + 'px';
+            dragDM.style.top = (e.clientY - dragOffsetY) + 'px';
+        });
+
+        document.addEventListener('mouseup', () => { dragDM = null; });
+
+        // Context menu'ye DM seçeneği ekle
+        function ctxDM() {
+            if (!ctxTarget) return;
+            openDMWindow(ctxTarget);
+        }
     </script>
 
-    <!-- Context Menu -->
     <div class="ctx-menu" id="ctx-menu">
+        <div class="ctx-item" onclick="ctxDM()">💬 Özel Mesaj</div>
+        <div class="ctx-sep"></div>
         <div class="ctx-item ctx-admin" onclick="ctxKick()">🚫 Odadan At</div>
         <div class="ctx-item ctx-admin" onclick="ctxMute()">🔇 Sustur</div>
         <div class="ctx-sep ctx-admin"></div>
@@ -2160,6 +2626,10 @@
             </div>
         </div>
     </div>
+
+    <!-- DM Container & Taskbar -->
+    <div id="dm-container"></div>
+    <div id="dm-taskbar"></div>
 </body>
 
 </html>
