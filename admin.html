@@ -465,8 +465,48 @@
 
             <!-- Rooms Panel -->
             <div class="panel" style="grid-column: span 2">
-                <div class="panel-header">🏠 Oda Yönetimi</div>
-                <div class="panel-body" id="rooms-panel"></div>
+                <div class="panel-header">
+                    🏠 Oda Yönetimi
+                    <button class="act-btn act-unlock"
+                        onclick="document.getElementById('add-room-form').style.display=document.getElementById('add-room-form').style.display==='none'?'block':'none'">+
+                        Yeni Oda</button>
+                </div>
+                <div class="panel-body">
+                    <!-- Add Room Form -->
+                    <div id="add-room-form"
+                        style="display:none;background:#1a2642;border:1px solid #2C3E50;border-radius:4px;padding:12px;margin-bottom:12px">
+                        <div style="font-weight:bold;margin-bottom:8px;color:#85C1E9">🆕 Yeni Oda Ekle</div>
+                        <div class="form-row">
+                            <input class="form-input" id="room-name" placeholder="Oda Adı (ör: Dans Pisti)"
+                                style="flex:2">
+                            <input class="form-input" id="room-icon" placeholder="🎵 Icon" style="flex:0.5">
+                            <select class="form-select" id="room-category">
+                                <option value="free">Serbest</option>
+                                <option value="cam">Kamera</option>
+                                <option value="music">Müzik</option>
+                                <option value="vip">VIP</option>
+                                <option value="hot">Gece</option>
+                            </select>
+                            <input class="form-input" id="room-max" placeholder="Kapasite" type="number" value="50"
+                                style="flex:0.5">
+                        </div>
+                        <div class="form-row">
+                            <select class="form-select" id="room-badge">
+                                <option value="">Rozet Yok</option>
+                                <option value="hot">POPÜLER</option>
+                                <option value="new">YENİ</option>
+                                <option value="vip">VIP</option>
+                                <option value="vip-new">VIP+YENİ</option>
+                                <option value="music">MÜZİK</option>
+                                <option value="cam">KAMERA</option>
+                            </select>
+                            <input class="form-input" id="room-desc" placeholder="Açıklama" style="flex:3">
+                            <button class="act-btn act-unlock" onclick="addRoom()" style="white-space:nowrap">✅ Oda
+                                Ekle</button>
+                        </div>
+                    </div>
+                    <div id="rooms-panel"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -480,10 +520,7 @@
             'Authorization': 'Bearer ' + token
         };
 
-        const ROOMS = [
-            'Genel Sohbet', 'VIP Lounge', 'Müzik Odası', 'Kamera Odası 1',
-            'Gece Kulübü', 'VIP Gold', 'Rock & Metal', 'Kamera Odası 2', 'Nostalji Köşesi'
-        ];
+        const ADMIN_SECRET = 'retro2024admin';
 
         // Auth check
         async function checkAuth() {
@@ -583,40 +620,92 @@
             } catch { }
         }
 
-        // Rooms
+        // Rooms — dinamik API'den çek
+        const categoryLabels = { free: 'Serbest', cam: 'Kamera', music: 'Müzik', vip: 'VIP', hot: 'Gece' };
         async function loadRooms() {
             try {
-                const [roomRes] = await Promise.all([fetch('/api/rooms')]);
+                const [roomRes, liveRes] = await Promise.all([
+                    fetch('/api/admin/rooms'),
+                    fetch('/api/rooms')
+                ]);
                 const roomData = await roomRes.json();
+                const liveData = await liveRes.json();
                 const panel = document.getElementById('rooms-panel');
-                let html = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">';
-                for (const name of ROOMS) {
-                    const rd = roomData.rooms?.find(r => r.name === name);
-                    const count = rd ? rd.participants : 0;
-                    // Check lock status
-                    let lockRes;
-                    try {
-                        lockRes = await fetch('/api/room/status?room=' + encodeURIComponent(name));
-                        lockRes = await lockRes.json();
-                    } catch { lockRes = { locked: false }; }
+                if (!roomData.success) { panel.innerHTML = '<div style="color:#E74C3C">Oda verisi alınamadı</div>'; return; }
 
-                    const isLocked = lockRes.locked;
-                    html += `
-                        <div class="room-card ${isLocked ? 'room-locked' : ''}">
-                            <div class="room-card-info">
-                                <div class="room-card-name">${isLocked ? '🔒' : '🏠'} ${esc(name)}</div>
-                                <div class="room-card-meta">👥 ${count} kişi ${isLocked ? '— <span style="color:#E74C3C">KİLİTLİ</span>' : ''}</div>
-                            </div>
-                            ${isLocked
-                            ? `<button class="act-btn act-unlock" onclick="unlockRoom('${esc(name)}')">🔓 Aç</button>`
-                            : `<button class="act-btn act-lock" onclick="lockRoom('${esc(name)}')">🔒 Kilitle</button>`
-                        }
-                        </div>
-                    `;
+                let html = '<table><thead><tr><th>Icon</th><th>Oda Adı</th><th>Kategori</th><th>Kapasite</th><th>Açıklama</th><th>İşlemler</th></tr></thead><tbody>';
+                for (const room of roomData.rooms) {
+                    const live = liveData.rooms?.find(r => r.name === room.name);
+                    const count = live ? live.participants : 0;
+                    html += `<tr>
+                        <td style="font-size:20px;text-align:center">${room.icon}</td>
+                        <td><b>${esc(room.name)}</b></td>
+                        <td><span class="role-badge" style="background:#3498DB">${categoryLabels[room.category] || room.category}</span></td>
+                        <td>${count}/${room.max}</td>
+                        <td style="font-size:11px;color:#7F8C8D;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(room.desc || '')}</td>
+                        <td>
+                            <button class="act-btn act-role" onclick="editRoom('${esc(room.name)}')">✏️ Düzenle</button>
+                            <button class="act-btn act-ban" onclick="deleteRoom('${esc(room.name)}')">🗑️ Sil</button>
+                        </td>
+                    </tr>`;
                 }
-                html += '</div>';
+                html += '</tbody></table>';
                 panel.innerHTML = html;
-            } catch { }
+            } catch (e) { console.error('loadRooms hatası:', e); }
+        }
+
+        async function addRoom() {
+            const name = document.getElementById('room-name').value.trim();
+            const icon = document.getElementById('room-icon').value.trim() || '💬';
+            const category = document.getElementById('room-category').value;
+            const max = document.getElementById('room-max').value || 50;
+            const badge = document.getElementById('room-badge').value || null;
+            const desc = document.getElementById('room-desc').value.trim();
+            if (!name) { toast('Oda adı gerekli', true); return; }
+            try {
+                const res = await fetch('/api/admin/rooms', {
+                    method: 'POST',
+                    headers: { ...API_HEADERS, 'x-admin-token': ADMIN_SECRET },
+                    body: JSON.stringify({ name, icon, category, max, badge, desc })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    toast('✅ ' + name + ' odası eklendi!');
+                    document.getElementById('room-name').value = '';
+                    document.getElementById('room-desc').value = '';
+                    document.getElementById('add-room-form').style.display = 'none';
+                    loadRooms();
+                    loadStats();
+                } else { toast(data.error, true); }
+            } catch (e) { toast('Hata: ' + e.message, true); }
+        }
+
+        function editRoom(name) {
+            const newName = prompt('Yeni oda adı:', name);
+            if (!newName || newName === name) {
+                const newMax = prompt('Yeni kapasite:');
+                if (!newMax) return;
+                fetch('/api/admin/rooms', {
+                    method: 'PUT',
+                    headers: { ...API_HEADERS, 'x-admin-token': ADMIN_SECRET },
+                    body: JSON.stringify({ originalName: name, name, max: parseInt(newMax) })
+                }).then(r => r.json()).then(d => { toast(d.success ? '✅ Güncellendi' : d.error, !d.success); loadRooms(); });
+                return;
+            }
+            fetch('/api/admin/rooms', {
+                method: 'PUT',
+                headers: { ...API_HEADERS, 'x-admin-token': ADMIN_SECRET },
+                body: JSON.stringify({ originalName: name, name: newName })
+            }).then(r => r.json()).then(d => { toast(d.success ? '✅ ' + name + ' → ' + newName : d.error, !d.success); loadRooms(); });
+        }
+
+        function deleteRoom(name) {
+            if (!confirm('⚠️ "' + name + '" odasını silmek istediğinize emin misiniz?')) return;
+            fetch('/api/admin/rooms', {
+                method: 'DELETE',
+                headers: { ...API_HEADERS, 'x-admin-token': ADMIN_SECRET },
+                body: JSON.stringify({ name })
+            }).then(r => r.json()).then(d => { toast(d.success ? '🗑️ ' + name + ' silindi' : d.error, !d.success); loadRooms(); loadStats(); });
         }
 
         // Actions
