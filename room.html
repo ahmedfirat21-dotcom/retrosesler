@@ -1699,7 +1699,7 @@
     <!-- ============ TOP BAR ============ -->
     <div class="topbar">
         <div class="topbar-left">
-            <a class="topbar-logo" href="index.html">Retro<span>Sesler</span>.com</a>
+            <a class="topbar-logo" href="/">Retro<span>Sesler</span>.com</a>
             <div class="topbar-sep"></div>
             <div class="topbar-room-name">
                 <span class="room-emoji" id="room-emoji">💬</span>
@@ -1709,7 +1709,7 @@
         <div class="topbar-right">
             <div class="topbar-stat"><span class="topbar-dot"></span> Odada: <b id="room-user-count">124</b></div>
             <div class="topbar-stat">⏰ <span id="clock">22:13</span></div>
-            <a class="btn-lobby" href="index.html">🚪 Lobiye Dön</a>
+            <a class="btn-lobby" href="/">🚪 Lobiye Dön</a>
         </div>
     </div>
 
@@ -2332,7 +2332,7 @@
         async function leaveRoom(e) {
             e.preventDefault();
             await disconnectFromLiveKit();
-            window.location.href = 'index.html';
+            window.location.href = '/';
         }
 
         /* ============ QUERY PARAMS ============ */

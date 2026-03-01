@@ -13,11 +13,16 @@ app.use(cors());
 app.use(express.json()); // Moderation API için JSON body parser
 
 // ============ Statik dosya sunumu ============
-// admin.html'e doğrudan erişimi engelle
-app.get('/admin.html', (req, res) => res.status(404).send('Sayfa bulunamadı'));
-// Gizli admin yolu
+// .html uzantılı dosyalara doğrudan erişimi engelle (index.html hariç - root'ta sunulur)
+app.get('*.html', (req, res, next) => {
+    if (req.path === '/index.html') return res.redirect('/');
+    return res.status(404).send('Sayfa bulunamadı');
+});
+// Temiz URL rotaları
+app.get('/giris', (req, res) => res.sendFile(path.join(__dirname, 'auth.html')));
+app.get('/oda', (req, res) => res.sendFile(path.join(__dirname, 'room.html')));
 app.get('/yonetim-r3tro', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
-// index.html, room.html vb. doğrudan sunulur
+// Statik dosyalar (CSS, JS, resimler vb.)
 app.use(express.static(__dirname));
 
 // LiveKit client SDK'yı node_modules'dan sun

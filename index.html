@@ -840,8 +840,8 @@
                         style="font-size:10px;color:#8B7D6B;font-style:italic;margin:4px 0"></div>
                     <div class="user-status" id="profile-status">● Misafir</div>
                     <div class="user-actions" id="profile-actions">
-                        <button class="user-btn" onclick="window.location.href='auth.html'">🔑 Giriş Yap</button>
-                        <button class="user-btn" onclick="window.location.href='auth.html'">📝 Kayıt Ol</button>
+                        <button class="user-btn" onclick="window.location.href='/giris'">🔑 Giriş Yap</button>
+                        <button class="user-btn" onclick="window.location.href='/giris'">📝 Kayıt Ol</button>
                     </div>
                 </div>
             </div>
@@ -1221,8 +1221,8 @@
             document.getElementById('profile-bio').textContent = '';
             document.getElementById('profile-status').innerHTML = '● Misafir';
             document.getElementById('profile-actions').innerHTML =
-                '<button class="user-btn" onclick="window.location.href=\'auth.html\'">🔑 Giriş Yap</button>' +
-                '<button class="user-btn" onclick="window.location.href=\'auth.html\'">📝 Kayıt Ol</button>';
+                '<button class="user-btn" onclick="window.location.href=\'/giris\'">🔑 Giriş Yap</button>' +
+                '<button class="user-btn" onclick="window.location.href=\'/giris\'">📝 Kayıt Ol</button>';
         }
 
         initProfile();
@@ -1423,7 +1423,7 @@
             if (!nick) nick = 'Misafir_' + Math.floor(Math.random() * 9999);
             localStorage.setItem('retrosesler_nick', nick);
             closeModal();
-            window.location.href = 'room.html?room=' + encodeURIComponent(currentRoomName) + '&nick=' + encodeURIComponent(nick);
+            window.location.href = '/oda?room=' + encodeURIComponent(currentRoomName) + '&nick=' + encodeURIComponent(nick);
         }
 
         document.getElementById('modal-overlay').addEventListener('click', function (e) {
