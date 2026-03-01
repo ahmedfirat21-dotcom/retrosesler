@@ -1522,6 +1522,165 @@
             border-radius: 3px;
             border-left: 3px solid #D4A574;
         }
+
+        /* ========== DJ PANEL ========== */
+        .dj-panel {
+            display: none;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border: 2px solid #E67E22;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 6px;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(230, 126, 34, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .dj-panel.active {
+            display: block;
+        }
+
+        .dj-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .dj-vinyl {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #333 30%, #111 31%, #222 60%, #111 61%, #333 100%);
+            border: 3px solid #E67E22;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #E67E22;
+            animation: spin-vinyl 3s linear infinite;
+            animation-play-state: paused;
+            flex-shrink: 0;
+        }
+
+        .dj-vinyl.playing {
+            animation-play-state: running;
+        }
+
+        @keyframes spin-vinyl {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .dj-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .dj-label {
+            font-size: 10px;
+            color: #E67E22;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dj-song-title {
+            font-size: 15px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dj-song-artist {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .dj-progress-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .dj-time {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Courier New', monospace;
+            flex-shrink: 0;
+        }
+
+        .dj-progress {
+            flex: 1;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .dj-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #E67E22, #F39C12);
+            border-radius: 3px;
+            transition: width 1s linear;
+        }
+
+        .dj-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .dj-btn {
+            padding: 4px 12px;
+            border: 2px solid #E67E22;
+            background: rgba(230, 126, 34, 0.15);
+            color: #E67E22;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .dj-btn:hover {
+            background: rgba(230, 126, 34, 0.3);
+        }
+
+        .dj-btn.active {
+            background: #E67E22;
+            color: #fff;
+        }
+
+        .dj-volume {
+            flex: 1;
+            max-width: 100px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .dj-volume::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #E67E22;
+            cursor: pointer;
+        }
+
+        .dj-next-info {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 6px;
+        }
     </style>
     <!-- LiveKit Client SDK (yerel sunucu) -->
     <script src="/livekit-sdk/livekit-client.umd.js"></script>
@@ -1579,6 +1738,33 @@
                 <div class="video-grid" id="video-grid">
                     <!-- Video tiles injected by JS -->
                 </div>
+            </div>
+
+            <!-- DJ PANEL (sadece müzik odalarında görünür) -->
+            <div class="dj-panel" id="dj-panel">
+                <div class="dj-header">
+                    <div class="dj-vinyl" id="dj-vinyl">🎤</div>
+                    <div class="dj-info">
+                        <div class="dj-label">🎶 DJ_RetroBot — 7/24 Nostalji FM</div>
+                        <div class="dj-song-title" id="dj-song-title">Yükleniyor...</div>
+                        <div class="dj-song-artist" id="dj-song-artist"></div>
+                    </div>
+                </div>
+                <div class="dj-progress-wrap">
+                    <span class="dj-time" id="dj-elapsed">0:00</span>
+                    <div class="dj-progress">
+                        <div class="dj-progress-bar" id="dj-progress-bar"></div>
+                    </div>
+                    <span class="dj-time" id="dj-duration">0:00</span>
+                </div>
+                <div class="dj-controls">
+                    <button class="dj-btn active" id="dj-play-btn" onclick="toggleRadio()">▶</button>
+                    <span style="font-size:10px;color:rgba(255,255,255,0.4)">🔊</span>
+                    <input type="range" class="dj-volume" id="dj-volume" min="0" max="100" value="50"
+                        oninput="setRadioVolume(this.value)">
+                    <span class="dj-time" id="dj-vol-label">50%</span>
+                </div>
+                <div class="dj-next-info" id="dj-next-info">Sıradaki: yükleniyor...</div>
             </div>
 
             <div class="chat-window">
@@ -1702,6 +1888,13 @@
         const userStatuses = {}; // nick -> status text
         let myStatus = '';
         let nudgeCooldown = false;
+        let radioPlaying = true;
+
+        // Müzik odası tespit
+        const isMusicRoom = (() => {
+            const rn = new URLSearchParams(window.location.search).get('room') || '';
+            return /müzik|music|rock|metal/i.test(rn);
+        })();
 
         // Nick: URL'den oku, yoksa localStorage, yoksa rastgele
         const _params = new URLSearchParams(window.location.search);
@@ -2873,6 +3066,83 @@
                 if (btn) btn.classList.add('blink');
             }
         }
+
+        /* ============ FAZ 8: DJ RADİO SİSTEMİ ============ */
+        function formatTime(sec) {
+            return Math.floor(sec / 60) + ':' + (sec % 60).toString().padStart(2, '0');
+        }
+
+        let lastSongIndex = -1;
+        async function pollNowPlaying() {
+            if (!isMusicRoom) return;
+            try {
+                const res = await fetch('/api/radio/now-playing');
+                const data = await res.json();
+                if (!data.success) return;
+
+                const c = data.current;
+                document.getElementById('dj-song-title').textContent = c.title;
+                document.getElementById('dj-song-artist').textContent = c.artist + ' (' + c.year + ')';
+                document.getElementById('dj-elapsed').textContent = formatTime(c.elapsed);
+                document.getElementById('dj-duration').textContent = formatTime(c.duration);
+                document.getElementById('dj-progress-bar').style.width = c.progress + '%';
+                document.getElementById('dj-next-info').textContent =
+                    '⏭ Sıradaki: ' + data.next.artist + ' - ' + data.next.title;
+
+                // Şarkı değiştiğinde chat'e bildir
+                if (lastSongIndex !== -1 && lastSongIndex !== data.trackIndex) {
+                    addMessage('system', {
+                        text: '🎵 DJ_RetroBot: Şimdi çalıyor → ' + c.artist + ' - ' + c.title + ' (' + c.year + ')',
+                        subtype: 'dj'
+                    });
+                }
+                lastSongIndex = data.trackIndex;
+            } catch (err) {
+                console.error('[DJ] Poll hatası:', err);
+            }
+        }
+
+        function toggleRadio() {
+            radioPlaying = !radioPlaying;
+            const btn = document.getElementById('dj-play-btn');
+            const vinyl = document.getElementById('dj-vinyl');
+            if (radioPlaying) {
+                btn.textContent = '▶';
+                btn.classList.add('active');
+                vinyl.classList.add('playing');
+            } else {
+                btn.textContent = '⏸';
+                btn.classList.remove('active');
+                vinyl.classList.remove('playing');
+            }
+        }
+
+        function setRadioVolume(val) {
+            document.getElementById('dj-vol-label').textContent = val + '%';
+        }
+
+        // DJ sistemi başlat
+        function initDJ() {
+            if (!isMusicRoom) return;
+            document.getElementById('dj-panel').classList.add('active');
+            document.getElementById('dj-vinyl').classList.add('playing');
+
+            // İlk poll
+            pollNowPlaying();
+            // Her 5 saniyede güncelle
+            setInterval(pollNowPlaying, 5000);
+
+            // DJ giriş mesajı
+            addMessage('system', {
+                text: '🎙️ DJ_RetroBot odaya katıldı! 7/24 Nostalji FM yayında 📻',
+                subtype: 'join'
+            });
+        }
+
+        // Sayfa yüklendiğinde DJ başlat
+        window.addEventListener('load', () => {
+            setTimeout(initDJ, 2000);
+        });
     </script>
 
     <div class="ctx-menu" id="ctx-menu">
