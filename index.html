@@ -794,7 +794,7 @@
     <!-- ============ TOP BAR ============ -->
     <div class="topbar">
         <div class="topbar-brand">
-            <div class="topbar-logo">Retro<span>Sesler</span>.com</div>
+            <div class="topbar-logo" id="topbar-logo">Retro<span>Sesler</span>.com</div>
             <div class="topbar-subtitle">sesli &amp; görüntülü sohbet</div>
         </div>
         <div class="topbar-stats">
@@ -1084,9 +1084,6 @@
 
                         let actionsHtml = '<button class="user-btn" onclick="openProfileEditor()">✏️ Profili Düzenle</button>';
                         actionsHtml += '<button class="user-btn" onclick="logout()">🚪 Çıkış Yap</button>';
-                        if (data.role === 'admin' || data.role === 'mod') {
-                            actionsHtml += '<button class="user-btn" onclick="window.location.href=\'admin.html\'" style="background:linear-gradient(180deg,#C0392B,#922B21);color:#fff;border-color:#E74C3C">🛡️ Admin Paneli</button>';
-                        }
                         document.getElementById('profile-actions').innerHTML = actionsHtml;
                         localStorage.setItem('retrosesler_nick', data.nick);
                         localStorage.setItem('retrosesler_role', data.role);
@@ -1114,6 +1111,28 @@
         }
 
         initProfile();
+
+        /* ============ GİZLİ ADMİN ERİŞİMİ — Logo 5x Tıklama ============ */
+        (() => {
+            let clickCount = 0;
+            let clickTimer = null;
+            const logo = document.getElementById('topbar-logo');
+            if (logo) {
+                logo.style.cursor = 'pointer';
+                logo.addEventListener('click', () => {
+                    clickCount++;
+                    if (clickTimer) clearTimeout(clickTimer);
+                    clickTimer = setTimeout(() => { clickCount = 0; }, 3000);
+                    if (clickCount >= 5) {
+                        clickCount = 0;
+                        const role = localStorage.getItem('retrosesler_role');
+                        if (role === 'admin' || role === 'mod') {
+                            window.location.href = 'admin.html';
+                        }
+                    }
+                });
+            }
+        })();
 
         /* ============ LIVE ROOM DATA (API) ============ */
         async function fetchRoomData() {
