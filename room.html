@@ -1865,7 +1865,7 @@
             <span class="ctrl-icon">🔊</span> Ses
         </button>
 
-        <button class="ctrl-btn" onclick="alert('Ayarlar yakında!')">
+        <button class="ctrl-btn" id="btn-settings" onclick="toggleSettings()">
             <span class="ctrl-icon">⚙️</span> Ayarlar
         </button>
 
@@ -1888,11 +1888,36 @@
         let nudgeCooldown = false;
         let radioPlaying = true;
 
-        // Müzik odası tespit
-        const isMusicRoom = (() => {
-            const rn = new URLSearchParams(window.location.search).get('room') || '';
-            return /müzik|music|rock|metal/i.test(rn);
+        // Oda kategorisi ve yetenek haritası
+        const roomName = new URLSearchParams(window.location.search).get('room') || '';
+        const roomCapabilities = (() => {
+            const rn = roomName.toLowerCase();
+            // Kamera odaları: mic + cam
+            if (/kamera/i.test(rn)) return { mic: true, cam: true, dj: false, label: 'Kamera Odası' };
+            // Müzik odaları: mic + dj (kamera yok)
+            if (/müzik|music|rock|metal/i.test(rn)) return { mic: true, cam: false, dj: true, label: 'Müzik Odası' };
+            // VIP: mic + cam
+            if (/vip/i.test(rn)) return { mic: true, cam: true, dj: false, label: 'VIP Oda' };
+            // Gece Kulübü: sadece mic
+            if (/gece/i.test(rn)) return { mic: true, cam: false, dj: false, label: 'Gece Kulübü' };
+            // Nostalji: sadece mic
+            if (/nostalji/i.test(rn)) return { mic: true, cam: false, dj: false, label: 'Nostalji Köşesi' };
+            // Genel Sohbet vb: sadece mic (kamera yok)
+            return { mic: true, cam: false, dj: false, label: 'Sohbet Odası' };
         })();
+        const isMusicRoom = roomCapabilities.dj;
+
+        // Kontrol çubuğunu oda yeteneklerine göre güncelle
+        window.addEventListener('load', () => {
+            if (!roomCapabilities.cam) {
+                const camBtn = document.getElementById('btn-cam');
+                if (camBtn) camBtn.style.display = 'none';
+            }
+            if (!roomCapabilities.mic) {
+                const micBtn = document.getElementById('btn-mic');
+                if (micBtn) micBtn.style.display = 'none';
+            }
+        });
 
         // Nick: URL'den oku, yoksa localStorage, yoksa rastgele
         const _params = new URLSearchParams(window.location.search);
@@ -2312,7 +2337,7 @@
 
         /* ============ QUERY PARAMS ============ */
         const params = new URLSearchParams(window.location.search);
-        const roomName = params.get('room') || 'Genel Sohbet';
+        const _roomName2 = roomName || 'Genel Sohbet';
 
         const roomConfigs = {
             'Genel Sohbet': { emoji: '💬', category: 'Serbest', capacity: 200, topic: '🗣️ Her konuda serbest sohbet! Saygılı olun, eğlenin!' },
@@ -3097,6 +3122,38 @@
         // Sayfa yüklendiğinde DJ başlat
         window.addEventListener('load', () => {
             setTimeout(initDJ, 2000);
+        });
+
+        /* ============ AYARLAR ============ */
+        function toggleSettings() {
+            const info = [
+                '⚙️ Oda Yetenekleri — ' + (roomCapabilities.label || roomName),
+                '',
+                '🎤 Mikrofon: ' + (roomCapabilities.mic ? '✅ Aktif' : '❌ Kapalı'),
+                '📹 Kamera: ' + (roomCapabilities.cam ? '✅ Aktif' : '❌ Bu odada kamera yok'),
+                '🎵 DJ Radyo: ' + (roomCapabilities.dj ? '✅ Aktif' : '❌ Bu odada DJ yok'),
+            ].join('\n');
+            alert(info);
+        }
+
+        /* ============ WIN-BTN PANEL TOGGLE ============ */
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('win-btn')) {
+                const panel = e.target.closest('.win-panel') || e.target.closest('.panel');
+                if (!panel) return;
+                const body = panel.querySelector('.win-body');
+                if (!body) return;
+                const txt = e.target.textContent.trim();
+                if (txt === '—') {
+                    body.style.display = body.style.display === 'none' ? '' : 'none';
+                    e.target.textContent = body.style.display === 'none' ? '□' : '—';
+                } else if (txt === '×') {
+                    panel.style.display = 'none';
+                } else if (txt === '□') {
+                    body.style.display = '';
+                    e.target.textContent = '—';
+                }
+            }
         });
     </script>
 

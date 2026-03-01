@@ -1657,6 +1657,26 @@
                 document.getElementById('profile-save-msg').innerHTML = '<span style="color:#E74C3C">❌ Hata: ' + err.message + '</span>';
             }
         }
+
+        /* ============ WIN-BTN PANEL TOGGLE ============ */
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('win-btn')) {
+                const panel = e.target.closest('.win-panel') || e.target.closest('.panel');
+                if (!panel) return;
+                const body = panel.querySelector('.win-body');
+                if (!body) return;
+                const txt = e.target.textContent.trim();
+                if (txt === '—') {
+                    body.style.display = body.style.display === 'none' ? '' : 'none';
+                    e.target.textContent = body.style.display === 'none' ? '□' : '—';
+                } else if (txt === '×') {
+                    panel.style.display = 'none';
+                } else if (txt === '□') {
+                    body.style.display = '';
+                    e.target.textContent = '—';
+                }
+            }
+        });
     </script>
 </body>
 
