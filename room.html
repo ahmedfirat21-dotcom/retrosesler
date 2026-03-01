@@ -2238,8 +2238,8 @@
 
     <!-- ============ CONTROL BAR ============ -->
     <div class="control-bar">
-        <button class="ctrl-btn active" id="btn-mic" onclick="toggleMic()">
-            <span class="ctrl-icon">🎤</span> Mikrofon
+        <button class="ctrl-btn muted" id="btn-mic" onclick="toggleMic()">
+            <span class="ctrl-icon">🔇</span> Mikrofon
             <span class="speaking-anim">
                 <span class="speaking-bar"></span>
                 <span class="speaking-bar"></span>
@@ -2272,7 +2272,7 @@
         /* ============ LIVEKIT YAPILANDIRMA ============ */
         const TOKEN_SERVER = window.location.origin + '/getToken';
         let livekitRoom = null;
-        let micEnabled = true;
+        let micEnabled = false; // Mikrofon varsayılan KAPALI — kullanıcı manuel açmalı
         let camEnabled = false;
         let soundEnabled = true;
         const userStatuses = {}; // nick -> status text
@@ -2388,9 +2388,9 @@
                 console.log('[Sistem] Bağlantı başarılı! Oda:', livekitRoom.name);
                 addMessage('system', { text: '✅ Ses/görüntü bağlantısı kuruldu!', subtype: 'join' });
 
-                // Mikrofon varsayılan olarak açık başla
-                await livekitRoom.localParticipant.setMicrophoneEnabled(micEnabled);
-                console.log('[Sistem] Mikrofon:', micEnabled ? 'açık' : 'kapalı');
+                // Mikrofon varsayılan olarak KAPALI başlar
+                // Kullanıcı mikrofon butonuna tıklayarak açmalı
+                console.log('[Sistem] Mikrofon: kapalı (önce tıklayın)');
 
             } catch (err) {
                 console.error('[Sistem] Bağlantı hatası:', err);
@@ -3537,32 +3537,97 @@
             });
         }
 
-        // Sayfa yüklendiğinde DJ başlat
+        // Sayfa yüklendiğinde DJ başlat + kaydedilmiş ayarları uygula
         window.addEventListener('load', () => {
             setTimeout(initDJ, 2000);
+            // Kaydedilmiş font boyutu uygula
+            const savedFs = localStorage.getItem('retrosesler_fontsize');
+            if (savedFs) {
+                const chatMsgs = document.querySelector('.chat-messages');
+                if (chatMsgs) chatMsgs.style.fontSize = savedFs + 'px';
+            }
         });
 
         /* ============ AYARLAR ============ */
-        function toggleSettings() {
+        async function toggleSettings() {
+            // Mevcut ayarları localStorage'dan oku
+            const savedFont = localStorage.getItem('retrosesler_fontsize') || '13';
+            const savedMicId = localStorage.getItem('retrosesler_mic_device') || '';
+            const savedCamId = localStorage.getItem('retrosesler_cam_device') || '';
+
+            // Cihazları listele
+            let micOptions = '<option value="">Varsayılan</option>';
+            let camOptions = '<option value="">Varsayılan</option>';
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                devices.filter(d => d.kind === 'audioinput').forEach((d, i) => {
+                    const sel = d.deviceId === savedMicId ? ' selected' : '';
+                    micOptions += `<option value="${d.deviceId}"${sel}>${escapeHTML(d.label || 'Mikrofon ' + (i + 1))}</option>`;
+                });
+                devices.filter(d => d.kind === 'videoinput').forEach((d, i) => {
+                    const sel = d.deviceId === savedCamId ? ' selected' : '';
+                    camOptions += `<option value="${d.deviceId}"${sel}>${escapeHTML(d.label || 'Kamera ' + (i + 1))}</option>`;
+                });
+            } catch (e) { console.warn('Cihaz listesi alınamadı:', e); }
+
             const mic = roomCapabilities.mic;
             const cam = roomCapabilities.cam;
             const dj = roomCapabilities.dj;
+
             const body = `
-                <div style="font-weight:bold;margin-bottom:8px;color:#4A7DB5">⚙️ ${escapeHTML(roomCapabilities.label || roomName)}</div>
+                <div style="font-weight:bold;margin-bottom:10px;color:#4A7DB5">⚙️ ${escapeHTML(roomCapabilities.label || roomName)}</div>
                 <div class="setting-row">
                     <span class="setting-label">🎤 Mikrofon</span>
                     <span class="setting-val ${mic ? '' : 'off'}">${mic ? '✅ Aktif' : '❌ Kapalı'}</span>
                 </div>
                 <div class="setting-row">
                     <span class="setting-label">📹 Kamera</span>
-                    <span class="setting-val ${cam ? '' : 'off'}">${cam ? '✅ Aktif' : '❌ Bu odada yok'}</span>
+                    <span class="setting-val ${cam ? '' : 'off'}">${cam ? '✅ Aktif' : '❌ Yok'}</span>
                 </div>
                 <div class="setting-row">
                     <span class="setting-label">🎵 DJ Radyo</span>
-                    <span class="setting-val ${dj ? '' : 'off'}">${dj ? '✅ Aktif' : '❌ Bu odada yok'}</span>
+                    <span class="setting-val ${dj ? '' : 'off'}">${dj ? '✅ Aktif' : '❌ Yok'}</span>
+                </div>
+                <hr style="border:none;border-top:1px solid #D5CEBF;margin:10px 0">
+                <div style="font-weight:bold;margin-bottom:8px">🔧 Cihaz Ayarları</div>
+                <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:4px">
+                    <span class="setting-label">🎤 Mikrofon Cihazı</span>
+                    <select id="settings-mic-device" style="width:100%;padding:4px 6px;border:1px solid #C8C3B5;border-radius:3px;font-size:11px;font-family:inherit">${micOptions}</select>
+                </div>
+                ${cam ? `<div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:4px">
+                    <span class="setting-label">📹 Kamera Cihazı</span>
+                    <select id="settings-cam-device" style="width:100%;padding:4px 6px;border:1px solid #C8C3B5;border-radius:3px;font-size:11px;font-family:inherit">${camOptions}</select>
+                </div>` : ''}
+                <hr style="border:none;border-top:1px solid #D5CEBF;margin:10px 0">
+                <div style="font-weight:bold;margin-bottom:8px">📝 Görünüm</div>
+                <div class="setting-row">
+                    <span class="setting-label">Yazı Boyutu</span>
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <input type="range" id="settings-font" min="10" max="18" value="${savedFont}" style="width:100px" oninput="document.getElementById('font-val').textContent=this.value+'px'">
+                        <span id="font-val" style="font-size:11px;min-width:30px">${savedFont}px</span>
+                    </div>
                 </div>
             `;
-            showRetroModal('⚙️ Oda Ayarları', body, [{ text: 'Tamam', cls: 'primary', action: 'close' }]);
+            const result = await showRetroModal('⚙️ Oda Ayarları', body, [
+                { text: 'İptal', cls: '', action: 'cancel' },
+                { text: 'Kaydet', cls: 'primary', action: 'confirm' }
+            ]);
+            if (result) {
+                // Font boyutu kaydet ve uygula
+                const fontSize = document.getElementById('settings-font').value;
+                localStorage.setItem('retrosesler_fontsize', fontSize);
+                document.querySelector('.chat-messages').style.fontSize = fontSize + 'px';
+
+                // Mikrofon cihazı kaydet
+                const micDev = document.getElementById('settings-mic-device').value;
+                localStorage.setItem('retrosesler_mic_device', micDev);
+
+                // Kamera cihazı kaydet
+                const camDev = document.getElementById('settings-cam-device');
+                if (camDev) localStorage.setItem('retrosesler_cam_device', camDev.value);
+
+                addMessage('system', { text: '✅ Ayarlar kaydedildi!', subtype: '' });
+            }
         }
 
         /* ============ WIN-BTN PANEL TOGGLE ============ */
