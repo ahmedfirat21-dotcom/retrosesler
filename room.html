@@ -1105,6 +1105,74 @@
             display: block;
         }
 
+        /* Profile Card Popup */
+        .profile-card {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            background: linear-gradient(135deg, #F5F3EE, #EDE8DC);
+            border: 2px solid #C8C3B5;
+            border-radius: 6px;
+            padding: 12px;
+            min-width: 180px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+            font-size: 12px;
+            color: #333;
+        }
+
+        .profile-card.active {
+            display: block;
+        }
+
+        .profile-card-avatar {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .profile-card-nick {
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .profile-card-role {
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .profile-card-role span {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .profile-card-status {
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+
+        .profile-card-btn {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #C8C3B5;
+            background: #fff;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+
+        .profile-card-btn:hover {
+            background: #ECF0F1;
+        }
+
         .ctx-item {
             padding: 5px 16px;
             cursor: pointer;
@@ -3208,6 +3276,54 @@
                 }
             }
         });
+
+        /* ============ PROFILE CARD — Nick Click ============ */
+        let pcTarget = '';
+        const roleBgColors = { admin: '#E74C3C', mod: '#F39C12', vip: '#9B59B6', user: '#27AE60' };
+        const roleLabels = { admin: 'Admin', mod: 'Moderatör', vip: 'VIP', user: 'Kullanıcı' };
+
+        document.getElementById('chat-messages').addEventListener('click', (e) => {
+            const nick = e.target.closest('.msg-nick');
+            if (!nick) return;
+            const name = nick.textContent.replace(':', '').trim();
+            if (name === userIdentity) return; // Kendine tıklama
+            pcTarget = name;
+
+            // Avatar ve rol bilgisi: mesaj satırından al
+            const msg = nick.closest('.msg');
+            const avatarEl = msg?.querySelector('.msg-avatar');
+            const badgeEl = msg?.querySelector('.msg-badge');
+            const avatar = avatarEl ? avatarEl.textContent : '😎';
+            let role = 'user';
+            if (badgeEl) {
+                if (badgeEl.classList.contains('msg-badge-admin')) role = 'admin';
+                else if (badgeEl.classList.contains('msg-badge-mod')) role = 'mod';
+                else if (badgeEl.classList.contains('msg-badge-vip')) role = 'vip';
+            }
+
+            const card = document.getElementById('profile-card');
+            document.getElementById('pc-avatar').textContent = avatar;
+            document.getElementById('pc-nick').textContent = name;
+            document.getElementById('pc-role').innerHTML = `<span style="background:${roleBgColors[role]}">${roleLabels[role]}</span>`;
+            document.getElementById('pc-status').textContent = userStatuses[name] || '';
+
+            const rect = nick.getBoundingClientRect();
+            card.style.left = Math.min(rect.left, window.innerWidth - 200) + 'px';
+            card.style.top = (rect.bottom + 4) + 'px';
+            card.classList.add('active');
+        });
+
+        function pcOpenDM() {
+            document.getElementById('profile-card').classList.remove('active');
+            if (pcTarget) openDM(pcTarget);
+        }
+
+        document.addEventListener('click', (e) => {
+            const card = document.getElementById('profile-card');
+            if (card.classList.contains('active') && !card.contains(e.target) && !e.target.classList.contains('msg-nick')) {
+                card.classList.remove('active');
+            }
+        });
     </script>
 
     <div class="ctx-menu" id="ctx-menu">
@@ -3217,6 +3333,15 @@
         <div class="ctx-item ctx-admin" onclick="ctxMute()">🔇 Sustur</div>
         <div class="ctx-sep ctx-admin"></div>
         <div class="ctx-item" onclick="ctxReport()">📢 Şikayet Et</div>
+    </div>
+
+    <!-- Profile Card Popup -->
+    <div class="profile-card" id="profile-card">
+        <div class="profile-card-avatar" id="pc-avatar">😎</div>
+        <div class="profile-card-nick" id="pc-nick">Kullanıcı</div>
+        <div class="profile-card-role" id="pc-role"></div>
+        <div class="profile-card-status" id="pc-status"></div>
+        <button class="profile-card-btn" id="pc-dm-btn" onclick="pcOpenDM()">💬 Özel Mesaj</button>
     </div>
 
     <!-- Admin Login Modal -->
