@@ -680,10 +680,10 @@
             } catch (e) { toast('Hata: ' + e.message, true); }
         }
 
-        function editRoom(name) {
-            const newName = prompt('Yeni oda adı:', name);
+        async function editRoom(name) {
+            const newName = await adminPrompt('✏️ Oda Adı Değiştir', 'Yeni oda adı:', name);
             if (!newName || newName === name) {
-                const newMax = prompt('Yeni kapasite:');
+                const newMax = await adminPrompt('📊 Kapasite Değiştir', 'Yeni kapasite (' + name + '):', '50');
                 if (!newMax) return;
                 fetch('/api/admin/rooms', {
                     method: 'PUT',
@@ -699,8 +699,9 @@
             }).then(r => r.json()).then(d => { toast(d.success ? '✅ ' + name + ' → ' + newName : d.error, !d.success); loadRooms(); });
         }
 
-        function deleteRoom(name) {
-            if (!confirm('⚠️ "' + name + '" odasını silmek istediğinize emin misiniz?')) return;
+        async function deleteRoom(name) {
+            const ok = await adminConfirm('🗑️ Oda Sil', '⚠️ "' + esc(name) + '" odasını silmek istediğinize emin misiniz?');
+            if (!ok) return;
             fetch('/api/admin/rooms', {
                 method: 'DELETE',
                 headers: { ...API_HEADERS, 'x-admin-token': ADMIN_SECRET },
@@ -789,9 +790,151 @@
         // Auto-refresh every 10s
         setInterval(loadStats, 10000);
 
+        // === Admin Modal System ===
+        function adminPrompt(title, message, defaultVal) {
+            return new Promise(resolve => {
+                const overlay = document.getElementById('admin-prompt-overlay');
+                document.getElementById('ap-title').textContent = title;
+                document.getElementById('ap-msg').textContent = message;
+                const inp = document.getElementById('ap-input');
+                inp.value = defaultVal || '';
+                inp.style.display = 'block';
+                overlay.classList.add('active');
+                inp.focus();
+                document.getElementById('ap-ok').onclick = () => { overlay.classList.remove('active'); resolve(inp.value || null); };
+                document.getElementById('ap-cancel').onclick = () => { overlay.classList.remove('active'); resolve(null); };
+                inp.onkeydown = (e) => { if (e.key === 'Enter') { overlay.classList.remove('active'); resolve(inp.value || null); } };
+            });
+        }
+        function adminConfirm(title, message) {
+            return new Promise(resolve => {
+                const overlay = document.getElementById('admin-prompt-overlay');
+                document.getElementById('ap-title').textContent = title;
+                document.getElementById('ap-msg').innerHTML = message;
+                document.getElementById('ap-input').style.display = 'none';
+                overlay.classList.add('active');
+                document.getElementById('ap-ok').onclick = () => { overlay.classList.remove('active'); resolve(true); };
+                document.getElementById('ap-cancel').onclick = () => { overlay.classList.remove('active'); resolve(false); };
+            });
+        }
+
         // Init
         checkAuth();
     </script>
+
+    <style>
+        .admin-prompt-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .admin-prompt-overlay.active {
+            display: flex;
+        }
+
+        .admin-prompt {
+            background: #1e2d47;
+            border: 2px solid #34495E;
+            border-radius: 8px;
+            min-width: 300px;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            color: #ECF0F1;
+            font-family: inherit;
+            overflow: hidden;
+        }
+
+        .admin-prompt-title {
+            background: linear-gradient(180deg, #2C3E50, #1a2942);
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #34495E;
+        }
+
+        .admin-prompt-body {
+            padding: 14px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .admin-prompt-body input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #34495E;
+            border-radius: 4px;
+            background: #0f1a2e;
+            color: #ECF0F1;
+            font-size: 12px;
+            font-family: inherit;
+            box-sizing: border-box;
+            margin-top: 8px;
+            outline: none;
+        }
+
+        .admin-prompt-body input:focus {
+            border-color: #85C1E9;
+        }
+
+        .admin-prompt-footer {
+            padding: 8px 14px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            border-top: 1px solid #34495E;
+        }
+
+        .admin-prompt-footer button {
+            padding: 6px 16px;
+            border: 1px solid #34495E;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .admin-prompt-footer .ap-ok {
+            background: #27AE60;
+            color: #fff;
+            border-color: #27AE60;
+        }
+
+        .admin-prompt-footer .ap-ok:hover {
+            background: #2ECC71;
+        }
+
+        .admin-prompt-footer .ap-cancel {
+            background: #34495E;
+            color: #ECF0F1;
+        }
+
+        .admin-prompt-footer .ap-cancel:hover {
+            background: #415B76;
+        }
+    </style>
+
+    <div class="admin-prompt-overlay" id="admin-prompt-overlay"
+        onclick="if(event.target===this){this.classList.remove('active')}">
+        <div class="admin-prompt">
+            <div class="admin-prompt-title"><span id="ap-title"></span></div>
+            <div class="admin-prompt-body">
+                <div id="ap-msg"></div>
+                <input type="text" id="ap-input">
+            </div>
+            <div class="admin-prompt-footer">
+                <button class="ap-cancel" id="ap-cancel">İptal</button>
+                <button class="ap-ok" id="ap-ok">Tamam</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

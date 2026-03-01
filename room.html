@@ -1240,6 +1240,151 @@
             }
         }
 
+        /* ============ RETRO MODAL ============ */
+        .retro-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 20000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .retro-modal-overlay.active {
+            display: flex;
+        }
+
+        .retro-modal {
+            background: linear-gradient(180deg, #EDE8DC, #F5F3EE);
+            border: 2px solid #8B7355;
+            border-radius: 6px;
+            min-width: 280px;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            overflow: hidden;
+        }
+
+        .retro-modal-title {
+            background: linear-gradient(180deg, #4A7DB5, #3A6A9E);
+            color: #fff;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .retro-modal-close {
+            background: #C0392B;
+            color: #fff;
+            border: 1px solid #922B21;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 0 5px;
+            line-height: 16px;
+            border-radius: 2px;
+        }
+
+        .retro-modal-close:hover {
+            background: #E74C3C;
+        }
+
+        .retro-modal-body {
+            padding: 14px;
+            font-size: 12px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .retro-modal-body .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #D5CEBF;
+        }
+
+        .retro-modal-body .setting-row:last-child {
+            border-bottom: none;
+        }
+
+        .retro-modal-body .setting-label {
+            font-weight: bold;
+        }
+
+        .retro-modal-body .setting-val {
+            color: #27AE60;
+        }
+
+        .retro-modal-body .setting-val.off {
+            color: #E74C3C;
+        }
+
+        .retro-modal-body input[type=text],
+        .retro-modal-body input[type=number] {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #C8C3B5;
+            border-radius: 3px;
+            font-size: 12px;
+            font-family: inherit;
+            box-sizing: border-box;
+            margin-top: 6px;
+        }
+
+        .retro-modal-footer {
+            padding: 8px 14px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            border-top: 1px solid #D5CEBF;
+        }
+
+        .retro-modal-footer button {
+            padding: 5px 14px;
+            border: 1px solid #8B7355;
+            border-radius: 3px;
+            font-size: 11px;
+            font-family: inherit;
+            cursor: pointer;
+            background: linear-gradient(180deg, #F5F3EE, #E8E2D6);
+            color: #333;
+        }
+
+        .retro-modal-footer button:hover {
+            background: linear-gradient(180deg, #E8E2D6, #DDD6C6);
+        }
+
+        .retro-modal-footer button.primary {
+            background: linear-gradient(180deg, #4A7DB5, #3A6A9E);
+            color: #fff;
+            border-color: #3A6A9E;
+        }
+
+        .retro-modal-footer button.primary:hover {
+            background: linear-gradient(180deg, #5A8DC5, #4A7DB5);
+        }
+
+        .retro-modal-footer button.danger {
+            background: linear-gradient(180deg, #E74C3C, #C0392B);
+            color: #fff;
+            border-color: #922B21;
+        }
+
+        .retro-modal-footer button.danger:hover {
+            background: linear-gradient(180deg, #FF5C4C, #E74C3C);
+        }
+
+        @media(max-width:480px) {
+            .retro-modal {
+                min-width: unset;
+                width: 90vw;
+            }
+        }
+
         /* ============ MODERATION: CONTEXT MENU ============ */
         .ctx-menu {
             display: none;
@@ -3399,14 +3544,25 @@
 
         /* ============ AYARLAR ============ */
         function toggleSettings() {
-            const info = [
-                '⚙️ Oda Yetenekleri — ' + (roomCapabilities.label || roomName),
-                '',
-                '🎤 Mikrofon: ' + (roomCapabilities.mic ? '✅ Aktif' : '❌ Kapalı'),
-                '📹 Kamera: ' + (roomCapabilities.cam ? '✅ Aktif' : '❌ Bu odada kamera yok'),
-                '🎵 DJ Radyo: ' + (roomCapabilities.dj ? '✅ Aktif' : '❌ Bu odada DJ yok'),
-            ].join('\n');
-            alert(info);
+            const mic = roomCapabilities.mic;
+            const cam = roomCapabilities.cam;
+            const dj = roomCapabilities.dj;
+            const body = `
+                <div style="font-weight:bold;margin-bottom:8px;color:#4A7DB5">⚙️ ${escapeHTML(roomCapabilities.label || roomName)}</div>
+                <div class="setting-row">
+                    <span class="setting-label">🎤 Mikrofon</span>
+                    <span class="setting-val ${mic ? '' : 'off'}">${mic ? '✅ Aktif' : '❌ Kapalı'}</span>
+                </div>
+                <div class="setting-row">
+                    <span class="setting-label">📹 Kamera</span>
+                    <span class="setting-val ${cam ? '' : 'off'}">${cam ? '✅ Aktif' : '❌ Bu odada yok'}</span>
+                </div>
+                <div class="setting-row">
+                    <span class="setting-label">🎵 DJ Radyo</span>
+                    <span class="setting-val ${dj ? '' : 'off'}">${dj ? '✅ Aktif' : '❌ Bu odada yok'}</span>
+                </div>
+            `;
+            showRetroModal('⚙️ Oda Ayarları', body, [{ text: 'Tamam', cls: 'primary', action: 'close' }]);
         }
 
         /* ============ WIN-BTN PANEL TOGGLE ============ */
@@ -3521,6 +3677,53 @@
     <!-- DM Container & Taskbar -->
     <div id="dm-container"></div>
     <div id="dm-taskbar"></div>
+
+    <!-- Retro Modal Container -->
+    <div class="retro-modal-overlay" id="retro-modal-overlay" onclick="if(event.target===this)closeRetroModal()">
+        <div class="retro-modal">
+            <div class="retro-modal-title">
+                <span id="retro-modal-title-text"></span>
+                <button class="retro-modal-close" onclick="closeRetroModal()">×</button>
+            </div>
+            <div class="retro-modal-body" id="retro-modal-body"></div>
+            <div class="retro-modal-footer" id="retro-modal-footer"></div>
+        </div>
+    </div>
+
+    <script>
+        // Retro Modal sistemi
+        let _retroModalResolve = null;
+        function showRetroModal(title, bodyHTML, buttons) {
+            document.getElementById('retro-modal-title-text').textContent = title;
+            document.getElementById('retro-modal-body').innerHTML = bodyHTML;
+            const footer = document.getElementById('retro-modal-footer');
+            footer.innerHTML = '';
+            return new Promise(resolve => {
+                _retroModalResolve = resolve;
+                buttons.forEach(b => {
+                    const btn = document.createElement('button');
+                    btn.textContent = b.text;
+                    if (b.cls) btn.className = b.cls;
+                    btn.addEventListener('click', () => {
+                        if (b.action === 'close') { closeRetroModal(); resolve(null); }
+                        else if (b.action === 'confirm') { closeRetroModal(); resolve(true); }
+                        else if (b.action === 'cancel') { closeRetroModal(); resolve(false); }
+                        else if (b.action === 'input') {
+                            const inp = document.querySelector('#retro-modal-body input');
+                            closeRetroModal();
+                            resolve(inp ? inp.value : null);
+                        }
+                        else { closeRetroModal(); resolve(b.action); }
+                    });
+                    footer.appendChild(btn);
+                });
+                document.getElementById('retro-modal-overlay').classList.add('active');
+            });
+        }
+        function closeRetroModal() {
+            document.getElementById('retro-modal-overlay').classList.remove('active');
+        }
+    </script>
 </body>
 
 </html>
