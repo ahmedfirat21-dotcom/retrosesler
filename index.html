@@ -1190,6 +1190,9 @@
 
                         let actionsHtml = '<button class="user-btn" onclick="openProfileEditor()">✏️ Profili Düzenle</button>';
                         actionsHtml += '<button class="user-btn" onclick="logout()">🚪 Çıkış Yap</button>';
+                        if (data.role === 'admin' || data.role === 'mod') {
+                            actionsHtml += '<button class="user-btn" onclick="window.location.href=\'/yonetim-r3tro\'" style="background:linear-gradient(180deg,#C0392B,#922B21);color:#fff;border-color:#E74C3C">🛡️ Yönetim</button>';
+                        }
                         document.getElementById('profile-actions').innerHTML = actionsHtml;
                         localStorage.setItem('retrosesler_nick', data.nick);
                         localStorage.setItem('retrosesler_role', data.role);
