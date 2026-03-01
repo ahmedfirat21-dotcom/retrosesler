@@ -335,7 +335,7 @@ app.post('/api/login', (req, res) => {
     res.json({ success: true, token, nick: user.nick, role: user.role });
 });
 
-// ============ Oturum Kontrolü (Me) ============
+// ============ Oturum Kontrolü (Me) — profil bilgileri dahil ============
 app.get('/api/me', (req, res) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -343,10 +343,51 @@ app.get('/api/me', (req, res) => {
     }
     try {
         const decoded = jwt.verify(authHeader.split(' ')[1], JWT_SECRET);
-        res.json({ success: true, nick: decoded.nick, role: decoded.role, id: decoded.id });
+        const users = loadUsers();
+        const user = users.find(u => u.id === decoded.id);
+        if (!user) return res.status(404).json({ success: false, error: 'Kullanıcı bulunamadı' });
+        res.json({
+            success: true, nick: user.nick, role: user.role, id: user.id,
+            avatar: user.avatar || 'default', bio: user.bio || '',
+            createdAt: user.createdAt
+        });
     } catch {
         res.status(401).json({ success: false, error: 'Geçersiz token' });
     }
+});
+
+// ============ Profil Güncelleme ============
+const AVATAR_LIST = [
+    'default', 'retro_tv', 'cassette', 'gameboy', 'floppy', 'headphones',
+    'sunglasses', 'rocket', 'star', 'crown', 'diamond', 'fire',
+    'robot', 'alien', 'ghost', 'ninja', 'wizard', 'pirate',
+    'cat', 'dog', 'unicorn', 'phoenix'
+];
+
+app.post('/api/profile', requireAuth, (req, res) => {
+    const { avatar, bio } = req.body;
+    const users = loadUsers();
+    const user = users.find(u => u.id === req.user.id);
+    if (!user) return res.status(404).json({ success: false, error: 'Kullanıcı bulunamadı' });
+
+    if (avatar && AVATAR_LIST.includes(avatar)) user.avatar = avatar;
+    if (bio !== undefined) user.bio = String(bio).substring(0, 60);
+
+    saveUsers(users);
+    console.log(`[PROFILE] ${user.nick} profil güncelledi`);
+    res.json({ success: true, avatar: user.avatar, bio: user.bio });
+});
+
+// ============ Herkese Açık Profil Bilgisi ============
+app.get('/api/profile/:nick', (req, res) => {
+    const users = loadUsers();
+    const user = users.find(u => u.nick.toLowerCase() === req.params.nick.toLowerCase());
+    if (!user) return res.status(404).json({ success: false, error: 'Kullanıcı bulunamadı' });
+    res.json({
+        success: true, nick: user.nick, role: user.role,
+        avatar: user.avatar || 'default', bio: user.bio || '',
+        createdAt: user.createdAt
+    });
 });
 
 // ============ BAN SİSTEMİ ============

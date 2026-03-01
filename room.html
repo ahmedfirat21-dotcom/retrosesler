@@ -1528,9 +1528,9 @@
     <script>
         // SDK global değişken adını kontrol et
         if (typeof LivekitClient === 'undefined') {
-            console.error('[LiveKit] SDK yüklenemedi! /livekit-sdk/livekit-client.umd.js bulunamadı.');
+            console.error('[Sistem] SDK yüklenemedi! /livekit-sdk/livekit-client.umd.js bulunamadı.');
         } else {
-            console.log('[LiveKit] SDK başarıyla yüklendi ✅');
+            console.log('[Sistem] SDK başarıyla yüklendi ✅');
         }
     </script>
 </head>
@@ -1751,7 +1751,7 @@
         /* ============ LIVEKIT BAĞLANTI ============ */
         async function connectToLiveKit(roomName, identity) {
             try {
-                addMessage('system', { text: '🔌 LiveKit sunucusuna bağlanılıyor...', subtype: '' });
+                addMessage('system', { text: '🔌 Sunucuya bağlanılıyor...', subtype: '' });
 
                 // Token al
                 const tokenUrl = `${TOKEN_SERVER}?room=${encodeURIComponent(roomName)}&identity=${encodeURIComponent(identity)}`;
@@ -1763,7 +1763,7 @@
                 }
 
                 const data = await resp.json();
-                console.log('[LiveKit] Token alındı:', data.identity, '→', data.room);
+                console.log('[Sistem] Token alındı:', data.identity, '→', data.room);
 
                 // Room oluştur
                 livekitRoom = new LivekitClient.Room({
@@ -1777,16 +1777,16 @@
 
                 // Bağlan
                 await livekitRoom.connect(data.url, data.token);
-                console.log('[LiveKit] Bağlantı başarılı! Oda:', livekitRoom.name);
-                addMessage('system', { text: '✅ LiveKit ses/görüntü bağlantısı kuruldu!', subtype: 'join' });
+                console.log('[Sistem] Bağlantı başarılı! Oda:', livekitRoom.name);
+                addMessage('system', { text: '✅ Ses/görüntü bağlantısı kuruldu!', subtype: 'join' });
 
                 // Mikrofon varsayılan olarak açık başla
                 await livekitRoom.localParticipant.setMicrophoneEnabled(micEnabled);
-                console.log('[LiveKit] Mikrofon:', micEnabled ? 'açık' : 'kapalı');
+                console.log('[Sistem] Mikrofon:', micEnabled ? 'açık' : 'kapalı');
 
             } catch (err) {
-                console.error('[LiveKit] Bağlantı hatası:', err);
-                addMessage('system', { text: '⚠️ LiveKit bağlantısı kurulamadı: ' + err.message + ' — Sohbet mock modda devam ediyor.', subtype: '' });
+                console.error('[Sistem] Bağlantı hatası:', err);
+                addMessage('system', { text: '⚠️ Bağlantı kurulamadı: ' + err.message + ' — Sohbet metin modda devam ediyor.', subtype: '' });
             }
         }
 
@@ -1795,7 +1795,7 @@
 
             // Yeni katılımcı
             room.on(RoomEvent.ParticipantConnected, (participant) => {
-                console.log('[LiveKit] Katılımcı katıldı:', participant.identity);
+                console.log('[Sistem] Katılımcı katıldı:', participant.identity);
                 addMessage('system', { text: '👋 ' + participant.identity + ' odaya katıldı', subtype: 'join' });
                 sfxJoin();
                 renderParticipantList();
@@ -1803,7 +1803,7 @@
 
             // Katılımcı ayrıldı
             room.on(RoomEvent.ParticipantDisconnected, (participant) => {
-                console.log('[LiveKit] Katılımcı ayrıldı:', participant.identity);
+                console.log('[Sistem] Katılımcı ayrıldı:', participant.identity);
                 addMessage('system', { text: '🚪 ' + participant.identity + ' odayı terk etti', subtype: 'leave' });
                 sfxLeave();
                 const el = document.getElementById('media-' + participant.identity);
@@ -1814,7 +1814,7 @@
 
             // Track abone olundu (ses/video geldi)
             room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
-                console.log('[LiveKit] Track alındı:', track.kind, 'from', participant.identity);
+                console.log('[Sistem] Track alındı:', track.kind, 'from', participant.identity);
 
                 if (track.kind === 'video') {
                     // Video track'i grid'e ekle
@@ -1832,7 +1832,7 @@
 
             // Track aboneliği bitti
             room.on(RoomEvent.TrackUnsubscribed, (track, publication, participant) => {
-                console.log('[LiveKit] Track kaldırıldı:', track.kind, 'from', participant.identity);
+                console.log('[Sistem] Track kaldırıldı:', track.kind, 'from', participant.identity);
                 if (track.kind === 'video') {
                     removeVideoTile(participant.identity);
                 }
@@ -1869,14 +1869,14 @@
                         renderParticipantList();
                     }
                 } catch (err) {
-                    console.error('[LiveKit] Data parse hatası:', err);
+                    console.error('[Sistem] Data parse hatası:', err);
                 }
             });
 
             // Bağlantı kesildi
             room.on(RoomEvent.Disconnected, (reason) => {
-                console.log('[LiveKit] Bağlantı kesildi:', reason);
-                addMessage('system', { text: '🔌 LiveKit bağlantısı kesildi: ' + (reason || 'bilinmeyen sebep'), subtype: 'leave' });
+                console.log('[Sistem] Bağlantı kesildi:', reason);
+                addMessage('system', { text: '🔌 Bağlantı kesildi: ' + (reason || 'bilinmeyen sebep'), subtype: 'leave' });
                 renderParticipantList();
             });
 
@@ -1975,7 +1975,7 @@
         /* ============ DATA CHANNEL — MESAJ GÖNDER ============ */
         async function sendDataMessage(text) {
             if (!livekitRoom || !livekitRoom.localParticipant) {
-                console.warn('[LiveKit] Data Channel: Bağlantı yok, mesaj gönderilemedi');
+                console.warn('[Sistem] Data Channel: Bağlantı yok, mesaj gönderilemedi');
                 return false;
             }
             try {
@@ -1986,10 +1986,10 @@
                     timestamp: Date.now()
                 }));
                 await livekitRoom.localParticipant.publishData(data, { reliable: true });
-                console.log('[LiveKit] Mesaj gönderildi:', text);
+                console.log('[Sistem] Mesaj gönderildi:', text);
                 return true;
             } catch (err) {
-                console.error('[LiveKit] Mesaj gönderme hatası:', err);
+                console.error('[Sistem] Mesaj gönderme hatası:', err);
                 return false;
             }
         }
@@ -2113,7 +2113,7 @@
             if (livekitRoom) {
                 await livekitRoom.disconnect();
                 livekitRoom = null;
-                console.log('[LiveKit] Bağlantı kapatıldı');
+                console.log('[Sistem] Bağlantı kapatıldı');
             }
         }
 
@@ -2277,7 +2277,7 @@
 
             const sent = await sendDataMessage(text);
             if (!sent) {
-                console.warn('[Chat] LiveKit bağlantısı yok, mesaj sadece yerel gösterildi');
+                console.warn('[Chat] Bağlantı yok, mesaj sadece yerel gösterildi');
             }
 
             inputEl.value = '';
@@ -2359,9 +2359,9 @@
             if (livekitRoom && livekitRoom.localParticipant) {
                 try {
                     await livekitRoom.localParticipant.setMicrophoneEnabled(micEnabled);
-                    console.log('[LiveKit] Mikrofon:', micEnabled ? 'açık' : 'kapalı');
+                    console.log('[Sistem] Mikrofon:', micEnabled ? 'açık' : 'kapalı');
                 } catch (err) {
-                    console.error('[LiveKit] Mikrofon hatası:', err);
+                    console.error('[Sistem] Mikrofon hatası:', err);
                 }
             }
         }
@@ -2385,7 +2385,7 @@
             if (livekitRoom && livekitRoom.localParticipant) {
                 try {
                     await livekitRoom.localParticipant.setCameraEnabled(camEnabled);
-                    console.log('[LiveKit] Kamera:', camEnabled ? 'açık' : 'kapalı');
+                    console.log('[Sistem] Kamera:', camEnabled ? 'açık' : 'kapalı');
 
                     // Video Grid — local preview
                     if (camEnabled) {
@@ -2400,7 +2400,7 @@
                     }
                     renderParticipantList();
                 } catch (err) {
-                    console.error('[LiveKit] Kamera hatası:', err);
+                    console.error('[Sistem] Kamera hatası:', err);
                     // Kamera yoksa geri al
                     camEnabled = false;
                     btn.classList.remove('active');
@@ -2427,7 +2427,7 @@
             document.querySelectorAll('audio').forEach(el => {
                 el.muted = !soundEnabled;
             });
-            console.log('[LiveKit] Ses:', soundEnabled ? 'açık' : 'kapalı');
+            console.log('[Sistem] Ses:', soundEnabled ? 'açık' : 'kapalı');
         }
 
         /* ============ Participant listesini periyodik güncelle (speaking animasyonu için) ============ */
@@ -2682,7 +2682,7 @@
                     appendDMMessage(targetNick, 'system', '❌ Mesaj gönderilemedi: ' + err.message);
                 }
             } else {
-                appendDMMessage(targetNick, 'system', '⚠️ LiveKit bağlantısı yok, mesaj gönderilemedi.');
+                appendDMMessage(targetNick, 'system', '⚠️ Bağlantı yok, mesaj gönderilemedi.');
             }
         }
 
