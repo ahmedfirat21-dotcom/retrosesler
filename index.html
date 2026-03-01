@@ -1227,28 +1227,6 @@
 
         initProfile();
 
-        /* ============ GİZLİ ADMİN ERİŞİMİ — Logo 5x Tıklama ============ */
-        (() => {
-            let clickCount = 0;
-            let clickTimer = null;
-            const logo = document.getElementById('topbar-logo');
-            if (logo) {
-                logo.style.cursor = 'pointer';
-                logo.addEventListener('click', () => {
-                    clickCount++;
-                    if (clickTimer) clearTimeout(clickTimer);
-                    clickTimer = setTimeout(() => { clickCount = 0; }, 3000);
-                    if (clickCount >= 5) {
-                        clickCount = 0;
-                        const role = localStorage.getItem('retrosesler_role');
-                        if (role === 'admin' || role === 'mod') {
-                            window.location.href = 'admin.html';
-                        }
-                    }
-                });
-            }
-        })();
-
         /* ============ LIVE ROOM DATA (API) ============ */
         async function fetchRoomData() {
             try {
