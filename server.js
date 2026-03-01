@@ -648,7 +648,6 @@ app.get('/api/admin/stats', requireAuth, requireRole('admin'), async (req, res) 
 });
 
 // ============ DJ RADİO SİSTEMİ - playlist.json'dan yüklenir ============
-const fs = require('fs');
 let RADIO_PLAYLIST = [];
 try {
     const playlistPath = require('path').join(__dirname, 'playlist.json');
