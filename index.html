@@ -1059,9 +1059,13 @@
                     if (data.success) {
                         document.getElementById('profile-nick').textContent = data.nick;
                         document.getElementById('profile-status').innerHTML = '<span style="color:#27AE60">●</span> Çevrimiçi';
-                        document.getElementById('profile-actions').innerHTML =
-                            '<button class="user-btn" onclick="logout()">🚪 Çıkış Yap</button>';
+                        let actionsHtml = '<button class="user-btn" onclick="logout()">🚪 Çıkış Yap</button>';
+                        if (data.role === 'admin' || data.role === 'mod') {
+                            actionsHtml += '<button class="user-btn" onclick="window.location.href=\'admin.html\'" style="background:linear-gradient(180deg,#C0392B,#922B21);color:#fff;border-color:#E74C3C">🛡️ Admin Paneli</button>';
+                        }
+                        document.getElementById('profile-actions').innerHTML = actionsHtml;
                         localStorage.setItem('retrosesler_nick', data.nick);
+                        localStorage.setItem('retrosesler_role', data.role);
                         return;
                     }
                 } catch (e) { /* token geçersiz */ }
@@ -1159,10 +1163,37 @@
         let modalTimer = null;
         let currentRoomName = '';
 
-        function openRoom(el) {
+        async function openRoom(el) {
             if (el.classList.contains('is-full')) return;
             const roomName = el.dataset.room;
             currentRoomName = roomName;
+
+            // Ban kontrolü
+            const nick = localStorage.getItem('retrosesler_nick');
+            if (nick) {
+                try {
+                    const banCheck = await fetch('/getToken?room=test&identity=' + encodeURIComponent(nick));
+                    if (banCheck.status === 403) {
+                        const banData = await banCheck.json();
+                        alert('🚫 Yasaklandınız!\n\nSebep: ' + (banData.reason || 'Kural ihlali') + '\nBitiş: ' + (banData.expiresAt === 'Süresiz' ? 'Süresiz' : new Date(banData.expiresAt).toLocaleString('tr')));
+                        return;
+                    }
+                } catch { }
+            }
+
+            // Kilit kontrolü
+            try {
+                const lockCheck = await fetch('/api/room/status?room=' + encodeURIComponent(roomName));
+                const lockData = await lockCheck.json();
+                if (lockData.locked) {
+                    const role = localStorage.getItem('retrosesler_role');
+                    if (role !== 'admin' && role !== 'mod') {
+                        alert('🔒 Bu oda kilitli!\n\n"' + roomName + '" şu anda kapalı.\nKilitleyen: ' + (lockData.lockedBy || 'Admin'));
+                        return;
+                    }
+                }
+            } catch { }
+
             const overlay = document.getElementById('modal-overlay');
             overlay.classList.add('active');
 
