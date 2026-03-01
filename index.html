@@ -1199,11 +1199,15 @@
                 } catch (e) { /* token geçersiz */ }
             }
 
-            // Misafir veya geçersiz token
-            if (savedNick) {
-                document.getElementById('profile-nick').textContent = savedNick;
-                document.getElementById('profile-status').innerHTML = '<span style="color:#F39C12">●</span> Misafir';
-            }
+            // Misafir veya geçersiz token — eski nick'i temizle
+            localStorage.removeItem('retrosesler_nick');
+            localStorage.removeItem('retrosesler_role');
+            localStorage.removeItem('retrosesler_avatar');
+            document.getElementById('profile-nick').textContent = 'Misafir';
+            document.getElementById('profile-avatar').textContent = '😎';
+            document.getElementById('profile-badge').innerHTML = '';
+            document.getElementById('profile-bio').textContent = '';
+            document.getElementById('profile-status').innerHTML = '<span style="color:#F39C12">●</span> Giriş yapın';
         }
 
         function logout() {
