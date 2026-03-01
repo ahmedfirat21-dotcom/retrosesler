@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetroSesler.com — Admin Panel</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Tahoma, Verdana, sans-serif;
+            font-size: 13px;
+            background: #1a1a2e;
+            color: #E0E0E0;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .admin-header {
+            background: linear-gradient(90deg, #0A246A, #1a1a4e);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #C0392B;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .admin-header h1 {
+            font-size: 16px;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .admin-header h1 span {
+            color: #E74C3C;
+        }
+
+        .admin-header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .admin-header-actions .admin-nick {
+            font-size: 12px;
+            color: #85C1E9;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .header-btn {
+            padding: 6px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            display: flex;
+            gap: 16px;
+            padding: 16px 24px;
+            background: linear-gradient(180deg, #16213e, #1a1a2e);
+            border-bottom: 1px solid #2C3E50;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: linear-gradient(135deg, #2C3E50, #34495E);
+            padding: 16px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #3d566e;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #95A5A6;
+            margin-top: 4px;
+        }
+
+        /* Main layout */
+        .admin-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            padding: 16px 24px;
+            max-width: 1400px;
+        }
+
+        /* Panel */
+        .panel {
+            background: #16213e;
+            border: 1px solid #2C3E50;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: linear-gradient(90deg, #0A246A, #1B3A5C);
+            padding: 10px 16px;
+            font-weight: bold;
+            font-size: 13px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-body {
+            padding: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .panel-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .panel-body::-webkit-scrollbar-thumb {
+            background: #34495E;
+            border-radius: 3px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        th {
+            background: #2C3E50;
+            padding: 8px 10px;
+            text-align: left;
+            font-size: 11px;
+            color: #95A5A6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #2C3E50;
+        }
+
+        tr:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        /* Badges */
+        .role-badge {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .role-admin {
+            background: #E74C3C;
+            color: #fff;
+        }
+
+        .role-mod {
+            background: #F39C12;
+            color: #fff;
+        }
+
+        .role-user {
+            background: #2ECC71;
+            color: #fff;
+        }
+
+        /* Action buttons */
+        .act-btn {
+            padding: 3px 10px;
+            border: none;
+            border-radius: 3px;
+            font-family: inherit;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 0 2px;
+        }
+
+        .act-ban {
+            background: #E74C3C;
+            color: #fff;
+        }
+
+        .act-ban:hover {
+            background: #C0392B;
+        }
+
+        .act-unban {
+            background: #27AE60;
+            color: #fff;
+        }
+
+        .act-unban:hover {
+            background: #1E8449;
+        }
+
+        .act-role {
+            background: #3498DB;
+            color: #fff;
+        }
+
+        .act-role:hover {
+            background: #2980B9;
+        }
+
+        .act-lock {
+            background: #E67E22;
+            color: #fff;
+        }
+
+        .act-lock:hover {
+            background: #D35400;
+        }
+
+        .act-unlock {
+            background: #2ECC71;
+            color: #fff;
+        }
+
+        .act-unlock:hover {
+            background: #27AE60;
+        }
+
+        /* Forms */
+        .form-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .form-input {
+            flex: 1;
+            padding: 7px 10px;
+            border: 1px solid #34495E;
+            background: #2C3E50;
+            color: #ECF0F1;
+            font-family: inherit;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #3498DB;
+        }
+
+        .form-select {
+            padding: 7px 10px;
+            border: 1px solid #34495E;
+            background: #2C3E50;
+            color: #ECF0F1;
+            font-family: inherit;
+            font-size: 12px;
+        }
+
+        /* Room cards */
+        .room-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            background: #1a2642;
+            border: 1px solid #2C3E50;
+            border-radius: 4px;
+        }
+
+        .room-card-info {
+            flex: 1;
+        }
+
+        .room-card-name {
+            font-weight: bold;
+            font-size: 13px;
+            color: #ECF0F1;
+        }
+
+        .room-card-meta {
+            font-size: 11px;
+            color: #7F8C8D;
+            margin-top: 2px;
+        }
+
+        .room-locked {
+            border-color: #E74C3C;
+            background: #2C1A1A;
+        }
+
+        .lock-icon {
+            font-size: 16px;
+            margin-right: 8px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: #27AE60;
+            color: #fff;
+            border-radius: 6px;
+            font-size: 13px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 9999;
+        }
+
+        .toast.error {
+            background: #E74C3C;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* Access denied */
+        .access-denied {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .access-denied h2 {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .access-denied p {
+            color: #95A5A6;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Access Denied -->
+    <div class="access-denied" id="access-denied">
+        <h2>🚫</h2>
+        <p>Bu sayfaya erişim yetkiniz yok.<br>Sadece Admin kullanıcılar bu paneli görebilir.</p>
+        <br>
+        <button class="header-btn" onclick="window.location.href='index.html'">← Lobiye Dön</button>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" style="display:none">
+        <div class="admin-header">
+            <h1>🛡️ Retro<span>Sesler</span>.com — Admin Panel</h1>
+            <div class="admin-header-actions">
+                <div class="admin-nick" id="admin-nick">⏳ Yükleniyor...</div>
+                <button class="header-btn" onclick="window.location.href='index.html'">← Lobi</button>
+                <button class="header-btn" onclick="loadAll()">🔄 Yenile</button>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-number" id="stat-users">-</div>
+                <div class="stat-label">Kayıtlı Kullanıcı</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="stat-online" style="color:#2ECC71">-</div>
+                <div class="stat-label">Çevrimiçi</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="stat-bans" style="color:#E74C3C">-</div>
+                <div class="stat-label">Aktif Ban</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="stat-locks" style="color:#E67E22">-</div>
+                <div class="stat-label">Kilitli Oda</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-main">
+            <!-- Users Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    👥 Kayıtlı Kullanıcılar
+                    <span id="user-count-label" style="font-size:11px;color:#85C1E9"></span>
+                </div>
+                <div class="panel-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nick</th>
+                                <th>Rol</th>
+                                <th>Kayıt</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Ban Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    🚫 Ban Yönetimi
+                    <span id="ban-count-label" style="font-size:11px;color:#E74C3C"></span>
+                </div>
+                <div class="panel-body">
+                    <!-- Add ban form -->
+                    <div class="form-row">
+                        <input class="form-input" id="ban-nick" placeholder="Nick" style="flex:2">
+                        <input class="form-input" id="ban-reason" placeholder="Sebep (opsiyonel)">
+                        <select class="form-select" id="ban-duration">
+                            <option value="0">Süresiz</option>
+                            <option value="30">30 dk</option>
+                            <option value="60">1 Saat</option>
+                            <option value="1440">1 Gün</option>
+                            <option value="10080">1 Hafta</option>
+                        </select>
+                        <button class="act-btn act-ban" onclick="addBan()">🚫 Banla</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nick</th>
+                                <th>Sebep</th>
+                                <th>Banlayan</th>
+                                <th>Bitiş</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="bans-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Rooms Panel -->
+            <div class="panel" style="grid-column: span 2">
+                <div class="panel-header">🏠 Oda Yönetimi</div>
+                <div class="panel-body" id="rooms-panel"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const token = localStorage.getItem('retrosesler_token');
+        const API_HEADERS = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        };
+
+        const ROOMS = [
+            'Genel Sohbet', 'VIP Lounge', 'Müzik Odası', 'Kamera Odası 1',
+            'Gece Kulübü', 'VIP Gold', 'Rock & Metal', 'Kamera Odası 2', 'Nostalji Köşesi'
+        ];
+
+        // Auth check
+        async function checkAuth() {
+            if (!token) { showDenied(); return; }
+            try {
+                const res = await fetch('/api/me', { headers: { 'Authorization': 'Bearer ' + token } });
+                const data = await res.json();
+                if (!data.success || (data.role !== 'admin' && data.role !== 'mod')) {
+                    showDenied();
+                    return;
+                }
+                document.getElementById('admin-nick').textContent = '🛡️ ' + data.nick + ' (' + data.role + ')';
+                document.getElementById('admin-panel').style.display = 'block';
+                loadAll();
+            } catch { showDenied(); }
+        }
+
+        function showDenied() {
+            document.getElementById('access-denied').style.display = 'block';
+        }
+
+        function toast(msg, error) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast show' + (error ? ' error' : '');
+            setTimeout(() => t.className = 'toast', 3000);
+        }
+
+        async function loadAll() {
+            loadStats();
+            loadUsers();
+            loadBans();
+            loadRooms();
+        }
+
+        // Stats
+        async function loadStats() {
+            try {
+                const res = await fetch('/api/admin/stats', { headers: API_HEADERS });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('stat-users').textContent = data.totalUsers;
+                    document.getElementById('stat-online').textContent = data.totalOnline;
+                    document.getElementById('stat-bans').textContent = data.totalBans;
+                    document.getElementById('stat-locks').textContent = data.lockedRooms;
+                }
+            } catch { }
+        }
+
+        // Users
+        async function loadUsers() {
+            try {
+                const res = await fetch('/api/admin/users', { headers: API_HEADERS });
+                const data = await res.json();
+                if (!data.success) return;
+                document.getElementById('user-count-label').textContent = data.users.length + ' kullanıcı';
+                const tbody = document.getElementById('users-table');
+                tbody.innerHTML = data.users.map(u => `
+                    <tr>
+                        <td><b>${esc(u.nick)}</b></td>
+                        <td><span class="role-badge role-${u.role}">${u.role}</span></td>
+                        <td style="font-size:11px;color:#7F8C8D">${new Date(u.createdAt).toLocaleDateString('tr')}</td>
+                        <td>
+                            <select onchange="changeRole('${u.id}', this.value)" class="form-select" style="padding:2px 6px;font-size:11px">
+                                <option value="user" ${u.role === 'user' ? 'selected' : ''}>user</option>
+                                <option value="mod" ${u.role === 'mod' ? 'selected' : ''}>mod</option>
+                                <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>admin</option>
+                            </select>
+                            <button class="act-btn act-ban" onclick="quickBan('${esc(u.nick)}')">🚫</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch { }
+        }
+
+        // Bans
+        async function loadBans() {
+            try {
+                const res = await fetch('/api/admin/bans', { headers: API_HEADERS });
+                const data = await res.json();
+                if (!data.success) return;
+                document.getElementById('ban-count-label').textContent = data.bans.length + ' ban';
+                const tbody = document.getElementById('bans-table');
+                if (data.bans.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#7F8C8D">Aktif ban yok ✅</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = data.bans.map(b => `
+                    <tr>
+                        <td><b>${esc(b.nick)}</b></td>
+                        <td style="font-size:11px">${esc(b.reason)}</td>
+                        <td style="font-size:11px;color:#85C1E9">${esc(b.bannedBy)}</td>
+                        <td style="font-size:11px">${b.expiresAt ? new Date(b.expiresAt).toLocaleString('tr') : '<span style="color:#E74C3C">Süresiz</span>'}</td>
+                        <td><button class="act-btn act-unban" onclick="removeBan('${esc(b.nick)}')">Kaldır</button></td>
+                    </tr>
+                `).join('');
+            } catch { }
+        }
+
+        // Rooms
+        async function loadRooms() {
+            try {
+                const [roomRes] = await Promise.all([fetch('/api/rooms')]);
+                const roomData = await roomRes.json();
+                const panel = document.getElementById('rooms-panel');
+                let html = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">';
+                for (const name of ROOMS) {
+                    const rd = roomData.rooms?.find(r => r.name === name);
+                    const count = rd ? rd.participants : 0;
+                    // Check lock status
+                    let lockRes;
+                    try {
+                        lockRes = await fetch('/api/room/status?room=' + encodeURIComponent(name));
+                        lockRes = await lockRes.json();
+                    } catch { lockRes = { locked: false }; }
+
+                    const isLocked = lockRes.locked;
+                    html += `
+                        <div class="room-card ${isLocked ? 'room-locked' : ''}">
+                            <div class="room-card-info">
+                                <div class="room-card-name">${isLocked ? '🔒' : '🏠'} ${esc(name)}</div>
+                                <div class="room-card-meta">👥 ${count} kişi ${isLocked ? '— <span style="color:#E74C3C">KİLİTLİ</span>' : ''}</div>
+                            </div>
+                            ${isLocked
+                            ? `<button class="act-btn act-unlock" onclick="unlockRoom('${esc(name)}')">🔓 Aç</button>`
+                            : `<button class="act-btn act-lock" onclick="lockRoom('${esc(name)}')">🔒 Kilitle</button>`
+                        }
+                        </div>
+                    `;
+                }
+                html += '</div>';
+                panel.innerHTML = html;
+            } catch { }
+        }
+
+        // Actions
+        async function changeRole(userId, role) {
+            try {
+                const res = await fetch('/api/admin/users/role', {
+                    method: 'POST', headers: API_HEADERS,
+                    body: JSON.stringify({ userId, role })
+                });
+                const data = await res.json();
+                toast(data.success ? `${data.nick} → ${role}` : data.error, !data.success);
+                loadUsers();
+            } catch (e) { toast('Hata: ' + e.message, true); }
+        }
+
+        async function addBan() {
+            const nick = document.getElementById('ban-nick').value.trim();
+            const reason = document.getElementById('ban-reason').value.trim();
+            const duration = parseInt(document.getElementById('ban-duration').value);
+            if (!nick) { toast('Nick gerekli', true); return; }
+            try {
+                const res = await fetch('/api/admin/ban', {
+                    method: 'POST', headers: API_HEADERS,
+                    body: JSON.stringify({ nick, reason, duration })
+                });
+                const data = await res.json();
+                toast(data.success ? data.message : data.error, !data.success);
+                document.getElementById('ban-nick').value = '';
+                document.getElementById('ban-reason').value = '';
+                loadAll();
+            } catch (e) { toast('Hata: ' + e.message, true); }
+        }
+
+        function quickBan(nick) {
+            document.getElementById('ban-nick').value = nick;
+            document.getElementById('ban-nick').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function removeBan(nick) {
+            try {
+                const res = await fetch('/api/admin/unban', {
+                    method: 'POST', headers: API_HEADERS,
+                    body: JSON.stringify({ nick })
+                });
+                const data = await res.json();
+                toast(data.success ? data.message : data.error, !data.success);
+                loadAll();
+            } catch (e) { toast('Hata: ' + e.message, true); }
+        }
+
+        async function lockRoom(room) {
+            try {
+                const res = await fetch('/api/admin/room/lock', {
+                    method: 'POST', headers: API_HEADERS,
+                    body: JSON.stringify({ room })
+                });
+                const data = await res.json();
+                toast(data.success ? data.message : data.error, !data.success);
+                loadAll();
+            } catch (e) { toast('Hata: ' + e.message, true); }
+        }
+
+        async function unlockRoom(room) {
+            try {
+                const res = await fetch('/api/admin/room/unlock', {
+                    method: 'POST', headers: API_HEADERS,
+                    body: JSON.stringify({ room })
+                });
+                const data = await res.json();
+                toast(data.success ? data.message : data.error, !data.success);
+                loadAll();
+            } catch (e) { toast('Hata: ' + e.message, true); }
+        }
+
+        function esc(str) {
+            const d = document.createElement('div');
+            d.textContent = str || '';
+            return d.innerHTML;
+        }
+
+        // Auto-refresh every 10s
+        setInterval(loadStats, 10000);
+
+        // Init
+        checkAuth();
+    </script>
+</body>
+
+</html>
