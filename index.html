@@ -959,8 +959,7 @@
                         style="font-size:10px;color:#8B7D6B;font-style:italic;margin:4px 0"></div>
                     <div class="user-status" id="profile-status">● Misafir</div>
                     <div class="user-actions" id="profile-actions">
-                        <button class="user-btn" onclick="window.location.href='/giris'">🔑 Giriş Yap</button>
-                        <button class="user-btn" onclick="window.location.href='/giris'">📝 Kayıt Ol</button>
+                        <!-- JS yönetiyor -->
                     </div>
                 </div>
             </div>
@@ -1330,6 +1329,9 @@
             document.getElementById('profile-badge').innerHTML = '';
             document.getElementById('profile-bio').textContent = '';
             document.getElementById('profile-status').innerHTML = '<span style="color:#F39C12">●</span> Giriş yapın';
+            document.getElementById('profile-actions').innerHTML =
+                '<button class="user-btn" onclick="window.location.href=\'/giris\'">🔑 Giriş Yap</button>' +
+                '<button class="user-btn" onclick="window.location.href=\'/giris\'">📝 Kayıt Ol</button>';
         }
 
         function logout() {
