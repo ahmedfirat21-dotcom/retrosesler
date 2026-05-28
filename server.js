@@ -164,6 +164,7 @@ app.get('*.html', (req, res, next) => {
     return res.status(404).send('Sayfa bulunamadı');
 });
 // Temiz URL rotaları
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/giris', (req, res) => res.sendFile(path.join(__dirname, 'auth.html')));
 app.get('/sifre-sifirla', (req, res) => res.sendFile(path.join(__dirname, 'sifre-sifirla.html')));
 app.get('/oda', (req, res) => res.sendFile(path.join(__dirname, 'room.html')));
