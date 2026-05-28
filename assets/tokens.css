@@ -1,0 +1,190 @@
+/* ════════════════════════════════════════════════════════
+   RETROSESLER — DESIGN TOKENS
+   ════════════════════════════════════════════════════════
+   Tek kaynak: renk, spacing, font, radius, z-index, geçiş süresi.
+   Tüm yeni component'ler bu variables üzerinden inşa edilir.
+   Tema sistemi (classic/sakir/gece/pera) ekstra body[data-theme]
+   selector'larında bu palet'i override eder.
+
+   Kullanım:
+     padding: var(--space-md);          → 12px
+     color:   var(--rs-ink);            → ana metin rengi
+     font:    var(--font-body);         → Tahoma 13px
+     border-radius: var(--radius-md);   → 6px
+     transition: var(--ease-fast);      → 0.15s ease
+
+   Sayfa head'ine: <link rel="stylesheet" href="/assets/tokens.css">
+   ────────────────────────────────────────────────────────── */
+
+:root {
+    /* ── RENK PALETİ (classic = Win2000 + Eski Dergi) ── */
+    --rs-paper:        #FAFAF5;
+    --rs-paper-soft:   #F0EDE4;
+    --rs-paper-cream:  #E8E4D9;
+    --rs-paper-dark:   #D4CFBF;
+    --rs-paper-border: #A09880;
+    --rs-ink:          #222;
+    --rs-ink-soft:     #555;
+    --rs-ink-faded:    #888;
+
+    /* Marka & Win2000 mavisi */
+    --rs-blue:         #3A6EA5;
+    --rs-blue-dark:    #1E4070;
+    --rs-blue-light:   #4A90D9;
+    --rs-blue-mid:     #2E6BBF;
+
+    /* Accent kırmızı (logo + leave + danger) */
+    --rs-red:          #C0392B;
+    --rs-red-light:    #E74C3C;
+    --rs-red-dark:     #922B21;
+    --rs-red-bg:       #FCE4E4;
+
+    /* Accent altın (badge + retro vurgu) */
+    --rs-gold:         #C8A464;
+    --rs-gold-dark:    #A88513;
+    --rs-gold-light:   #FFE082;
+    --rs-gold-bg:      #FFF9E6;
+
+    /* Statu/feedback */
+    --rs-green:        #27AE60;
+    --rs-green-bg:     #D5F5E3;
+    --rs-warn:         #D68910;
+    --rs-warn-bg:      #FCF3CF;
+    --rs-info:         #5DADE2;
+    --rs-info-bg:      #D6EAF8;
+
+    /* ── SPACING (4px grid) ── */
+    --space-xxs: 2px;
+    --space-xs:  4px;
+    --space-sm:  8px;
+    --space-md:  12px;
+    --space-lg:  16px;
+    --space-xl:  24px;
+    --space-xxl: 32px;
+
+    /* ── FONT FAMILY ── */
+    --font-body:    Tahoma, Verdana, sans-serif;
+    --font-display: 'Press Start 2P', monospace;
+    --font-mono:    'JetBrains Mono', monospace;
+    --font-serif:   'PT Serif', Georgia, serif;
+
+    /* ── FONT SIZE ── */
+    --fs-xxs:  10px;
+    --fs-xs:   11px;
+    --fs-sm:   12px;
+    --fs-md:   13px;
+    --fs-lg:   14px;
+    --fs-xl:   16px;
+    --fs-h2:   18px;
+    --fs-h1:   22px;
+
+    /* ── RADIUS ── */
+    --radius-xs: 2px;
+    --radius-sm: 3px;
+    --radius-md: 6px;
+    --radius-lg: 10px;
+    --radius-pill: 999px;
+
+    /* ── SHADOW ── */
+    --shadow-soft:  0 1px 3px rgba(0,0,0,0.08);
+    --shadow-card:  2px 3px 8px rgba(0,0,0,0.15);
+    --shadow-modal: 0 8px 32px rgba(0,0,0,0.35);
+
+    /* ── BORDER ── */
+    --border-thin:  1px solid var(--rs-paper-border);
+    --border-card:  2px solid var(--rs-paper-border);
+    --border-inset: 2px inset #b0b0b0;
+    --border-outset: 2px outset #d4d0c8;
+
+    /* ── Z-INDEX KATMANLARI ── */
+    --z-base:     1;
+    --z-sticky:   10;
+    --z-dropdown: 100;
+    --z-modal:    1000;
+    --z-toast:    2000;
+    --z-tooltip:  3000;
+
+    /* ── TRANSITION ── */
+    --ease-fast:   0.15s ease;
+    --ease-base:   0.25s ease;
+    --ease-slow:   0.4s ease;
+
+    /* ── DOKUNMA HEDEFLERİ (Apple/Google standardı 44px) ── */
+    --touch-min:    44px;
+    --touch-cozy:   40px;
+    --touch-dense:  32px;
+
+    /* ── SAFE AREA (iOS notch, Android nav bar) ── */
+    --safe-top:    env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left:   env(safe-area-inset-left, 0px);
+    --safe-right:  env(safe-area-inset-right, 0px);
+}
+
+/* ════ TEMA OVERRIDE'LARI ════
+   body[data-theme="sakir|gece|pera"] kendi tokenlarını ezecek.
+   Yeni temalar buraya eklenir (tek nokta).
+*/
+
+body[data-theme="sakir"] {
+    --rs-paper:        #ece3cf;
+    --rs-paper-soft:   #dfd3bb;
+    --rs-paper-cream:  #c9b58e;
+    --rs-paper-dark:   #c2b296;
+    --rs-paper-border: #5a4b41;
+    --rs-ink:          #2b221e;
+    --rs-ink-soft:     #5a4b41;
+    --rs-blue:         #9e1b1b;        /* Şakir kırmızısı (header rengi) */
+    --rs-blue-dark:    #6b1010;
+    --rs-blue-light:   #c43030;
+    --rs-blue-mid:     #9e1b1b;
+    --rs-gold:         #d4a017;
+    --rs-gold-dark:    #a88513;
+    --rs-red:          #9e1b1b;
+    --rs-red-dark:     #6b1010;
+}
+
+body[data-theme="gece"] {
+    --rs-paper:        #0a1428;
+    --rs-paper-soft:   #0f1a2e;
+    --rs-paper-cream:  #1a2840;
+    --rs-paper-dark:   #050a18;
+    --rs-paper-border: #2a3a5a;
+    --rs-ink:          #d6dcea;
+    --rs-ink-soft:     #a8b3c8;
+    --rs-blue:         #1a2840;
+    --rs-blue-dark:    #050a18;
+    --rs-blue-light:   #2a3a5a;
+    --rs-gold:         #d4a017;
+    --rs-gold-light:   #f5d896;
+}
+
+body[data-theme="pera"] {
+    --rs-paper:        #faf0f5;
+    --rs-paper-soft:   #f0e0e8;
+    --rs-paper-cream:  #d8c0d0;
+    --rs-paper-dark:   #c0a8b8;
+    --rs-paper-border: #8a6a82;
+    --rs-ink:          #3a2838;
+    --rs-ink-soft:     #6a4a62;
+    --rs-blue:         #8a6a82;
+    --rs-blue-dark:    #6a4a62;
+    --rs-blue-light:   #b89cb0;
+    --rs-gold:         #d4a017;
+    --rs-red:          #b8527a;
+}
+
+/* ════ ORTAK MOBİL DAVRANIŞ ════
+   Tüm sayfalarda safe-area + touch min koruma — yeni component'lerde otomatik.
+*/
+
+@media (max-width: 768px) {
+    button, .btn, [role="button"], a.btn, input[type="button"], input[type="submit"] {
+        /* Yeni component'ler — eski kodu zorla bozma, sadece tavsiye */
+        min-height: var(--touch-cozy);
+    }
+}
+
+/* Safe-area koruyucu sınıflar — sticky bottom bar'lara uygula */
+.safe-bottom { padding-bottom: max(var(--space-md), var(--safe-bottom)); }
+.safe-top    { padding-top: max(var(--space-md), var(--safe-top)); }

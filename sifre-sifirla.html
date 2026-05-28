@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Şifre Sıfırla — RetroSesler.com</title>
+    <link rel="icon" type="image/png" href="assets/mikrofon.png">
+    <link rel="apple-touch-icon" href="assets/mikrofon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Tahoma&display=swap" rel="stylesheet">
+    <script src="/assets/retro-ui.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0 }
+        body {
+            font-family: Tahoma, Verdana, sans-serif; font-size: 13px;
+            background: #3A6EA5;
+            background-image:
+                radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.08), transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(0,60,120,0.15), transparent 50%),
+                linear-gradient(180deg, #3A6EA5 0%, #2B5A8C 50%, #1E4070 100%);
+            min-height: 100vh; color: #222;
+            display: flex; flex-direction: column;
+        }
+        .topbar {
+            background: linear-gradient(180deg, #E8E4D9 0%, #D4CFBF 100%);
+            border-bottom: 2px solid #A09880; padding: 8px 18px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .brand {
+            font-family: 'Press Start 2P', monospace; font-size: 14px;
+            color: #C0392B; text-decoration: none;
+            text-shadow: 2px 2px 0 #E74C3C, 3px 3px 0 rgba(0,0,0,0.15);
+        }
+        .brand span { color: #2E86C1 }
+        .topbar-back {
+            font-family: Tahoma; font-size: 11px;
+            background: #fff; border: 2px outset #d4d0c8;
+            padding: 4px 12px; cursor: pointer; color: #333;
+            text-decoration: none;
+        }
+        .topbar-back:active { border-style: inset; }
+        .main {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 30px 16px;
+        }
+        .card {
+            background: linear-gradient(180deg, #FAFAF5 0%, #F0EDE4 100%);
+            border: 2px solid #A09880; border-radius: 6px;
+            box-shadow: 4px 6px 18px rgba(0,0,0,0.35);
+            width: 420px; max-width: 100%;
+            overflow: hidden;
+        }
+        .card-tb {
+            background: linear-gradient(180deg, #4A90D9 0%, #2E6BBF 40%, #1E5AA8 100%);
+            color: #fff; padding: 8px 14px;
+            font-size: 13px; font-weight: bold;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+        }
+        .card-body { padding: 22px 24px; }
+        .card-body h1 {
+            font-size: 18px; color: #1E4070; margin-bottom: 8px;
+        }
+        .card-body p {
+            font-size: 12px; color: #555; line-height: 1.5; margin-bottom: 14px;
+        }
+        label {
+            display: block; font-size: 11px; font-weight: bold; color: #444;
+            margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        input[type="password"], input[type="text"] {
+            width: 100%; padding: 8px 10px;
+            font-family: Tahoma, sans-serif; font-size: 13px;
+            border: 2px inset #b0b0b0; background: #fff;
+            outline: none; border-radius: 3px;
+            margin-bottom: 12px;
+        }
+        input:focus { border-color: #3A6EA5; }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(180deg, #4A90D9, #2E6BBF);
+            color: #fff;
+            border: 1px solid #1E5AA8;
+            font-family: Tahoma, sans-serif;
+            font-size: 13px; font-weight: bold;
+            cursor: pointer;
+            border-radius: 3px;
+            letter-spacing: 0.5px;
+        }
+        .btn:hover { filter: brightness(1.08); }
+        .btn:disabled { background: #aaa; cursor: not-allowed; }
+        .alert {
+            padding: 10px 14px; border-radius: 4px;
+            font-size: 12px; line-height: 1.4;
+            margin-bottom: 12px;
+        }
+        .alert.success { background: #d5f5e3; border: 1px solid #2ecc71; color: #186A3B; }
+        .alert.error { background: #fadbd8; border: 1px solid #e74c3c; color: #922B21; }
+        .alert.warn { background: #fcf3cf; border: 1px solid #f0c419; color: #7d6608; }
+        .alert.info { background: #d6eaf8; border: 1px solid #5dade2; color: #1B4F72; }
+        .hint { font-size: 11px; color: #888; margin-top: 4px; }
+        .pwd-strength {
+            font-size: 10px; color: #777; margin-top: 4px;
+        }
+        .pwd-strength.weak { color: #c0392b; }
+        .pwd-strength.medium { color: #d68910; }
+        .pwd-strength.strong { color: #27ae60; }
+        .footer {
+            text-align: center; color: rgba(255,255,255,0.7);
+            font-size: 11px; padding: 16px;
+        }
+        .footer a { color: rgba(255,255,255,0.9) }
+    </style>
+    <link rel="stylesheet" href="/assets/tokens.css">
+</head>
+<body>
+    <div class="topbar">
+        <a href="/" class="brand">Retro<span>Sesler</span></a>
+        <a href="/giris" class="topbar-back">◀ Girişe Dön</a>
+    </div>
+
+    <div class="main">
+        <div class="card">
+            <div class="card-tb">🔑 Şifre Sıfırlama</div>
+            <div class="card-body" id="body">
+                <p>🔄 Token doğrulanıyor...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © <span id="y"></span> <a href="/">RetroSesler.com</a>
+        <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(location.search);
+        const token = params.get('token');
+        const body = document.getElementById('body');
+
+        function showForm() {
+            body.innerHTML = `
+                <h1>Yeni Şifre Belirle</h1>
+                <p>Bu link 1 saat geçerli. Yeni şifren en az 4 karakter olmalı.</p>
+                <label>Yeni Şifre</label>
+                <input type="password" id="new-pwd" placeholder="••••••••" autocomplete="new-password" maxlength="64">
+                <div class="pwd-strength" id="pwd-str"></div>
+                <label style="margin-top:12px">Yeni Şifre (tekrar)</label>
+                <input type="password" id="new-pwd2" placeholder="••••••••" autocomplete="new-password" maxlength="64">
+                <div id="msg"></div>
+                <button class="btn" id="submit-btn" type="button">💾 Şifremi Güncelle</button>
+            `;
+            const inp1 = document.getElementById('new-pwd');
+            const inp2 = document.getElementById('new-pwd2');
+            const str = document.getElementById('pwd-str');
+            inp1.focus();
+            inp1.addEventListener('input', () => {
+                const v = inp1.value;
+                let label = '', cls = '';
+                if (!v) { str.textContent = ''; return; }
+                if (v.length < 4) { label = '⚠️ En az 4 karakter gerekli'; cls = 'weak'; }
+                else if (v.length < 8) { label = 'Kısa şifre — daha güçlü tavsiye'; cls = 'weak'; }
+                else if (/^[a-z]+$/i.test(v) || /^\d+$/.test(v)) { label = 'Sadece harf veya rakam — karışık kullan'; cls = 'medium'; }
+                else if (v.length >= 12 && /[A-Z]/.test(v) && /\d/.test(v)) { label = '✅ Çok güçlü şifre'; cls = 'strong'; }
+                else { label = 'İdare eder — biraz daha karıştır'; cls = 'medium'; }
+                str.textContent = label;
+                str.className = 'pwd-strength ' + cls;
+            });
+            // Enter ile submit
+            [inp1, inp2].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') doSubmit(); }));
+            document.getElementById('submit-btn').addEventListener('click', doSubmit);
+        }
+
+        async function doSubmit() {
+            const p1 = document.getElementById('new-pwd').value;
+            const p2 = document.getElementById('new-pwd2').value;
+            const msg = document.getElementById('msg');
+            const btn = document.getElementById('submit-btn');
+            if (!p1 || p1.length < 4) { msg.innerHTML = '<div class="alert error">Şifre en az 4 karakter olmalı.</div>'; return; }
+            if (p1 !== p2) { msg.innerHTML = '<div class="alert error">İki şifre aynı değil.</div>'; return; }
+            btn.disabled = true; btn.textContent = '⏳ Kaydediliyor...';
+            try {
+                const res = await fetch('/api/account/password-reset/confirm', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token, newPassword: p1 }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    body.innerHTML = `
+                        <h1 style="color:#186A3B">✅ Şifren Yenilendi!</h1>
+                        <div class="alert success">
+                            ${data.message || 'Yeni şifrenle giriş yapabilirsin.'}
+                        </div>
+                        <a href="/giris" class="btn" style="display:block;text-align:center;text-decoration:none;line-height:1.3">🔑 Giriş Yap</a>
+                    `;
+                } else {
+                    msg.innerHTML = `<div class="alert error">${data.error || 'Hata'}</div>`;
+                    btn.disabled = false; btn.textContent = '💾 Şifremi Güncelle';
+                }
+            } catch (err) {
+                msg.innerHTML = `<div class="alert error">Sunucu hatası: ${err.message}</div>`;
+                btn.disabled = false; btn.textContent = '💾 Şifremi Güncelle';
+            }
+        }
+
+        async function verifyToken() {
+            if (!token) {
+                body.innerHTML = `
+                    <h1 style="color:#922B21">❌ Geçersiz Adres</h1>
+                    <div class="alert error">Bu sayfa şifre sıfırlama linki ile açılır. Email'inden gelen linki kullan.</div>
+                    <a href="/giris" class="btn" style="display:block;text-align:center;text-decoration:none">◀ Girişe Dön</a>
+                `;
+                return;
+            }
+            try {
+                const res = await fetch('/api/account/password-reset/verify?token=' + encodeURIComponent(token));
+                const data = await res.json();
+                if (data.success) {
+                    showForm();
+                } else {
+                    body.innerHTML = `
+                        <h1 style="color:#922B21">❌ Geçersiz veya Süresi Dolmuş Link</h1>
+                        <div class="alert error">${data.error || 'Bu link artık kullanılamaz.'}</div>
+                        <p style="font-size:11px;color:#888">Sıfırlama linki <b>1 saat</b> geçerli. Yeni link almak için aşağıdan yeniden iste.</p>
+                        <a href="/giris" class="btn" style="display:block;text-align:center;text-decoration:none;line-height:1.3">🔑 Girişe Dön → Şifremi Unuttum</a>
+                    `;
+                }
+            } catch (err) {
+                body.innerHTML = `<div class="alert error">Sunucu hatası: ${err.message}</div>`;
+            }
+        }
+
+        verifyToken();
+    </script>
+</body>
+</html>

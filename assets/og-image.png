@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#3a6ea5"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g transform="translate(600,260)" text-anchor="middle">
+    <text font-family="Press Start 2P, monospace" font-size="72" font-weight="bold" fill="#FFFFFF" letter-spacing="6">
+      <tspan>Retro</tspan>
+      <tspan fill="#85C1E9">Sesler</tspan>
+    </text>
+  </g>
+  <g transform="translate(600,360)" text-anchor="middle">
+    <text font-family="Tahoma, sans-serif" font-size="36" fill="rgba(255,255,255,0.85)">
+      Sesli &amp; G&#246;r&#252;nt&#252;l&#252; Sohbet
+    </text>
+  </g>
+  <g transform="translate(600,430)" text-anchor="middle">
+    <text font-family="Tahoma, sans-serif" font-size="24" fill="rgba(255,255,255,0.6)" font-style="italic">
+      2000'lerin ruhu, modern teknoloji
+    </text>
+  </g>
+  <g transform="translate(600,540)" text-anchor="middle">
+    <rect x="-160" y="-30" width="320" height="60" rx="30" fill="#E74C3C"/>
+    <text font-family="Tahoma, sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF" y="8">retrosesler.com</text>
+  </g>
+</svg>
