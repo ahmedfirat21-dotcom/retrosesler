@@ -21,3 +21,13 @@ docker-compose.override.yml
 
 # User data (JSON store)
 data/
+
+# Database files (★ GÜVENLİK — asla commit edilmemeli)
+*.db
+*.sqlite
+*.sqlite3
+
+# Keystore / credentials
+*.jks
+*.keystore
+pc-api-key.json

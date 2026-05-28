@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RetroSesler.com — Admin Panel</title>
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+    <link rel="icon" type="image/png" href="assets/mikrofon.png">
+    <link rel="apple-touch-icon" href="assets/mikrofon.png">
     <style>
         * {
             box-sizing: border-box;
@@ -363,6 +363,8 @@
             font-size: 14px;
         }
     </style>
+    <link rel="stylesheet" href="/assets/tokens.css">
+    <script src="/assets/retro-ui.js"></script>
 </head>
 
 <body>
@@ -377,7 +379,7 @@
     <!-- Admin Panel -->
     <div id="admin-panel" style="display:none">
         <div class="admin-header">
-            <h1>🛡️ Retro<span>Sesler</span>.com — Admin Panel</h1>
+            <h1>🛡️ Retro<span>Sesler</span> — Admin Panel</h1>
             <div class="admin-header-actions">
                 <div class="admin-nick" id="admin-nick">⏳ Yükleniyor...</div>
                 <button class="header-btn" onclick="window.location.href='/'">← Lobi</button>
@@ -468,7 +470,7 @@
                 <div class="panel-header">
                     🏠 Oda Yönetimi
                     <button class="act-btn act-unlock"
-                        onclick="document.getElementById('add-room-form').style.display=document.getElementById('add-room-form').style.display==='none'?'block':'none'">+
+                        onclick="(function(){var f=document.getElementById('add-room-form');f.style.display=f.style.display==='none'?'block':'none';if(f.style.display==='block') updateAddRoomPresetPreview();})()">+
                         Yeni Oda</button>
                 </div>
                 <div class="panel-body">
@@ -480,11 +482,12 @@
                             <input class="form-input" id="room-name" placeholder="Oda Adı (ör: Dans Pisti)"
                                 style="flex:2">
                             <input class="form-input" id="room-icon" placeholder="🎵 Icon" style="flex:0.5">
-                            <select class="form-select" id="room-category">
-                                <option value="free">Serbest</option>
-                                <option value="cam">Kamera</option>
+                            <select class="form-select" id="room-category" onchange="updateAddRoomPresetPreview()">
+                                <option value="free">Serbest Sohbet</option>
+                                <option value="cam">Kameralı</option>
                                 <option value="music">Müzik</option>
-                                <option value="vip">VIP</option>
+                                <option value="book">Edebiyat</option>
+                                <option value="game">Oyun</option>
                                 <option value="hot">Gece</option>
                             </select>
                             <input class="form-input" id="room-max" placeholder="Kapasite" type="number" value="50"
@@ -495,8 +498,6 @@
                                 <option value="">Rozet Yok</option>
                                 <option value="hot">POPÜLER</option>
                                 <option value="new">YENİ</option>
-                                <option value="vip">VIP</option>
-                                <option value="vip-new">VIP+YENİ</option>
                                 <option value="music">MÜZİK</option>
                                 <option value="cam">KAMERA</option>
                             </select>
@@ -504,10 +505,76 @@
                             <button class="act-btn act-unlock" onclick="addRoom()" style="white-space:nowrap">✅ Oda
                                 Ekle</button>
                         </div>
+                        <div class="form-row">
+                            <select class="form-select" id="room-theme" title="Oda görsel teması">
+                                <option value="classic">🪟 Klasik (Win2000)</option>
+                                <option value="sakir">☕ Şakir'in Kahvesi</option>
+                            </select>
+                            <select class="form-select" id="room-cam-mode" title="Kamera modu">
+                                <option value="camera">📹 Kameralı (sahnedeki herkes)</option>
+                                <option value="host_only">👑 Sadece host kamera</option>
+                                <option value="none">🔇 Kamerasız (sesli)</option>
+                            </select>
+                        </div>
+                        <div id="preset-preview" style="margin-top:8px;padding:6px 10px;background:#0f1a30;border:1px dashed #4A6FA5;border-radius:3px;font-size:11px;color:#a8c3e5">
+                            Otomatik atanacak ayarlar burada görünür.
+                        </div>
                     </div>
                     <div id="rooms-panel"></div>
                 </div>
             </div>
+
+            <!-- Üye Odaları (kullanıcılar açtıkları) -->
+            <div class="row" style="margin-top:18px">
+                <div class="card-section">
+                    <div class="section-title">🚪 Üye Oluşturduğu Odalar</div>
+                    <div id="user-rooms-panel"></div>
+                </div>
+            </div>
+
+            <!-- AI Moderasyon Raporları -->
+            <div class="row" style="margin-top:18px">
+                <div class="card-section">
+                    <div class="section-title">🚨 AI Moderasyon Raporları (son 100)</div>
+                    <div id="reports-panel"></div>
+                </div>
+            </div>
+
+            <!-- Moderasyon Geçmişi (audit log) -->
+            <div class="row" style="margin-top:18px">
+                <div class="card-section">
+                    <div class="section-title">📜 Moderasyon Geçmişi (host + admin kararları)</div>
+                    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
+                        <input id="ml-room-filter" class="form-input" placeholder="Oda adı filtre" style="flex:1;min-width:150px">
+                        <select id="ml-action-filter" class="form-select">
+                            <option value="">Tüm aksiyonlar</option>
+                            <option value="host-kick">🚪 Host kick</option>
+                            <option value="co-host-add">👑+ Co-host eklendi</option>
+                            <option value="co-host-remove">👑× Co-host kaldırıldı</option>
+                            <option value="settings-changed">⚙️ Ayar değişti</option>
+                            <option value="admin-kick">🛡️ Admin kick</option>
+                            <option value="admin-mute">🔇 Admin mute</option>
+                            <option value="admin-ban">⛔ Admin ban</option>
+                            <option value="admin-unban">✅ Unban</option>
+                            <option value="admin-role-change">👤 Rol değişti</option>
+                            <option value="admin-room-delete">🗑️ Oda silindi</option>
+                        </select>
+                        <button class="act-btn" onclick="loadModLog()" style="background:#3498DB;color:#fff">🔄 Yenile</button>
+                    </div>
+                    <div id="mod-log-panel"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Oda içi katılımcı modali (admin'in görüp yönetebilmesi için) -->
+    <div id="parts-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;align-items:center;justify-content:center;font-family:Tahoma,sans-serif">
+        <div style="background:#FAFAF5;border:2px solid #A09880;border-radius:6px;width:520px;max-width:92vw;max-height:80vh;overflow:hidden;display:flex;flex-direction:column">
+            <div style="background:linear-gradient(180deg,#4A90D9,#2E6BBF);color:#fff;padding:8px 12px;font-weight:bold;display:flex;justify-content:space-between">
+                <span id="parts-title">👀 Odadakiler</span>
+                <span style="cursor:pointer;background:#D04040;color:#fff;width:22px;height:18px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #800" onclick="closePartsModal()">×</span>
+            </div>
+            <div id="parts-body" style="padding:14px;overflow-y:auto;flex:1"></div>
         </div>
     </div>
 
@@ -520,7 +587,29 @@
             'Authorization': 'Bearer ' + token
         };
 
-        const ADMIN_SECRET = 'retro2024admin';
+        // Server-tarafı ROOM_PRESETS'in yansıması — yeni oda ekle formunda preview için kullanılır.
+        // KRİTİK: server.js'teki ROOM_PRESETS sabiti ile eşit kalmalı.
+        const CLIENT_ROOM_PRESETS = {
+            free:  { max_speakers: 6, max_cameras: 4,  mic_policy: 'request', cam_policy: 'speakers_only', ai_level: 'standard' },
+            music: { max_speakers: 4, max_cameras: 2,  mic_policy: 'request', cam_policy: 'mod_only',      ai_level: 'standard' },
+            cam:   { max_speakers: 8, max_cameras: 12, mic_policy: 'request', cam_policy: 'speakers_only', ai_level: 'standard' },
+            hot:   { max_speakers: 6, max_cameras: 6,  mic_policy: 'request', cam_policy: 'speakers_only', ai_level: 'standard' },
+            book:  { max_speakers: 4, max_cameras: 0,  mic_policy: 'request', cam_policy: 'mod_only',      ai_level: 'strict'   },
+            game:  { max_speakers: 6, max_cameras: 4,  mic_policy: 'request', cam_policy: 'speakers_only', ai_level: 'standard' },
+        };
+        function updateAddRoomPresetPreview() {
+            const cat = document.getElementById('room-category')?.value || 'free';
+            const p = CLIENT_ROOM_PRESETS[cat] || CLIENT_ROOM_PRESETS.free;
+            const target = document.getElementById('preset-preview');
+            if (!target) return;
+            const micText = p.mic_policy === 'open' ? 'serbest' : (p.mic_policy === 'invite_only' ? 'davet' : 'söz iste');
+            const camText = p.max_cameras === 0 ? 'kapalı' : (p.cam_policy === 'mod_only' ? 'sadece host' : 'sadece sahnede');
+            target.innerHTML = `🎤 <b>${p.max_speakers}</b> sahne · 📹 <b>${p.max_cameras}</b> kamera (${camText}) · ✋ <b>${micText}</b> · 🤖 AI <b>${p.ai_level}</b> <span style="color:#7d92b0">— bu değerler otomatik atanır; sonra ✏️ ile değiştirilebilir.</span>`;
+        }
+
+        // ADMIN_SECRET artık YOK — JWT + 'admin' rolü ile giriş yapılıyor.
+        // sopranochat@gmail.com Google ile giriş yaparsa otomatik admin olur
+        // (server.js ADMIN_EMAILS whitelist).
 
         // Auth check
         async function checkAuth() {
@@ -542,8 +631,15 @@
             document.getElementById('access-denied').style.display = 'block';
         }
 
+        // toast() admin sayfa-spesifik wrapper — retro-ui.js'in retroToast()'una köprü.
+        // Tek toast/modal sistemi (Codex tavsiyesi #5): tüm sayfalar artık retro-ui.js kullanır.
         function toast(msg, error) {
+            if (window.retroToast) {
+                return retroToast(msg, error ? 'error' : 'ok');
+            }
+            // Fallback (retro-ui yüklenememişse)
             const t = document.getElementById('toast');
+            if (!t) { console.warn('[admin] toast fallback yok:', msg); return; }
             t.textContent = msg;
             t.className = 'toast show' + (error ? ' error' : '');
             setTimeout(() => t.className = 'toast', 3000);
@@ -554,6 +650,217 @@
             loadUsers();
             loadBans();
             loadRooms();
+            loadUserRooms();
+            loadReports();
+            loadModLog();
+        }
+
+        // ============ MODERASYON GEÇMİŞİ (audit log) ============
+        const ML_ACTION_LABEL = {
+            'host-kick': '🚪 Host kick',
+            'co-host-add': '👑+ Co-host eklendi',
+            'co-host-remove': '👑× Co-host kaldırıldı',
+            'settings-changed': '⚙️ Ayar değişti',
+            'admin-kick': '🛡️ Admin kick',
+            'admin-mute': '🔇 Admin mute',
+            'admin-ban': '⛔ Admin ban',
+            'admin-unban': '✅ Unban',
+            'admin-role-change': '👤 Rol değişti',
+            'admin-room-delete': '🗑️ Oda silindi',
+        };
+        function mlTime(ts) {
+            const d = new Date(ts);
+            const sec = Math.floor((Date.now() - ts) / 1000);
+            if (sec < 60) return sec + 'sn önce';
+            if (sec < 3600) return Math.floor(sec/60) + ' dk önce';
+            if (sec < 86400) return Math.floor(sec/3600) + ' sa önce';
+            return d.toLocaleString('tr-TR');
+        }
+        async function loadModLog() {
+            const panel = document.getElementById('mod-log-panel');
+            if (!panel) return;
+            const room = document.getElementById('ml-room-filter')?.value?.trim() || '';
+            const action = document.getElementById('ml-action-filter')?.value || '';
+            const qp = new URLSearchParams();
+            if (room) qp.set('room', room);
+            if (action) qp.set('action', action);
+            qp.set('limit', '300');
+            try {
+                const r = await fetch('/api/admin/mod-log?' + qp.toString(), { headers: API_HEADERS });
+                const data = await r.json();
+                if (!data.success || !data.items?.length) {
+                    panel.innerHTML = '<div style="text-align:center;color:#888;font-style:italic;padding:30px">📭 Henüz moderasyon kaydı yok.</div>';
+                    return;
+                }
+                let html = `<div style="font-size:11px;color:#888;margin-bottom:6px">Toplam ${data.total} kayıt — filtreli ${data.filtered}, gösterilen ${data.items.length}</div>`;
+                html += '<table><thead><tr><th style="width:90px">Ne zaman</th><th>Aksiyon</th><th>Yapan</th><th>Hedef</th><th>Oda</th><th>Sebep / Detay</th></tr></thead><tbody>';
+                for (const it of data.items) {
+                    const label = ML_ACTION_LABEL[it.action] || it.action;
+                    const detailStr = it.details ? JSON.stringify(it.details).slice(0, 80) : '';
+                    html += `<tr>
+                        <td style="font-size:10px;color:#666" title="${new Date(it.ts).toLocaleString('tr-TR')}">${mlTime(it.ts)}</td>
+                        <td style="font-weight:bold">${label}</td>
+                        <td>${esc(it.by || '')}</td>
+                        <td>${esc(it.target || '')}</td>
+                        <td>${esc(it.room || '')}</td>
+                        <td style="font-size:11px;color:#555">${esc(it.reason || '')} ${detailStr ? '<span style="color:#999;font-size:10px"> — '+esc(detailStr)+'</span>' : ''}</td>
+                    </tr>`;
+                }
+                html += '</tbody></table>';
+                panel.innerHTML = html;
+            } catch (e) { panel.innerHTML = '<div style="color:#E74C3C">Yükleme hatası: '+e.message+'</div>'; }
+        }
+
+        // ============ ÜYE ODALARI ============
+        async function loadUserRooms() {
+            const panel = document.getElementById('user-rooms-panel');
+            if (!panel) return;
+            try {
+                const res = await fetch('/api/admin/user-rooms', { headers: API_HEADERS });
+                const data = await res.json();
+                if (!data.success || !data.rooms || data.rooms.length === 0) {
+                    panel.innerHTML = '<div style="text-align:center;color:#888;font-style:italic;padding:30px">📭 Şu an kullanıcı tarafından açılmış oda yok.</div>';
+                    return;
+                }
+                let html = '<table style="width:100%;border-collapse:collapse"><thead><tr style="background:#1E5AA8;color:#fff"><th style="text-align:left;padding:6px 8px">Oda</th><th style="text-align:left;padding:6px 8px">Host</th><th style="text-align:left;padding:6px 8px">Erişim</th><th style="text-align:left;padding:6px 8px">Açılış</th><th style="text-align:left;padding:6px 8px">İşlem</th></tr></thead><tbody>';
+                const accessLabel = { public: '🌍 Açık', password: '🔒 Şifreli', invite: '📨 Davetli', friends: '👥 Arkadaş' };
+                for (const r of data.rooms) {
+                    const age = Math.floor((Date.now() - new Date(r.createdAt).getTime()) / 60000);
+                    const ageLabel = age < 60 ? age + ' dk önce' : Math.floor(age / 60) + ' saat önce';
+                    html += `<tr style="border-bottom:1px solid #ddd">
+                        <td style="padding:6px 8px"><b>${esc(r.icon || '💬')} ${esc(r.name)}</b></td>
+                        <td style="padding:6px 8px"><a href="/u/${encodeURIComponent(r.host)}" target="_blank">@${esc(r.host)}</a></td>
+                        <td style="padding:6px 8px;font-size:11px">${accessLabel[r.access] || r.access}</td>
+                        <td style="padding:6px 8px;font-size:11px;color:#666">${ageLabel}</td>
+                        <td style="padding:6px 8px">
+                            <button class="act-btn" style="background:#9b59b6" onclick="viewParticipants('${esc(r.name)}')">👀 İçindekiler</button>
+                            <button class="act-btn act-ban" onclick="forceDeleteUserRoom('${esc(r.name)}')">🗑️ Zorla Sil</button>
+                        </td>
+                    </tr>`;
+                }
+                html += '</tbody></table>';
+                panel.innerHTML = html;
+            } catch (e) { console.error('loadUserRooms hatası:', e); }
+        }
+
+        async function forceDeleteUserRoom(name) {
+            const ok = await adminConfirm('🗑️ Üye Odasını Zorla Sil',
+                `"${esc(name)}" odasını zorla silmek istediğine emin misin? Host bunu yapamadığı için sen yetkilisin.`);
+            if (!ok) return;
+            try {
+                const res = await fetch('/api/admin/user-rooms/' + encodeURIComponent(name), {
+                    method: 'DELETE', headers: API_HEADERS,
+                });
+                const data = await res.json();
+                toast(data.success ? `🗑️ ${name} silindi` : (data.error || 'Hata'), !data.success);
+                loadUserRooms();
+                loadStats();
+            } catch (e) { toast('Hata: ' + e.message, true); }
+        }
+
+        // ============ ODA İÇİ KATILIMCILAR ============
+        async function viewParticipants(roomName) {
+            const modal = document.getElementById('parts-modal');
+            const body = document.getElementById('parts-body');
+            const title = document.getElementById('parts-title');
+            title.textContent = '👀 ' + roomName + ' — İçindekiler';
+            body.innerHTML = '<div style="text-align:center;color:#888;padding:20px">🔄 Yükleniyor...</div>';
+            modal.style.display = 'flex';
+            try {
+                const res = await fetch('/api/admin/room/' + encodeURIComponent(roomName) + '/participants', { headers: API_HEADERS });
+                const data = await res.json();
+                if (!data.success) {
+                    body.innerHTML = `<div style="color:#c00">❌ ${esc(data.error || 'Hata')}</div>`;
+                    return;
+                }
+                if (data.participants.length === 0) {
+                    body.innerHTML = '<div style="text-align:center;color:#888;font-style:italic;padding:20px">📭 Oda boş.</div>';
+                    return;
+                }
+                body.innerHTML = data.participants.map(p => `
+                    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #ddd">
+                        <div style="flex:1">
+                            <a href="/u/${encodeURIComponent(p.identity)}" target="_blank" style="font-weight:bold;color:#1E4070">@${esc(p.identity)}</a>
+                            <div style="font-size:10px;color:#888">${p.audioTracks > 0 ? '🎤 ' : ''}${p.videoTracks > 0 ? '📹 ' : ''}${p.isPublisher ? 'Konuşmacı' : 'Dinleyici'}</div>
+                        </div>
+                        <button class="act-btn" style="background:#f39c12" onclick="kickFromRoom('${esc(roomName)}', '${esc(p.identity)}')">🚫 At</button>
+                        <button class="act-btn" style="background:#3498db" onclick="muteInRoom('${esc(roomName)}', '${esc(p.identity)}')">🔇 Sustur</button>
+                    </div>
+                `).join('');
+            } catch (e) {
+                body.innerHTML = `<div style="color:#c00">❌ ${esc(e.message)}</div>`;
+            }
+        }
+        function closePartsModal() {
+            document.getElementById('parts-modal').style.display = 'none';
+        }
+        async function kickFromRoom(room, identity) {
+            const ok = await adminConfirm('🚫 Odadan At', `@${esc(identity)} kullanıcısı "${esc(room)}" odasından atılsın mı?`);
+            if (!ok) return;
+            try {
+                const res = await fetch('/api/kick', {
+                    method: 'POST', headers: API_HEADERS,
+                    body: JSON.stringify({ room, identity, reason: 'Admin kararı' }),
+                });
+                const data = await res.json();
+                toast(data.success ? `🚫 ${identity} atıldı` : (data.error || 'Hata'), !data.success);
+                viewParticipants(room); // tazele
+            } catch (e) { toast('Hata: ' + e.message, true); }
+        }
+        async function muteInRoom(room, identity) {
+            try {
+                const res = await fetch('/api/mute', {
+                    method: 'POST', headers: API_HEADERS,
+                    body: JSON.stringify({ room, identity }),
+                });
+                const data = await res.json();
+                toast(data.success ? `🔇 ${identity} susturuldu` : (data.error || 'Hata'), !data.success);
+            } catch (e) { toast('Hata: ' + e.message, true); }
+        }
+
+        // ============ AI MODERASYON RAPORLARI ============
+        async function loadReports() {
+            const panel = document.getElementById('reports-panel');
+            if (!panel) return;
+            try {
+                const res = await fetch('/api/admin/reports', { headers: API_HEADERS });
+                const data = await res.json();
+                if (!data.success || !data.reports || data.reports.length === 0) {
+                    panel.innerHTML = '<div style="text-align:center;color:#888;font-style:italic;padding:30px">📭 Henüz rapor yok. AI temiz çalışıyor demektir.</div>';
+                    return;
+                }
+                let html = '<table style="width:100%;border-collapse:collapse"><thead><tr style="background:#C0392B;color:#fff"><th style="text-align:left;padding:6px 8px">Zaman</th><th style="text-align:left;padding:6px 8px">Bildiren</th><th style="text-align:left;padding:6px 8px">Bildirilen</th><th style="text-align:left;padding:6px 8px">Sebep</th><th style="text-align:left;padding:6px 8px">AI Kararı</th><th style="text-align:left;padding:6px 8px"></th></tr></thead><tbody>';
+                const actionLabel = {
+                    none: '✅ Temiz', warn: '⚠️ Uyarı',
+                    mute_15m: '🔇 15dk sus', mute_1h: '🔇 1sa sus', mute_5m: '🔇 5dk sus',
+                    kick: '🚪 Atıldı', ban_24h: '⛔ 24sa ban', ban_perm: '⛔ Kalıcı ban',
+                };
+                data.reports.forEach((r, i) => {
+                    const t = new Date(r.ts);
+                    const dateStr = t.toLocaleDateString('tr-TR') + ' ' + t.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+                    const aiAction = r.ai ? actionLabel[r.ai.action] || r.ai.action : '—';
+                    const aiReason = r.ai?.reason ? `<div style="font-size:10px;color:#666;font-style:italic">${esc(r.ai.reason)}</div>` : '';
+                    const transcript = r.ai?.transcript ? `<div style="font-size:10px;color:#444;background:#f5f5f5;padding:3px 5px;margin-top:3px">📝 "${esc(r.ai.transcript)}"</div>` : '';
+                    html += `<tr style="border-bottom:1px solid #ddd">
+                        <td style="padding:6px 8px;font-size:11px;color:#666;white-space:nowrap">${dateStr}</td>
+                        <td style="padding:6px 8px"><a href="/u/${encodeURIComponent(r.reporter)}" target="_blank">@${esc(r.reporter)}</a></td>
+                        <td style="padding:6px 8px"><a href="/u/${encodeURIComponent(r.reported)}" target="_blank" style="color:#c00">@${esc(r.reported)}</a></td>
+                        <td style="padding:6px 8px;font-size:11px">${esc(r.reason || '—')}<br><span style="font-size:10px;color:#888">📍 ${esc(r.room || '?')}</span></td>
+                        <td style="padding:6px 8px"><span class="role-badge" style="background:${r.ai?.action === 'none' ? '#27ae60' : (r.ai?.action?.startsWith('ban') ? '#c0392b' : '#f39c12')}">${aiAction}</span>${aiReason}${transcript}</td>
+                        <td style="padding:6px 8px"><button class="act-btn" onclick="dismissReport(${i})">✓ Kapat</button></td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+                panel.innerHTML = html;
+            } catch (e) { console.error('loadReports hatası:', e); }
+        }
+        async function dismissReport(index) {
+            try {
+                const res = await fetch('/api/admin/reports/' + index, { method: 'DELETE', headers: API_HEADERS });
+                const data = await res.json();
+                if (data.success) loadReports();
+                else toast(data.error || 'Hata', true);
+            } catch (e) { toast('Hata: ' + e.message, true); }
         }
 
         // Stats
@@ -621,11 +928,11 @@
         }
 
         // Rooms — dinamik API'den çek
-        const categoryLabels = { free: 'Serbest', cam: 'Kamera', music: 'Müzik', vip: 'VIP', hot: 'Gece' };
+        const categoryLabels = { free: 'Serbest', cam: 'Kamera', music: 'Müzik', book: 'Edebiyat', game: 'Oyun', hot: 'Gece' };
         async function loadRooms() {
             try {
                 const [roomRes, liveRes] = await Promise.all([
-                    fetch('/api/admin/rooms'),
+                    fetch('/api/admin/rooms', { headers: API_HEADERS }),
                     fetch('/api/rooms')
                 ]);
                 const roomData = await roomRes.json();
@@ -644,7 +951,8 @@
                         <td>${count}/${room.max}</td>
                         <td style="font-size:11px;color:#7F8C8D;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(room.desc || '')}</td>
                         <td>
-                            <button class="act-btn act-role" onclick="editRoom('${esc(room.name)}')">✏️ Düzenle</button>
+                            <button class="act-btn act-role" onclick='openRoomEditModal(${JSON.stringify(room).replace(/'/g, "&#39;")})'>✏️ Düzenle</button>
+                            <button class="act-btn" style="background:#9b59b6" onclick="toggleRoomLock('${esc(room.name)}')">🔒 Kilit</button>
                             <button class="act-btn act-ban" onclick="deleteRoom('${esc(room.name)}')">🗑️ Sil</button>
                         </td>
                     </tr>`;
@@ -661,12 +969,14 @@
             const max = document.getElementById('room-max').value || 50;
             const badge = document.getElementById('room-badge').value || null;
             const desc = document.getElementById('room-desc').value.trim();
+            const theme = document.getElementById('room-theme')?.value || 'classic';
+            const cam_mode = document.getElementById('room-cam-mode')?.value || 'camera';
             if (!name) { toast('Oda adı gerekli', true); return; }
             try {
                 const res = await fetch('/api/admin/rooms', {
                     method: 'POST',
-                    headers: { ...API_HEADERS, 'x-admin-token': ADMIN_SECRET },
-                    body: JSON.stringify({ name, icon, category, max, badge, desc })
+                    headers: API_HEADERS,
+                    body: JSON.stringify({ name, icon, category, max, badge, desc, theme, cam_mode })
                 });
                 const data = await res.json();
                 if (data.success) {
@@ -676,27 +986,174 @@
                     document.getElementById('add-room-form').style.display = 'none';
                     loadRooms();
                     loadStats();
-                } else { toast(data.error, true); }
+                } else { toast(data.error || 'Eklenemedi', true); }
             } catch (e) { toast('Hata: ' + e.message, true); }
         }
 
-        async function editRoom(name) {
-            const newName = await adminPrompt('✏️ Oda Adı Değiştir', 'Yeni oda adı:', name);
-            if (!newName || newName === name) {
-                const newMax = await adminPrompt('📊 Kapasite Değiştir', 'Yeni kapasite (' + name + '):', '50');
-                if (!newMax) return;
-                fetch('/api/admin/rooms', {
+        // ============ DETAYLI ODA DÜZENLE MODAL ============
+        function openRoomEditModal(room) {
+            // Mevcut modal varsa kaldır
+            const existing = document.getElementById('room-edit-modal');
+            if (existing) existing.remove();
+
+            const m = document.createElement('div');
+            m.id = 'room-edit-modal';
+            m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:Tahoma,sans-serif;';
+            m.innerHTML = `
+                <div style="background:#FAFAF5;border:2px solid #A09880;border-radius:6px;box-shadow:4px 6px 18px rgba(0,0,0,0.4);width:460px;max-width:92vw;overflow:hidden;">
+                    <div style="background:linear-gradient(180deg,#4A90D9 0%,#2E6BBF 40%,#1E5AA8 100%);color:#fff;padding:8px 12px;font-weight:bold;display:flex;justify-content:space-between;align-items:center;">
+                        <span>✏️ Oda Düzenle — ${esc(room.name)}</span>
+                        <span style="cursor:pointer;background:#D04040;color:#fff;width:22px;height:18px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #800;font-weight:bold;" onclick="closeRoomEditModal()">×</span>
+                    </div>
+                    <div style="padding:16px 18px;background:#ECE9D8;">
+                        <div style="margin-bottom:10px"><label style="display:block;font-size:11px;font-weight:bold;color:#444;margin-bottom:3px">Oda Adı</label>
+                            <input type="text" id="re-name" value="${esc(room.name)}" maxlength="40" style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:12px;box-sizing:border-box"></div>
+                        <div style="margin-bottom:10px;display:flex;gap:10px">
+                            <div style="flex:0 0 90px"><label style="display:block;font-size:11px;font-weight:bold;color:#444;margin-bottom:3px">İkon (emoji)</label>
+                                <input type="text" id="re-icon" value="${esc(room.icon || '💬')}" maxlength="4" style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:18px;text-align:center;box-sizing:border-box"></div>
+                            <div style="flex:1"><label style="display:block;font-size:11px;font-weight:bold;color:#444;margin-bottom:3px">Kategori</label>
+                                <select id="re-category" style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:12px;box-sizing:border-box">
+                                    <option value="free" ${room.category === 'free' ? 'selected' : ''}>💬 Sohbet</option>
+                                    <option value="music" ${room.category === 'music' ? 'selected' : ''}>🎵 Müzik</option>
+                                    <option value="cam" ${room.category === 'cam' ? 'selected' : ''}>📹 Kamera</option>
+                                    <option value="book" ${room.category === 'book' ? 'selected' : ''}>📚 Edebiyat</option>
+                                    <option value="game" ${room.category === 'game' ? 'selected' : ''}>🎮 Oyun</option>
+                                    <option value="hot" ${room.category === 'hot' ? 'selected' : ''}>🌙 Gece kuşları</option>
+                                </select></div>
+                            <div style="flex:0 0 80px"><label style="display:block;font-size:11px;font-weight:bold;color:#444;margin-bottom:3px">Kapasite</label>
+                                <input type="number" id="re-max" value="${room.max || 50}" min="2" max="500" style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:12px;box-sizing:border-box"></div>
+                        </div>
+                        <div style="margin-bottom:10px"><label style="display:block;font-size:11px;font-weight:bold;color:#444;margin-bottom:3px">Rozet (boş = yok)</label>
+                            <select id="re-badge" style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:12px;box-sizing:border-box">
+                                <option value="">— Rozet yok —</option>
+                                <option value="hot" ${room.badge === 'hot' ? 'selected' : ''}>🔥 Popüler</option>
+                                <option value="new" ${room.badge === 'new' ? 'selected' : ''}>✨ Yeni</option>
+                                <option value="music" ${room.badge === 'music' ? 'selected' : ''}>🎵 Müzik</option>
+                                <option value="cam" ${room.badge === 'cam' ? 'selected' : ''}>📹 Kamera</option>
+                            </select></div>
+                        <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:bold;color:#444;margin-bottom:3px">Açıklama (max 120 karakter)</label>
+                            <textarea id="re-desc" maxlength="120" rows="2" style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:12px;box-sizing:border-box;resize:vertical">${esc(room.desc || '')}</textarea></div>
+
+                        <!-- 🎤 Sahne Ayarları -->
+                        <div style="margin:14px 0 6px;padding:8px 10px;background:linear-gradient(180deg,#FFF8E1,#FCEABF);border-left:3px solid #E0C870;font-size:11px;font-weight:bold;color:#5A3E00;text-transform:uppercase;letter-spacing:0.5px">🎤 SAHNE & MİKROFON</div>
+                        <div style="margin-bottom:10px;display:flex;gap:10px">
+                            <div style="flex:1"><label style="display:block;font-size:11px;font-weight:bold;color:#444;margin-bottom:3px">Mikrofon Politikası</label>
+                                <select id="re-mic-policy" style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:12px;box-sizing:border-box">
+                                    <option value="open" ${room.mic_policy === 'open' ? 'selected' : ''}>🔓 Açık — herkes direkt mic açar</option>
+                                    <option value="request" ${(room.mic_policy === 'request' || !room.mic_policy) ? 'selected' : ''}>✋ Söz iste — sahneye çıkmak için onay</option>
+                                    <option value="invite_only" ${room.mic_policy === 'invite_only' ? 'selected' : ''}>🔒 Sadece davetli — host davet eder</option>
+                                </select></div>
+                            <div style="flex:0 0 100px"><label style="display:block;font-size:11px;font-weight:bold;color:#444;margin-bottom:3px">Max Konuşmacı</label>
+                                <input type="number" id="re-max-speakers" value="${room.max_speakers || 6}" min="1" max="50" style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:12px;box-sizing:border-box"></div>
+                        </div>
+
+                        <!-- 📹 Kamera Ayarları -->
+                        <div style="margin:14px 0 6px;padding:8px 10px;background:linear-gradient(180deg,#E1F0FF,#BFD8FC);border-left:3px solid #4A90D9;font-size:11px;font-weight:bold;color:#1E4070;text-transform:uppercase;letter-spacing:0.5px">📹 KAMERA</div>
+                        <div style="margin-bottom:10px;display:flex;gap:10px">
+                            <div style="flex:1"><label style="display:block;font-size:11px;font-weight:bold;color:#444;margin-bottom:3px">Kamera Politikası</label>
+                                <select id="re-cam-policy" style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:12px;box-sizing:border-box">
+                                    <option value="speakers_only" ${(room.cam_policy === 'speakers_only' || !room.cam_policy || room.cam_policy === 'all') ? 'selected' : ''}>🎤 Sadece sahnedekiler</option>
+                                    <option value="mod_only" ${room.cam_policy === 'mod_only' ? 'selected' : ''}>🛡️ Sadece host / mod</option>
+                                </select></div>
+                            <div style="flex:0 0 100px"><label style="display:block;font-size:11px;font-weight:bold;color:#444;margin-bottom:3px">Max Kamera</label>
+                                <input type="number" id="re-max-cameras" value="${room.max_cameras !== undefined ? room.max_cameras : 4}" min="0" max="30" style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:12px;box-sizing:border-box"></div>
+                        </div>
+
+                        <!-- ⚙️ Otomasyon -->
+                        <div style="margin:14px 0 6px;padding:8px 10px;background:linear-gradient(180deg,#E1FFE1,#BFFCBF);border-left:3px solid #2ecc71;font-size:11px;font-weight:bold;color:#186A3B;text-transform:uppercase;letter-spacing:0.5px">⚙️ OTOMASYON</div>
+                        <div style="margin-bottom:8px;display:flex;align-items:center;gap:6px;font-size:12px">
+                            <input type="checkbox" id="re-auto-stage" ${(room.auto_stage !== false) ? 'checked' : ''}>
+                            <label for="re-auto-stage">Mod yokken sahne boş slot varsa sıradakini otomatik al</label>
+                        </div>
+                        <div style="margin-bottom:10px;display:flex;gap:10px">
+                            <div style="flex:1"><label style="display:block;font-size:11px;font-weight:bold;color:#444;margin-bottom:3px">Konuşma Süresi Limiti (sn — 0=sınırsız)</label>
+                                <input type="number" id="re-speaker-time" value="${room.speaker_time_limit || 0}" min="0" max="3600" step="60" style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:12px;box-sizing:border-box">
+                                <div style="font-size:10px;color:#666;margin-top:2px">Süre dolunca otomatik sahneden iner. 300=5dk önerilir.</div></div>
+                            <div style="flex:1"><label style="display:block;font-size:11px;font-weight:bold;color:#444;margin-bottom:3px">Sessizlik At (sn — 0=kapalı)</label>
+                                <input type="number" id="re-silence-kick" value="${room.silence_kick_seconds || 0}" min="0" max="3600" step="30" style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:12px;box-sizing:border-box">
+                                <div style="font-size:10px;color:#666;margin-top:2px">Bu kadar sessiz konuşmacı indirilir. 120=2dk.</div></div>
+                        </div>
+
+                        <!-- 🤖 AI -->
+                        <div style="margin:14px 0 6px;padding:8px 10px;background:linear-gradient(180deg,#FAE1FF,#E8BFFC);border-left:3px solid #9b59b6;font-size:11px;font-weight:bold;color:#4a235a;text-transform:uppercase;letter-spacing:0.5px">🤖 AI MODERASYON</div>
+                        <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:bold;color:#444;margin-bottom:3px">AI Seviye</label>
+                            <select id="re-ai-level" style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:12px;box-sizing:border-box">
+                                <option value="off" ${room.ai_level === 'off' ? 'selected' : ''}>⚪ Kapalı — AI yok; küfür filtresi + kullanıcı raporu çalışır</option>
+                                <option value="standard" ${(room.ai_level === 'standard' || !room.ai_level) ? 'selected' : ''}>🟢 Standart — AI bağlamsal değerlendirir (çoğu odaya uygun)</option>
+                                <option value="strict" ${room.ai_level === 'strict' ? 'selected' : ''}>🔴 Sert — küçük ihlali bile yakalar (edebiyat/aile odası için)</option>
+                            </select></div>
+
+                        <!-- 🎨 TEMA + KAMERA MODU -->
+                        <div style="margin:14px 0 6px;padding:8px 10px;background:linear-gradient(180deg,#FFF5E1,#FCE5BF);border-left:3px solid #d4a017;font-size:11px;font-weight:bold;color:#7d4a00;text-transform:uppercase;letter-spacing:0.5px">🎨 GÖRÜNÜM</div>
+                        <div style="margin-bottom:10px;display:flex;gap:10px">
+                            <div style="flex:1"><label style="display:block;font-size:11px;font-weight:bold;color:#444;margin-bottom:3px">Oda Teması</label>
+                                <select id="re-theme" style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:12px;box-sizing:border-box">
+                                    <option value="classic" ${(!room.theme || room.theme === 'classic') ? 'selected' : ''}>🪟 Klasik (Win2000)</option>
+                                    <option value="sakir" ${room.theme === 'sakir' ? 'selected' : ''}>☕ Şakir'in Kahvesi</option>
+                                </select></div>
+                            <div style="flex:1"><label style="display:block;font-size:11px;font-weight:bold;color:#444;margin-bottom:3px">Kamera Modu</label>
+                                <select id="re-cam-mode" style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:12px;box-sizing:border-box">
+                                    <option value="">— Değiştirme —</option>
+                                    <option value="camera">📹 Kameralı (sahnedeki herkes)</option>
+                                    <option value="host_only">👑 Sadece host kamera</option>
+                                    <option value="none">🔇 Kamerasız (sesli)</option>
+                                </select>
+                                <div style="font-size:10px;color:#666;margin-top:2px">Seçersen Max Kamera/Cam Politika üzerine yazılır.</div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex;gap:8px;justify-content:flex-end;padding-top:10px;border-top:1px solid #c8c3b5">
+                            <button onclick="closeRoomEditModal()" style="padding:6px 14px;background:linear-gradient(180deg,#E8E4D9,#C8C3B5);border:2px outset #d4d0c8;cursor:pointer;font-family:Tahoma;font-size:12px">Vazgeç</button>
+                            <button onclick='saveRoomEdit("${esc(room.name)}")' style="padding:6px 14px;background:linear-gradient(180deg,#4A90D9,#2E6BBF);color:#fff;border:1px solid #1E5AA8;cursor:pointer;font-family:Tahoma;font-size:12px;font-weight:bold">💾 Kaydet</button>
+                        </div>
+                    </div>
+                </div>`;
+            document.body.appendChild(m);
+            m.addEventListener('click', e => { if (e.target === m) closeRoomEditModal(); });
+        }
+        function closeRoomEditModal() {
+            const m = document.getElementById('room-edit-modal');
+            if (m) m.remove();
+        }
+        async function saveRoomEdit(originalName) {
+            const payload = {
+                originalName,
+                name: document.getElementById('re-name').value.trim(),
+                icon: document.getElementById('re-icon').value.trim() || '💬',
+                category: document.getElementById('re-category').value,
+                max: parseInt(document.getElementById('re-max').value) || 50,
+                badge: document.getElementById('re-badge').value || null,
+                desc: document.getElementById('re-desc').value.trim(),
+                // Yeni sahne/kamera/otomasyon ayarları
+                mic_policy: document.getElementById('re-mic-policy').value,
+                cam_policy: document.getElementById('re-cam-policy').value,
+                max_speakers: parseInt(document.getElementById('re-max-speakers').value) || 6,
+                max_cameras: parseInt(document.getElementById('re-max-cameras').value) || 0,
+                auto_stage: document.getElementById('re-auto-stage').checked,
+                speaker_time_limit: parseInt(document.getElementById('re-speaker-time').value) || 0,
+                silence_kick_seconds: parseInt(document.getElementById('re-silence-kick').value) || 0,
+                ai_level: document.getElementById('re-ai-level').value,
+                theme: document.getElementById('re-theme')?.value || 'classic',
+            };
+            const camMode = document.getElementById('re-cam-mode')?.value || '';
+            if (camMode) payload.cam_mode = camMode;
+            if (!payload.name) { toast('Oda adı boş olamaz', true); return; }
+            try {
+                const res = await fetch('/api/admin/rooms', {
                     method: 'PUT',
-                    headers: { ...API_HEADERS, 'x-admin-token': ADMIN_SECRET },
-                    body: JSON.stringify({ originalName: name, name, max: parseInt(newMax) })
-                }).then(r => r.json()).then(d => { toast(d.success ? '✅ Güncellendi' : d.error, !d.success); loadRooms(); });
-                return;
-            }
-            fetch('/api/admin/rooms', {
-                method: 'PUT',
-                headers: { ...API_HEADERS, 'x-admin-token': ADMIN_SECRET },
-                body: JSON.stringify({ originalName: name, name: newName })
-            }).then(r => r.json()).then(d => { toast(d.success ? '✅ ' + name + ' → ' + newName : d.error, !d.success); loadRooms(); });
+                    headers: API_HEADERS,
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    toast('✅ ' + originalName + ' güncellendi');
+                    closeRoomEditModal();
+                    loadRooms();
+                    loadStats();
+                } else {
+                    toast(data.error || 'Kaydedilemedi', true);
+                }
+            } catch (e) { toast('Hata: ' + e.message, true); }
         }
 
         async function deleteRoom(name) {
@@ -704,9 +1161,33 @@
             if (!ok) return;
             fetch('/api/admin/rooms', {
                 method: 'DELETE',
-                headers: { ...API_HEADERS, 'x-admin-token': ADMIN_SECRET },
+                headers: API_HEADERS,
                 body: JSON.stringify({ name })
-            }).then(r => r.json()).then(d => { toast(d.success ? '🗑️ ' + name + ' silindi' : d.error, !d.success); loadRooms(); loadStats(); });
+            }).then(r => r.json()).then(d => { toast(d.success ? '🗑️ ' + name + ' silindi' : (d.error || 'Silinemedi'), !d.success); loadRooms(); loadStats(); });
+        }
+
+        // Oda kilitle/aç (admin/mod)
+        async function toggleRoomLock(name) {
+            try {
+                const st = await fetch('/api/room/status?room=' + encodeURIComponent(name));
+                const stData = await st.json();
+                const locked = !!stData.locked;
+                const endpoint = locked ? '/api/admin/room/unlock' : '/api/admin/room/lock';
+                const verb = locked ? 'kilidi açıldı' : 'kilitlendi';
+                const ok = await adminConfirm(
+                    locked ? '🔓 Kilidi Aç' : '🔒 Odayı Kilitle',
+                    `"${esc(name)}" odasını ${locked ? 'açmak' : 'kilitlemek'} istediğinize emin misiniz? ${locked ? 'Tekrar açılınca herkes girebilir.' : 'Kilitliyken normal kullanıcılar giremez.'}`
+                );
+                if (!ok) return;
+                const res = await fetch(endpoint, {
+                    method: 'POST', headers: API_HEADERS,
+                    body: JSON.stringify({ room: name }),
+                });
+                const data = await res.json();
+                toast(data.success ? `✅ ${name} ${verb}` : (data.error || 'Hata'), !data.success);
+                loadRooms();
+                loadStats();
+            } catch (e) { toast('Hata: ' + e.message, true); }
         }
 
         // Actions

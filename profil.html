@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil — RetroSesler.com</title>
+    <link rel="icon" type="image/png" href="assets/mikrofon.png">
+    <link rel="apple-touch-icon" href="assets/mikrofon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Tahoma&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0 }
+        body {
+            font-family: Tahoma, Verdana, sans-serif; font-size: 13px;
+            background: #3A6EA5;
+            background-image:
+                radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.08), transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(0,60,120,0.15), transparent 50%),
+                linear-gradient(180deg, #3A6EA5 0%, #2B5A8C 50%, #1E4070 100%);
+            min-height: 100vh; color: #222;
+        }
+        a { color: #1E5AA8; text-decoration: none }
+        a:hover { text-decoration: underline }
+
+        .topbar {
+            background: linear-gradient(180deg, #E8E4D9 0%, #D4CFBF 100%);
+            border-bottom: 2px solid #A09880; padding: 8px 18px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .topbar a.brand {
+            font-family: 'Press Start 2P', monospace; font-size: 14px;
+            color: #C0392B; text-decoration: none;
+            text-shadow: 2px 2px 0 #E74C3C, 3px 3px 0 rgba(0,0,0,0.15);
+            letter-spacing: 1px;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .topbar a.brand span { color: #2E86C1 }
+        .topbar a.brand img { width: 28px; height: 28px; display: block; filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.25)); }
+        .topbar-back {
+            font-family: Tahoma; font-size: 11px;
+            background: #fff; border: 2px outset #d4d0c8;
+            padding: 4px 12px; cursor: pointer; color: #333;
+            text-decoration: none;
+        }
+        .topbar-back:active { border-style: inset; transform: translateY(1px) }
+
+        .main { max-width: 980px; margin: 24px auto; padding: 0 16px }
+
+        /* Win panel temel */
+        .win-panel {
+            background: linear-gradient(180deg, #FAFAF5 0%, #F0EDE4 100%);
+            border: 2px solid #A09880; border-radius: 6px; overflow: hidden;
+            box-shadow: 2px 3px 12px rgba(0,0,0,0.25), inset 0 1px 0 #fff;
+            margin-bottom: 14px;
+        }
+        .win-titlebar {
+            background: linear-gradient(180deg, #4A90D9 0%, #2E6BBF 40%, #1E5AA8 100%);
+            color: #fff; font-size: 12px; font-weight: bold;
+            padding: 6px 12px;
+            display: flex; align-items: center; gap: 8px;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+        }
+        .win-titlebar-btns { margin-left: auto; display: flex; gap: 3px; }
+        .win-btn {
+            width: 18px; height: 14px;
+            background: linear-gradient(180deg, #E8E4D9, #C8C3B5);
+            border: 1px outset #fff; color: #333;
+            font-size: 9px; line-height: 1; text-align: center;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+        .win-body { padding: 18px 22px }
+
+        /* ============ ÜST PROFİL KARTI ============ */
+        .p-hero {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 22px;
+            align-items: flex-start;
+        }
+        .p-avatar-wrap { position: relative; }
+        .p-avatar {
+            width: 120px; height: 120px;
+            background: linear-gradient(135deg, #E8F4FD, #B8D8F8);
+            border: 3px solid #2E6BBF;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 60px;
+            color: #2E86C1;
+            box-shadow: 2px 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.4);
+        }
+        .p-avatar.role-admin { border-color: #C0392B; background: linear-gradient(135deg, #FFE4E4, #FFC0C0); }
+        .p-avatar.role-mod { border-color: #B8860B; background: linear-gradient(135deg, #FFF8DC, #FFE8A0); }
+        /* Status dot */
+        .p-status-dot {
+            position: absolute; bottom: 4px; right: 4px;
+            width: 22px; height: 22px; border-radius: 50%;
+            border: 3px solid #FAFAF5;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .p-status-dot.online { background: #2ecc71 }
+        .p-status-dot.away { background: #f39c12 }
+        .p-status-dot.busy { background: #e74c3c }
+        .p-status-dot.brb { background: #9b59b6 }
+        .p-status-dot.invisible { background: #95a5a6 }
+
+        .p-info { min-width: 0; }
+        .p-nick-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+        .p-nick {
+            font-size: 26px; font-weight: bold; color: #1E4070;
+            line-height: 1.1;
+        }
+        .p-role {
+            display: inline-block; font-size: 10px;
+            padding: 3px 9px; border-radius: 10px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            font-weight: bold; vertical-align: middle;
+        }
+        .p-role.user  { background: #E8F4FD; color: #1E5AA8; border: 1px solid #A0C4E8 }
+        .p-role.mod   { background: #FFF5DD; color: #B8860B; border: 1px solid #D4B852 }
+        .p-role.admin { background: #FCE4E4; color: #C0392B; border: 1px solid #E68888 }
+        .p-status-label {
+            font-size: 11px; color: #555;
+            padding: 2px 8px; background: #f0eddf; border-radius: 8px;
+        }
+
+        .p-tagline {
+            font-size: 13px; color: #555; font-style: italic;
+            margin: 4px 0 8px;
+        }
+        .p-tagline.empty { color: #aaa; }
+
+        .p-pmsg {
+            display: inline-block;
+            font-size: 12px;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #FFFCE6, #FFF4B8);
+            border: 1px solid #E0C870;
+            border-radius: 14px;
+            position: relative;
+            margin: 2px 0 10px;
+            color: #5a4a00;
+        }
+        .p-pmsg::before {
+            content: '💭';
+            margin-right: 6px;
+        }
+
+        .p-meta-row {
+            display: flex; flex-wrap: wrap; gap: 12px;
+            font-size: 11px; color: #666;
+            margin-top: 6px;
+        }
+        .p-meta-row b { color: #333 }
+        .p-meta-row .meta-item {
+            display: inline-flex; align-items: center; gap: 4px;
+        }
+
+        /* Active room — yeşil pulsing pill */
+        .p-active-room {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 11px;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, #d5f5e3, #abebc6);
+            border: 1px solid #2ecc71;
+            border-radius: 12px;
+            color: #186A3B;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 6px;
+        }
+        .p-active-room::before {
+            content: ''; width: 8px; height: 8px; border-radius: 50%;
+            background: #27ae60;
+            box-shadow: 0 0 0 0 rgba(46,204,113,0.7);
+            animation: pulse 1.4s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(46,204,113,0.7) }
+            70% { box-shadow: 0 0 0 8px rgba(46,204,113,0) }
+            100% { box-shadow: 0 0 0 0 rgba(46,204,113,0) }
+        }
+
+        /* ============ AKSİYON BUTONLARI ============ */
+        .p-actions {
+            display: flex; gap: 8px; margin-top: 14px;
+            padding-top: 14px; border-top: 1px dotted #c8c3b5;
+            flex-wrap: wrap;
+        }
+        .p-btn {
+            padding: 7px 14px;
+            font-family: Tahoma, sans-serif; font-size: 12px;
+            font-weight: bold;
+            border: 2px outset #d4d0c8; background: #fff;
+            cursor: pointer; color: #1a1a1a;
+            box-shadow: 1px 1px 0 rgba(0,0,0,0.15);
+            display: inline-flex; align-items: center; gap: 6px;
+            text-decoration: none;
+        }
+        .p-btn:hover { background: #fafaf5 }
+        .p-btn:active { border-style: inset; transform: translateY(1px); box-shadow: none }
+        .p-btn.primary {
+            background: linear-gradient(180deg, #4A90D9 0%, #2E6BBF 100%);
+            color: #fff; border-color: #1E5AA8;
+            border-style: solid; border-width: 1px;
+        }
+        .p-btn.primary:hover { filter: brightness(1.08) }
+        .p-btn.success {
+            background: linear-gradient(180deg, #5cb85c 0%, #449d44 100%);
+            color: #fff; border: 1px solid #398439;
+        }
+        .p-btn.danger {
+            background: linear-gradient(180deg, #d9534f 0%, #c9302c 100%);
+            color: #fff; border: 1px solid #ac2925;
+        }
+
+        /* ============ 2-KOLON LAYOUT ============ */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 14px;
+        }
+        @media (max-width: 760px) {
+            .grid-2col { grid-template-columns: 1fr }
+        }
+        @media (max-width: 600px) {
+            .p-hero { grid-template-columns: 1fr; text-align: center }
+            .p-avatar { margin: 0 auto }
+            .p-nick-row { justify-content: center }
+            .p-meta-row { justify-content: center }
+            .p-actions { justify-content: center }
+        }
+
+        /* ============ ROZETLER ============ */
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(98px, 1fr));
+            gap: 10px;
+        }
+        .badge-item {
+            background: linear-gradient(135deg, #FFFCE6 0%, #F8E8B0 100%);
+            border: 1.5px solid #D4B852;
+            border-radius: 8px;
+            padding: 12px 6px;
+            text-align: center;
+            cursor: help;
+            transition: transform 0.15s;
+        }
+        .badge-item:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .badge-emoji { font-size: 28px; line-height: 1; }
+        .badge-name {
+            font-size: 10px; font-weight: bold; color: #5a4a00;
+            margin-top: 6px; line-height: 1.2;
+        }
+
+        /* ============ HAKKIMDA / DETAY ============ */
+        .about-block {
+            font-size: 13px; color: #333; line-height: 1.5;
+            padding: 12px;
+            background: #FFFDF6;
+            border-left: 3px solid #E0D5A0;
+            border-radius: 0 4px 4px 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .about-block.empty { color: #aaa; font-style: italic }
+
+        .detail-grid {
+            display: grid; grid-template-columns: auto 1fr; gap: 4px 12px;
+            font-size: 12px;
+        }
+        .detail-grid dt { font-weight: bold; color: #666; }
+        .detail-grid dd { color: #222; }
+        .detail-grid dd.empty { color: #999; font-style: italic; }
+
+        .music-block {
+            font-size: 12px;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+            border: 1px solid #ce93d8;
+            border-radius: 6px;
+            color: #4a148c;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .music-block::before { content: '🎵'; font-size: 18px; }
+        .music-block.empty { background: #f5f5f5; border-color: #ddd; color: #999; font-style: italic; }
+
+        /* Sosyal linkler */
+        .social-row {
+            display: flex; gap: 10px; flex-wrap: wrap;
+            font-size: 12px;
+        }
+        .social-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 12px;
+            background: #fff; border: 1px solid #ddd; border-radius: 6px;
+            color: #444;
+        }
+        .social-link.instagram { background: linear-gradient(135deg, #fdf0f4, #f8d2e0); border-color: #e91e63 }
+        .social-link.twitter { background: #e3f2fd; border-color: #1da1f2; color: #0d47a1 }
+
+        /* ============ ARKADAŞLAR ============ */
+        .owned-rooms-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .owned-room {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            background: #FAFAF5;
+            border: 1px solid #d4cebf;
+            border-radius: 4px;
+            text-decoration: none;
+            color: inherit;
+            transition: background .12s, transform .08s;
+        }
+        .owned-room:hover { background: #FFF9E6; transform: translateX(2px); }
+        .owned-room .or-ico { font-size: 18px; flex-shrink: 0; }
+        .owned-room .or-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+        .owned-room .or-name { font-size: 12px; font-weight: bold; color: #1E5AA8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .owned-room .or-meta { font-size: 10px; color: #777; }
+        .friends-list {
+            display: flex; flex-wrap: wrap; gap: 6px;
+        }
+        .friend-chip {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 10px;
+            background: #E8F4FD;
+            border: 1px solid #A0C4E8;
+            border-radius: 12px;
+            font-size: 11px; color: #1E4070;
+        }
+        .friend-chip:hover { background: #D0E8FA; text-decoration: none }
+
+        /* ============ İSTATİSTİKLER ============ */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+        }
+        .stat-box {
+            background: #F8F5EE;
+            border: 1px solid #d8cfb8;
+            border-radius: 4px;
+            padding: 10px;
+            text-align: center;
+        }
+        .stat-value { font-size: 20px; font-weight: bold; color: #1E4070 }
+        .stat-label { font-size: 10px; color: #777; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px }
+
+        /* ============ DAVET LİNKİ ============ */
+        .invite-box {
+            background: #FFF9E6; border: 1px dashed #E0D5A0;
+            padding: 10px 12px; margin-top: 12px;
+            display: flex; gap: 8px; align-items: center;
+            font-size: 11px;
+        }
+        .invite-box input {
+            flex: 1; padding: 4px 8px;
+            font-family: 'Courier New', monospace; font-size: 11px;
+            border: 1px inset #b0b0b0; background: #fff;
+            color: #1E5AA8;
+        }
+        .invite-box button {
+            padding: 4px 12px; font-family: Tahoma; font-size: 11px;
+            background: linear-gradient(180deg, #E8E4D9, #D4CFBF);
+            border: 2px outset #d4d0c8; cursor: pointer;
+        }
+        .invite-box button:active { border-style: inset }
+
+        /* Section başlıkları için titlebar mini stil */
+        .sec-h {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 11px; font-weight: bold; color: #1E4070;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #d8cfb8;
+            margin-bottom: 10px;
+        }
+        .sec-h::before {
+            content: '▸'; color: #2E6BBF;
+        }
+
+        /* ============ EDIT MODU ============ */
+        .edit-row {
+            margin-bottom: 10px;
+        }
+        .edit-row label {
+            display: block; font-size: 11px; font-weight: bold;
+            color: #444; margin-bottom: 3px;
+        }
+        .edit-row input,
+        .edit-row textarea,
+        .edit-row select {
+            width: 100%; padding: 6px 8px;
+            font-family: Tahoma; font-size: 12px;
+            border: 2px inset #b0b0b0; background: #fff;
+            box-sizing: border-box;
+        }
+        .edit-row textarea { resize: vertical; min-height: 60px }
+        .edit-row .hint { font-size: 10px; color: #888; margin-top: 2px }
+        .edit-row .char-count { float: right }
+
+        .p-not-found {
+            text-align: center; padding: 50px 20px;
+            font-size: 14px; color: #555;
+        }
+        .p-not-found .big-icon {
+            display: block; font-size: 56px; margin-bottom: 14px;
+        }
+
+        .footer {
+            text-align: center; color: rgba(255,255,255,0.7);
+            font-size: 11px; padding: 16px;
+        }
+        .footer a { color: rgba(255,255,255,0.9) }
+
+        /* Toast bildirimi */
+        .toast {
+            position: fixed; bottom: 24px; right: 24px;
+            padding: 12px 18px; border-radius: 6px;
+            color: #fff; font-size: 13px; font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            opacity: 0; transform: translateY(20px);
+            transition: all 0.25s;
+            z-index: 9999;
+        }
+        .toast.show { opacity: 1; transform: translateY(0) }
+        .toast.ok { background: #2ecc71 }
+        .toast.error { background: #e74c3c }
+        .toast.warn { background: #f39c12 }
+    </style>
+    <script src="/assets/retro-ui.js"></script>
+    <link rel="stylesheet" href="/assets/tokens.css">
+</head>
+<body>
+    <div class="topbar">
+        <a href="/" class="brand">Retro<span>Sesler</span></a>
+        <a href="/" class="topbar-back">◀ Anasayfa</a>
+    </div>
+
+    <div class="main">
+        <div id="profile-root">
+            <div class="win-panel">
+                <div class="win-titlebar">
+                    <span>👤</span>
+                    <span id="tb-title">Profil — Yükleniyor...</span>
+                </div>
+                <div class="win-body">
+                    <div class="p-not-found">Yükleniyor...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © <span id="y"></span> <a href="/">RetroSesler.com</a> ·
+        <a href="/hakkimizda">hakkımızda</a> ·
+        <a href="/gizlilik">gizlilik</a>
+        <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const nick = decodeURIComponent(location.pathname.split('/').filter(Boolean)[1] || '');
+        const root = document.getElementById('profile-root');
+
+        const avatarMap = {
+            'default': '😎', 'retro_tv': '📺', 'cassette': '📼', 'gameboy': '🎮',
+            'floppy': '💾', 'headphones': '🎧', 'sunglasses': '🕶️', 'rocket': '🚀',
+            'star': '⭐', 'crown': '👑', 'diamond': '💎', 'fire': '🔥', 'robot': '🤖',
+        };
+        const statusLabel = {
+            online: '🟢 Çevrimiçi', busy: '🔴 Meşgul', brb: '🟣 Hemen dönerim',
+            away: '🟠 Uzakta', invisible: '⚪ Görünmez',
+        };
+
+        function esc(s) {
+            const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML;
+        }
+        function fmtDate(iso) {
+            if (!iso) return '—';
+            return new Date(iso).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+        function relAge(iso) {
+            if (!iso) return '';
+            const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+            if (days < 1) return 'bugün katıldı';
+            if (days < 30) return days + ' gündür üye';
+            if (days < 365) return Math.floor(days / 30) + ' aydır üye';
+            const yr = Math.floor(days / 365);
+            return yr + ' yıldır üye';
+        }
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const orig = btn.textContent;
+                btn.textContent = '✓ Kopyalandı';
+                setTimeout(() => { btn.textContent = orig; }, 1500);
+            });
+        }
+        function toast(msg, type) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast show ' + (type || 'ok');
+            setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        // Global profile cache (edit mode için)
+        let profileData = null;
+        let isMe = false;
+        let myFriends = [];
+        let pendingFR = { incoming: [], outgoing: [] }; // benim için bekleyen istekler
+
+        async function loadProfile() {
+            if (!nick) {
+                root.innerHTML = panelHtml('Profil — Hata', notFoundHtml('❓', 'Geçersiz adres'));
+                return;
+            }
+            try {
+                const res = await fetch('/api/profile/' + encodeURIComponent(nick));
+                const data = await res.json();
+                if (!data.success) {
+                    root.innerHTML = panelHtml('Profil — Bulunamadı',
+                        notFoundHtml('🔍', `<strong>"${esc(nick)}"</strong> adlı kullanıcı bulunamadı.<br><small>Belki silinmiş veya henüz kayıt olmamış.</small>`));
+                    document.title = 'Bulunamadı — RetroSesler.com';
+                    return;
+                }
+
+                profileData = data;
+                const myNick = localStorage.getItem('retrosesler_nick');
+                isMe = myNick && myNick.toLowerCase() === data.nick.toLowerCase();
+                document.title = data.nick + ' — RetroSesler.com';
+
+                // Mevcut kullanıcının arkadaş listesi + bekleyen istekleri + engellediği kişiler
+                if (localStorage.getItem('retrosesler_token')) {
+                    try {
+                        const tok = localStorage.getItem('retrosesler_token');
+                        const headers = { 'Authorization': 'Bearer ' + tok };
+                        const [fr, fre, bl] = await Promise.all([
+                            fetch('/api/friends/list', { headers }),
+                            fetch('/api/friends/requests', { headers }),
+                            fetch('/api/blocks', { headers }),
+                        ]);
+                        const fd = await fr.json();
+                        const fed = await fre.json();
+                        const bld = await bl.json();
+                        if (fd.success) myFriends = fd.friends || [];
+                        if (fed.success) pendingFR = { incoming: fed.incoming || [], outgoing: fed.outgoing || [] };
+                        if (bld.success) window.myBlocks = bld.blocked || [];
+                    } catch {}
+                }
+
+                // Codex D: hedef beni engellemişse minimal görünüm
+                if (data.blocked_by_target) {
+                    root.innerHTML = panelHtml('Profil — Erişim Yok',
+                        notFoundHtml('🚫', `<strong>"${esc(data.nick)}"</strong> seni engellemiş.<br><small>Bu kullanıcının profilini görüntüleyemezsin ve DM atamazsın.</small>`));
+                    document.title = data.nick + ' — Erişim Yok';
+                    return;
+                }
+
+                renderProfile();
+
+                // URL'de ?edit=1 varsa + bu kendi profilim ise → otomatik edit moduna geç
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('edit') === '1' && isMe) {
+                    setTimeout(() => enterEditMode(), 100); // render bitsin sonra
+                }
+            } catch (err) {
+                root.innerHTML = panelHtml('Profil — Hata', `<div class="p-not-found">Sunucu hatası: ${esc(err.message)}</div>`);
+            }
+        }
+
+        function renderProfile() {
+            const d = profileData;
+            const avatar = avatarMap[d.avatar] || '😎';
+            const roleLabel = d.role === 'admin' ? 'Yönetici' : d.role === 'mod' ? 'Moderatör' : 'Üye';
+            const roleClass = d.role || 'user';
+            const inviteUrl = d.invite_code ? `${location.origin}/davet/${d.invite_code}` : '';
+            const isFriend = myFriends.some(f => f.toLowerCase() === d.nick.toLowerCase());
+
+            // ----- ÜST: HERO -----
+            const tagline = d.bio
+                ? `<div class="p-tagline">"${esc(d.bio)}"</div>`
+                : (isMe ? `<div class="p-tagline empty">— Tagline yazmadın (düzenle: "Profili Düzenle")</div>` : '');
+            const pmsg = d.personal_msg
+                ? `<div class="p-pmsg">${esc(d.personal_msg)}</div>` : '';
+            const activeRoomPill = d.activeRoom
+                ? `<a class="p-active-room" href="/oda?room=${encodeURIComponent(d.activeRoom)}&nick=${encodeURIComponent(localStorage.getItem('retrosesler_nick') || 'Misafir')}">📍 Şu an "${esc(d.activeRoom)}" odasında</a>`
+                : '';
+
+            const metaItems = [];
+            if (d.age) metaItems.push(`<span class="meta-item">🎂 <b>${d.age}</b> yaşında</span>`);
+            if (d.city) metaItems.push(`<span class="meta-item">📍 ${esc(d.city)}</span>`);
+            metaItems.push(`<span class="meta-item">📅 ${relAge(d.createdAt)}</span>`);
+            if (d.invited_by_nick) metaItems.push(`<span class="meta-item">🎟️ Davet: <a href="/u/${encodeURIComponent(d.invited_by_nick)}">@${esc(d.invited_by_nick)}</a></span>`);
+
+            // Aksiyon butonları
+            let actions = '';
+            if (isMe) {
+                actions = `
+                    <button class="p-btn primary" onclick="enterEditMode()">✏️ Profili Düzenle</button>
+                    <a class="p-btn" href="/">🏠 Anasayfa</a>
+                `;
+            } else {
+                const tokenSet = !!localStorage.getItem('retrosesler_token');
+                // 5 farklı durum:
+                // 1. Login değil → giriş yap
+                // 2. Zaten arkadaş → çıkar butonu
+                // 3. Ona istek gönderdim, bekliyor → "İstek bekleniyor / Geri çek"
+                // 4. Bana istek göndermiş, bekliyor → "Kabul Et / Reddet"
+                // 5. Hiçbiri → "İstek Gönder"
+                const outgoingReq = pendingFR.outgoing.find(r => r.toNick.toLowerCase() === d.nick.toLowerCase());
+                const incomingReq = pendingFR.incoming.find(r => r.fromNick.toLowerCase() === d.nick.toLowerCase());
+                let friendBtn = '';
+                if (!tokenSet) {
+                    friendBtn = `<a class="p-btn" href="/giris">🔑 Arkadaş eklemek için giriş yap</a>`;
+                } else if (isFriend) {
+                    friendBtn = `<button class="p-btn danger" onclick="removeFriend('${esc(d.nick)}')">❌ Arkadaşlıktan Çıkar</button>`;
+                } else if (incomingReq) {
+                    friendBtn = `
+                        <button class="p-btn success" onclick="acceptFR('${esc(incomingReq.id)}')">✅ İsteği Kabul Et</button>
+                        <button class="p-btn danger" onclick="rejectFR('${esc(incomingReq.id)}')">❌ Reddet</button>
+                    `;
+                } else if (outgoingReq) {
+                    friendBtn = `<button class="p-btn" style="background:#FFF3C4;border-color:#E0C870" onclick="cancelFR('${esc(outgoingReq.id)}')" title="Geri çek">⏳ İstek bekleniyor (geri çek)</button>`;
+                } else {
+                    friendBtn = `<button class="p-btn success" onclick="sendFR('${esc(d.nick)}')">👥 Arkadaşlık İsteği Gönder</button>`;
+                }
+                // Codex D paketi: kişisel güvenlik — engelle/engel kaldır butonu
+                let blockBtn = '';
+                if (tokenSet) {
+                    const isBlocked = (window.myBlocks || []).some(n => n.toLowerCase() === d.nick.toLowerCase());
+                    if (isBlocked) {
+                        blockBtn = `<button class="p-btn" style="background:#fff;border-color:#27AE60;color:#186A3B" onclick="unblockUser('${esc(d.nick)}')">✅ Engeli Kaldır</button>`;
+                    } else {
+                        blockBtn = `<button class="p-btn" style="background:#fff;border-color:#C0392B;color:#922B21" onclick="blockUser('${esc(d.nick)}')">🚫 Engelle</button>`;
+                    }
+                }
+                actions = `
+                    <a class="p-btn primary" href="/?dm=${encodeURIComponent(d.nick)}">💬 Mesaj At</a>
+                    ${friendBtn}
+                    ${blockBtn}
+                `;
+            }
+
+            // ----- ROZETLER -----
+            const badgesHtml = d.badges && d.badges.length > 0
+                ? `<div class="badges-grid">${d.badges.map(b => `
+                    <div class="badge-item" title="${esc(b.desc)}">
+                        <div class="badge-emoji">${b.emoji}</div>
+                        <div class="badge-name">${esc(b.name)}</div>
+                    </div>`).join('')}</div>`
+                : `<div style="color:#999;font-style:italic;font-size:12px;text-align:center;padding:10px">
+                    ${isMe ? 'Henüz rozetin yok — aktif ol, arkadaş ekle, davet et, kazandıkça rozetler buraya gelir!' : 'Henüz rozet kazanmamış'}</div>`;
+
+            // ----- HAKKIMDA -----
+            const aboutHtml = d.about
+                ? `<div class="about-block">${esc(d.about)}</div>`
+                : `<div class="about-block empty">${isMe ? 'Hakkında bir şey yazmadın. "Profili Düzenle"ye tıkla, kendini anlat — kimlerle tanışmak istersin?' : 'Henüz hakkında bir şey yazmamış.'}</div>`;
+
+            // ----- DETAY (yıl/şehir/email) -----
+            const detailItems = [];
+            if (d.birthYear) detailItems.push(`<dt>Doğum:</dt><dd>${d.birthYear} (${d.age} yaşında)</dd>`);
+            if (d.city) detailItems.push(`<dt>Şehir:</dt><dd>${esc(d.city)}</dd>`);
+            detailItems.push(`<dt>Katılım:</dt><dd>${fmtDate(d.createdAt)}</dd>`);
+
+            // ----- MÜZİK ZEVKİ -----
+            const musicHtml = d.musicTaste
+                ? `<div class="music-block">${esc(d.musicTaste)}</div>`
+                : `<div class="music-block empty">${isMe ? "Müzik zevkini yaz — '80'ler Pop, Türkçe Rock, Sezen Aksu..." : 'Müzik zevki belirtilmemiş'}</div>`;
+
+            // ----- SOSYAL LİNKLER -----
+            const socialLinks = [];
+            if (d.instagram) socialLinks.push(`<a class="social-link instagram" href="https://instagram.com/${esc(d.instagram)}" target="_blank" rel="noopener">📷 @${esc(d.instagram)}</a>`);
+            if (d.twitter) socialLinks.push(`<a class="social-link twitter" href="https://twitter.com/${esc(d.twitter)}" target="_blank" rel="noopener">🐦 @${esc(d.twitter)}</a>`);
+            const socialHtml = socialLinks.length > 0
+                ? `<div class="social-row">${socialLinks.join('')}</div>`
+                : (isMe ? `<div style="color:#999;font-size:12px;font-style:italic;text-align:center">Sosyal linkin yok — "Düzenle"den ekleyebilirsin</div>` : '');
+
+            // ----- ARKADAŞLAR -----
+            const friendsHtml = d.friends && d.friends.length > 0
+                ? `<div class="friends-list">
+                    ${d.friends.map(f => `<a class="friend-chip" href="/u/${encodeURIComponent(f)}">@${esc(f)}</a>`).join('')}
+                    ${d.friendCount > d.friends.length ? `<span class="friend-chip" style="background:#eee">+${d.friendCount - d.friends.length} daha</span>` : ''}
+                </div>`
+                : `<div style="color:#999;font-style:italic;font-size:12px;text-align:center;padding:6px">Henüz arkadaşı yok</div>`;
+
+            // ----- AÇTIĞI ODALAR -----
+            const CAT_LABELS_P = { free: '💬 Sohbet', music: '🎵 Müzik', cam: '📹 Kamera', book: '📚 Edebiyat', game: '🎮 Oyun', hot: '🌙 Gece' };
+            const ownedRoomsHtml = d.ownedRooms && d.ownedRooms.length > 0
+                ? `<div class="owned-rooms-list">
+                    ${d.ownedRooms.map(r => `
+                        <a class="owned-room" href="/oda?room=${encodeURIComponent(r.name)}" title="${esc(r.desc || '')}">
+                            <span class="or-ico">${esc(r.icon)}</span>
+                            <span class="or-info">
+                                <span class="or-name">${esc(r.name)}</span>
+                                <span class="or-meta">${esc(CAT_LABELS_P[r.category] || r.category)} · max ${r.max}</span>
+                            </span>
+                        </a>
+                    `).join('')}
+                </div>`
+                : `<div style="color:#999;font-style:italic;font-size:12px;text-align:center;padding:6px">Henüz oda açmamış</div>`;
+
+            // ----- İSTATİSTİKLER -----
+            const ageDays = Math.max(1, Math.floor((Date.now() - new Date(d.createdAt).getTime()) / 86400000));
+            const statsHtml = `
+                <div class="stats-grid">
+                    <div class="stat-box"><div class="stat-value">${ageDays}</div><div class="stat-label">üyelik (gün)</div></div>
+                    <div class="stat-box"><div class="stat-value">${d.friendCount || 0}</div><div class="stat-label">arkadaş</div></div>
+                    <div class="stat-box"><div class="stat-value">${d.invited_count || 0}</div><div class="stat-label">davet ettiği</div></div>
+                    <div class="stat-box"><div class="stat-value">${d.badges?.length || 0}</div><div class="stat-label">rozet</div></div>
+                </div>
+            `;
+
+            // ----- ANA HTML -----
+            const tbTitle = (d.status === 'online' ? '🟢 ' : '') + d.nick + ' — Profil';
+            const inviteBoxHtml = isMe && inviteUrl ? `
+                <div class="invite-box">
+                    <span>🎟️</span>
+                    <strong>Davet linkin:</strong>
+                    <input type="text" id="inv-url" value="${esc(inviteUrl)}" readonly onclick="this.select()">
+                    <button onclick="copyToClipboard('${esc(inviteUrl)}', this)">Kopyala</button>
+                </div>` : '';
+
+            root.innerHTML = `
+                <!-- ÜST: HERO -->
+                <div class="win-panel">
+                    <div class="win-titlebar">
+                        <span>👤</span>
+                        <span>${tbTitle}</span>
+                        <div class="win-titlebar-btns">
+                            <div class="win-btn" onclick="history.back()">×</div>
+                        </div>
+                    </div>
+                    <div class="win-body">
+                        <div class="p-hero">
+                            <div class="p-avatar-wrap">
+                                <div class="p-avatar role-${roleClass}">${avatar}</div>
+                                <span class="p-status-dot ${d.status}" title="${statusLabel[d.status] || d.status}"></span>
+                            </div>
+                            <div class="p-info">
+                                <div class="p-nick-row">
+                                    <div class="p-nick">${esc(d.nick)}</div>
+                                    <span class="p-role ${roleClass}">${roleLabel}</span>
+                                    <span class="p-status-label">${statusLabel[d.status] || d.status}</span>
+                                </div>
+                                ${tagline}
+                                ${pmsg}
+                                <div class="p-meta-row">${metaItems.join('')}</div>
+                                ${activeRoomPill}
+                                <div class="p-actions">${actions}</div>
+                                ${inviteBoxHtml}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2 KOLON: SOL = Hakkında / Müzik / Sosyal | SAĞ = Rozetler / İstatistikler / Arkadaşlar -->
+                <div class="grid-2col">
+                    <div>
+                        <div class="win-panel">
+                            <div class="win-titlebar"><span>📝</span><span>Hakkında</span></div>
+                            <div class="win-body">${aboutHtml}</div>
+                        </div>
+                        <div class="win-panel">
+                            <div class="win-titlebar"><span>🎵</span><span>Müzik Zevki</span></div>
+                            <div class="win-body">${musicHtml}</div>
+                        </div>
+                        <div class="win-panel">
+                            <div class="win-titlebar"><span>🌐</span><span>Sosyal & Linkler</span></div>
+                            <div class="win-body">${socialHtml || '<div style="color:#999;font-size:12px;font-style:italic;text-align:center">—</div>'}</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="win-panel">
+                            <div class="win-titlebar"><span>🏅</span><span>Rozetler (${d.badges?.length || 0})</span></div>
+                            <div class="win-body">${badgesHtml}</div>
+                        </div>
+                        <div class="win-panel">
+                            <div class="win-titlebar"><span>📊</span><span>İstatistikler</span></div>
+                            <div class="win-body">${statsHtml}</div>
+                        </div>
+                        <div class="win-panel">
+                            <div class="win-titlebar"><span>👥</span><span>Arkadaşlar (${d.friendCount || 0})</span></div>
+                            <div class="win-body">${friendsHtml}</div>
+                        </div>
+                        <div class="win-panel">
+                            <div class="win-titlebar"><span>🏠</span><span>Açtığı Odalar (${d.ownedRoomsCount || 0})</span></div>
+                            <div class="win-body">${ownedRoomsHtml}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============ EDIT MODE — SEKMELI ============
+        let editAccountData = null; // /api/account/me cache
+        let editFullFriends = [];   // tüm arkadaşlar (preview değil, hepsi)
+        let editActiveTab = 'visible';
+
+        async function enterEditMode() {
+            const d = profileData;
+            // Sekmeli iskelet
+            root.innerHTML = `
+                <div class="win-panel">
+                    <div class="win-titlebar">
+                        <span>✏️</span>
+                        <span>Profili Düzenle — ${esc(d.nick)}</span>
+                        <div class="win-titlebar-btns">
+                            <div class="win-btn" onclick="cancelEdit()" title="İptal">×</div>
+                        </div>
+                    </div>
+                    <div class="win-body">
+                        <div id="edit-tabs" style="display:flex;gap:2px;border-bottom:2px solid #A09880;margin:-18px -22px 16px;padding:8px 22px 0;background:#ECE9D8;flex-wrap:wrap">
+                            <button class="edit-tab" data-tab="visible">👤 Görünür Bilgiler</button>
+                            <button class="edit-tab" data-tab="account">🔐 Hesap & Güvenlik</button>
+                            <button class="edit-tab" data-tab="friends">👥 Arkadaşlarım</button>
+                            <button class="edit-tab" data-tab="danger" style="margin-left:auto">⚠️ Tehlikeli Bölge</button>
+                        </div>
+                        <div id="edit-tab-body"></div>
+                    </div>
+                </div>
+            `;
+            // Tab style enjekt
+            if (!document.getElementById('edit-tab-styles')) {
+                const s = document.createElement('style');
+                s.id = 'edit-tab-styles';
+                s.textContent = `
+                    .edit-tab {
+                        padding: 7px 14px; border: 2px outset #d4d0c8; background: #D8D2BE;
+                        font-family: Tahoma, sans-serif; font-size: 12px; cursor: pointer;
+                        border-bottom: none; border-radius: 4px 4px 0 0; margin-bottom: -2px;
+                        font-weight: bold; color: #555;
+                    }
+                    .edit-tab.active {
+                        background: linear-gradient(180deg, #FAFAF5 0%, #F0EDE4 100%);
+                        color: #1E4070; border-color: #A09880;
+                        position: relative; z-index: 1;
+                    }
+                    .edit-tab.danger.active { color: #C0392B; }
+                    .danger-box {
+                        border: 2px solid #E68888; background: #FFF0F0; padding: 14px;
+                        border-radius: 4px; margin-bottom: 12px;
+                    }
+                    .danger-box h4 { color: #C0392B; margin-bottom: 6px; font-size: 13px; }
+                    .danger-box p { font-size: 12px; color: #6a4040; line-height: 1.5; }
+                `;
+                document.head.appendChild(s);
+            }
+            // Tab tıklama
+            document.querySelectorAll('.edit-tab').forEach(btn => {
+                btn.addEventListener('click', () => switchEditTab(btn.dataset.tab));
+            });
+            switchEditTab(editActiveTab);
+            // Hesap verisini çek (parallel)
+            try {
+                const tok = localStorage.getItem('retrosesler_token');
+                const res = await fetch('/api/account/me', { headers: { 'Authorization': 'Bearer ' + tok } });
+                const j = await res.json();
+                if (j.success) {
+                    editAccountData = j;
+                    if (editActiveTab === 'account') renderAccountTab(); // refresh
+                }
+            } catch {}
+            // Tüm arkadaşları + bekleyen istekleri tazele (edit modu için güncel olsun)
+            try {
+                const tok = localStorage.getItem('retrosesler_token');
+                const [r1, r2] = await Promise.all([
+                    fetch('/api/friends/list', { headers: { 'Authorization': 'Bearer ' + tok } }),
+                    fetch('/api/friends/requests', { headers: { 'Authorization': 'Bearer ' + tok } }),
+                ]);
+                const j1 = await r1.json(); const j2 = await r2.json();
+                if (j1.success) editFullFriends = j1.friends || [];
+                if (j2.success) pendingFR = { incoming: j2.incoming || [], outgoing: j2.outgoing || [] };
+                if (editActiveTab === 'friends') switchEditTab('friends'); // refresh
+            } catch {}
+        }
+
+        function switchEditTab(name) {
+            editActiveTab = name;
+            document.querySelectorAll('.edit-tab').forEach(b => {
+                b.classList.toggle('active', b.dataset.tab === name);
+                b.classList.toggle('danger', b.dataset.tab === 'danger');
+            });
+            const body = document.getElementById('edit-tab-body');
+            if (name === 'visible') body.innerHTML = renderVisibleTab();
+            else if (name === 'account') body.innerHTML = renderAccountTab();
+            else if (name === 'friends') body.innerHTML = renderFriendsTab();
+            else if (name === 'danger') body.innerHTML = renderDangerTab();
+            // Visible tab'ı render ettikten sonra char counter bind
+            if (name === 'visible') {
+                ['pmsg','bio','about','music'].forEach(k => {
+                    const map = { pmsg: 'e-pmsg', bio: 'e-bio', about: 'e-about', music: 'e-music' };
+                    const el = document.getElementById(map[k]);
+                    const cc = document.getElementById('cc-' + k);
+                    if (!el || !cc) return;
+                    const update = () => cc.textContent = (el.value || '').length;
+                    el.addEventListener('input', update); update();
+                });
+            }
+        }
+
+        function renderVisibleTab() {
+            const d = profileData;
+            const avatarOptions = Object.keys(avatarMap).map(k => `<option value="${k}" ${d.avatar === k ? 'selected' : ''}>${avatarMap[k]} ${k}</option>`).join('');
+            const statusOptions = Object.keys(statusLabel).map(k => `<option value="${k}" ${d.status === k ? 'selected' : ''}>${statusLabel[k]}</option>`).join('');
+            return `
+                <div class="grid-2col">
+                    <div>
+                        <div class="edit-row"><label>Avatar</label>
+                            <select id="e-avatar">${avatarOptions}</select></div>
+                        <div class="edit-row"><label>Statü</label>
+                            <select id="e-status">${statusOptions}</select></div>
+                        <div class="edit-row"><label>Kişisel Mesaj <span class="char-count">(<span id="cc-pmsg">0</span>/100)</span></label>
+                            <input type="text" id="e-pmsg" maxlength="100" value="${esc(d.personal_msg || '')}" placeholder="Şu an Tarkan dinliyorum..."></div>
+                        <div class="edit-row"><label>Tagline (kısa bio) <span class="char-count">(<span id="cc-bio">0</span>/60)</span></label>
+                            <input type="text" id="e-bio" maxlength="60" value="${esc(d.bio || '')}" placeholder="90'lar fanı"></div>
+                        <div class="edit-row"><label>Hakkında <span class="char-count">(<span id="cc-about">0</span>/500)</span></label>
+                            <textarea id="e-about" maxlength="500" placeholder="Kendinden bahset...">${esc(d.about || '')}</textarea></div>
+                    </div>
+                    <div>
+                        <div class="edit-row"><label>Doğum Yılı</label>
+                            <input type="number" id="e-byear" min="1950" max="2020" value="${d.birthYear || ''}" placeholder="1985">
+                            <div class="hint">Yaşın profilde görünür (zorunlu değil)</div></div>
+                        <div class="edit-row"><label>Şehir</label>
+                            <input type="text" id="e-city" maxlength="40" value="${esc(d.city || '')}" placeholder="İstanbul"></div>
+                        <div class="edit-row"><label>Müzik Zevki <span class="char-count">(<span id="cc-music">0</span>/150)</span></label>
+                            <textarea id="e-music" maxlength="150" placeholder="80'ler Pop, Sezen Aksu...">${esc(d.musicTaste || '')}</textarea></div>
+                        <div class="edit-row"><label>Instagram (@'sız)</label>
+                            <input type="text" id="e-instagram" maxlength="30" value="${esc(d.instagram || '')}" placeholder="ahmet_yilmaz"></div>
+                        <div class="edit-row"><label>Twitter / X (@'sız)</label>
+                            <input type="text" id="e-twitter" maxlength="15" value="${esc(d.twitter || '')}" placeholder="ahmet_yilmaz"></div>
+                    </div>
+                </div>
+                <div style="margin-top:14px;padding-top:14px;border-top:1px dotted #c8c3b5;display:flex;gap:8px;justify-content:flex-end;">
+                    <button class="p-btn" onclick="cancelEdit()">Profili Görüntüle</button>
+                    <button class="p-btn primary" id="save-btn" onclick="saveProfile()">💾 Görünür Bilgileri Kaydet</button>
+                </div>
+            `;
+        }
+
+        function renderAccountTab() {
+            const acc = editAccountData;
+            if (!acc) return '<div style="text-align:center;color:#777;padding:20px">🔄 Yükleniyor...</div>';
+            const emailRow = acc.googleLinked
+                ? `<div class="edit-row"><label>Email</label>
+                     <input type="text" value="${esc(acc.email || '')}" disabled style="background:#f0eddf;color:#666">
+                     <div class="hint">📌 Google ile bağlı — email otomatik gelir, değiştirilemez.</div></div>`
+                : `<div class="edit-row"><label>Email (şifre sıfırlama + bildirimler için)</label>
+                     <input type="email" id="acc-email" value="${esc(acc.email || '')}" placeholder="ornek@gmail.com">
+                     <div class="hint">Email eklersen şifreni unutunca sıfırlayabilirsin.</div>
+                     <button class="p-btn" style="margin-top:6px" onclick="saveEmail()">💾 Email Kaydet</button></div>`;
+            const pwdRow = acc.hasPassword
+                ? `<div class="edit-row"><label>Yeni Şifre (min 4 karakter)</label>
+                     <input type="password" id="acc-newpwd" minlength="4" placeholder="Yeni şifren">
+                     <label style="margin-top:8px">Mevcut Şifren (doğrulama)</label>
+                     <input type="password" id="acc-curpwd" placeholder="Şu anki şifren">
+                     <button class="p-btn" style="margin-top:6px" onclick="saveNewPassword()">🔐 Şifreyi Değiştir</button></div>`
+                : `<div class="edit-row"><label>Şifre Belirle</label>
+                     <input type="password" id="acc-newpwd" minlength="4" placeholder="Bir şifre belirle">
+                     <div class="hint">Henüz şifren yok (sadece Google ile giriş yapıyorsun). Şifre eklersen email+şifre ile de girebilirsin.</div>
+                     <button class="p-btn" style="margin-top:6px" onclick="saveNewPassword()">🔐 Şifre Belirle</button></div>`;
+            // Doğum yılı: girilmemişse dropdown göster, girilmişse readonly
+            const cy = new Date().getFullYear();
+            const age = acc.birthYear ? (cy - acc.birthYear) : null;
+            const byOptions = [`<option value="">— seçiniz —</option>`];
+            for (let y = cy - 13; y >= cy - 100; y--) byOptions.push(`<option value="${y}">${y}</option>`);
+            const birthYearRow = acc.birthYear
+                ? `<div class="edit-row"><label>🎂 Doğum yılı</label>
+                     <input type="text" value="${acc.birthYear} (${age} yaş)" disabled style="background:#f0eddf;color:#666">
+                     <div class="hint">📌 Doğum yılı bir kez set edilir; değiştirmek için admin ile iletişime geç.</div></div>`
+                : `<div class="edit-row"><label>🎂 Doğum yılı (yaş kontrolü için zorunlu)</label>
+                     <select id="acc-byear" style="padding:6px;border:2px inset #b0b0b0;font-family:Tahoma;font-size:12px;background:#fff">${byOptions.join('')}</select>
+                     <div class="hint">📌 Doğum yılı eksik (Google ile kayıtlısın). +18 odalara girmek için gerekli. Bir kez set edilir, sonra değişmez.</div>
+                     <button class="p-btn" style="margin-top:6px" onclick="saveBirthYear()">🎂 Doğum Yılını Kaydet</button></div>`;
+            return `
+                <div class="grid-2col">
+                    <div>
+                        <h4 style="font-size:12px;color:#1E4070;margin-bottom:8px;text-transform:uppercase">🔐 Şifre</h4>
+                        ${pwdRow}
+                        <h4 style="font-size:12px;color:#1E4070;margin:14px 0 8px;text-transform:uppercase">🎂 Yaş</h4>
+                        ${birthYearRow}
+                    </div>
+                    <div>
+                        <h4 style="font-size:12px;color:#1E4070;margin-bottom:8px;text-transform:uppercase">📧 Email</h4>
+                        ${emailRow}
+                        <h4 style="font-size:12px;color:#1E4070;margin:14px 0 8px;text-transform:uppercase">✏️ Nick Değiştir</h4>
+                        <div class="edit-row"><label>Yeni Nick (24 saatte 1 kez)</label>
+                            <input type="text" id="acc-nick" maxlength="20" value="${esc(profileData.nick)}" placeholder="${esc(profileData.nick)}">
+                            <div class="hint">Sadece harf, rakam ve _ — 2-20 karakter</div>
+                            <button class="p-btn" style="margin-top:6px" onclick="saveNewNick()">✏️ Nick'i Değiştir</button></div>
+                    </div>
+                </div>
+                <div style="margin-top:18px;padding-top:14px;border-top:1px dotted #c8c3b5;">
+                    <h4 style="font-size:12px;color:#1E4070;margin-bottom:10px;text-transform:uppercase">📳 Dürt & Tercihler</h4>
+                    <div class="edit-row">
+                        <label>Kimler beni dürtebilir?</label>
+                        <select id="pref-nudge">
+                            <option value="friends" ${(acc.nudge_pref || 'friends') === 'friends' ? 'selected' : ''}>👥 Sadece arkadaşlarım (önerilen)</option>
+                            <option value="all" ${acc.nudge_pref === 'all' ? 'selected' : ''}>🌍 Herkes dürtebilir</option>
+                            <option value="none" ${acc.nudge_pref === 'none' ? 'selected' : ''}>🚫 Hiç kimse — dürtme kapalı</option>
+                        </select>
+                        <div class="hint">"Sadece arkadaşlarım" spam'i önler. Yabancılar dürt isteğinde "kabul etmiyor" hatası alır.</div>
+                    </div>
+                    <div class="edit-row">
+                        <label style="display:flex;align-items:center;gap:6px;font-weight:normal">
+                            <input type="checkbox" id="pref-sound" ${acc.sound_enabled !== false ? 'checked' : ''}>
+                            🔊 Bildirim sesleri açık (DM, dürt, çağrı)
+                        </label>
+                    </div>
+                    <button class="p-btn" style="margin-top:4px" onclick="savePreferences()">💾 Tercihleri Kaydet</button>
+                </div>
+                <div style="margin-top:14px;padding-top:14px;border-top:1px dotted #c8c3b5;font-size:11px;color:#777;">
+                    Hesap oluşturulma: <b>${fmtDate(acc.createdAt)}</b> · Rol: <b>${esc(acc.role)}</b> ${acc.googleLinked ? '· <b style="color:#2E6BBF">🔵 Google ile bağlı</b>' : ''}
+                </div>
+            `;
+        }
+
+        function renderFriendsTab() {
+            // 3 bölüm: 📥 Gelen istekler / 📤 Gönderdiğim istekler / 👥 Arkadaşlarım
+            const incomingHtml = pendingFR.incoming.length > 0
+                ? `<h4 style="font-size:12px;color:#1E4070;margin:0 0 8px;text-transform:uppercase">📥 Sana Gelen İstekler (${pendingFR.incoming.length})</h4>
+                   <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
+                       ${pendingFR.incoming.map(r => `
+                           <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#FFF8E1;border:1px solid #E0C870;border-radius:4px">
+                               <a href="/u/${encodeURIComponent(r.fromNick)}" style="flex:1;color:#1E4070;font-weight:bold;text-decoration:none">@${esc(r.fromNick)}</a>
+                               <button class="p-btn" style="padding:3px 9px;font-size:11px;background:linear-gradient(180deg,#5cb85c,#449d44);color:#fff;border:1px solid #398439" onclick="acceptFR('${esc(r.id)}')">✅ Kabul</button>
+                               <button class="p-btn" style="padding:3px 9px;font-size:11px" onclick="rejectFR('${esc(r.id)}')">❌ Red</button>
+                           </div>
+                       `).join('')}
+                   </div>`
+                : '';
+            const outgoingHtml = pendingFR.outgoing.length > 0
+                ? `<h4 style="font-size:12px;color:#1E4070;margin:0 0 8px;text-transform:uppercase">📤 Gönderdiğin İstekler (${pendingFR.outgoing.length})</h4>
+                   <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
+                       ${pendingFR.outgoing.map(r => `
+                           <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#F0F4F8;border:1px solid #BCD;border-radius:4px">
+                               <a href="/u/${encodeURIComponent(r.toNick)}" style="flex:1;color:#666;text-decoration:none">@${esc(r.toNick)} <span style="font-size:10px;color:#999">⏳ bekliyor</span></a>
+                               <button class="p-btn" style="padding:3px 9px;font-size:11px" onclick="cancelFR('${esc(r.id)}')">↩️ Geri çek</button>
+                           </div>
+                       `).join('')}
+                   </div>`
+                : '';
+            const friendsHtml = editFullFriends && editFullFriends.length > 0
+                ? `<h4 style="font-size:12px;color:#1E4070;margin:0 0 8px;text-transform:uppercase">👥 Arkadaşların (${editFullFriends.length})</h4>
+                   <div style="display:flex;flex-direction:column;gap:6px">
+                       ${editFullFriends.map(f => `
+                           <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#F8F5EE;border:1px solid #d8cfb8;border-radius:4px">
+                               <a href="/u/${encodeURIComponent(f)}" style="flex:1;color:#1E4070;font-weight:bold;text-decoration:none">@${esc(f)}</a>
+                               <button class="p-btn" style="padding:3px 9px;font-size:11px;background:linear-gradient(180deg,#d9534f,#c9302c);color:#fff;border:1px solid #ac2925" onclick="removeFriendFromEdit('${esc(f).replace(/'/g,"&apos;")}')">❌ Çıkar</button>
+                           </div>
+                       `).join('')}
+                   </div>`
+                : `<div style="text-align:center;color:#999;font-style:italic;padding:20px">
+                    Henüz arkadaşın yok.<br><small>Başka kullanıcıların profilinden "👥 Arkadaşlık İsteği Gönder" butonuna basabilirsin.</small>
+                  </div>`;
+            return incomingHtml + outgoingHtml + friendsHtml;
+        }
+
+        function renderDangerTab() {
+            return `
+                <div class="danger-box">
+                    <h4>🔄 Davet linkini yenile</h4>
+                    <p>Mevcut davet linkin geçersiz olur, sıfırdan yeni bir kod üretilir. Eski linke sahip kişiler ulaşamaz.</p>
+                    <button class="p-btn" style="margin-top:10px;background:#FFF0DD;border-color:#E0A050" onclick="refreshInvite()">🔄 Davet Linkini Yenile</button>
+                </div>
+                <div class="danger-box">
+                    <h4>🗑️ Hesabımı Sil</h4>
+                    <p><strong>Geri dönüşü yok.</strong> Hesabın, profilin, arkadaşların, açtığın odaların — hepsi anında silinir. Yazdığın mesajlar diğer kullanıcıların sohbet geçmişinde kalır ama nick'in "(silindi)" görünür.</p>
+                    <p style="margin-top:8px"><b>Onaylamak için aşağıya "SIL" yaz:</b></p>
+                    <input type="text" id="del-confirm" placeholder="SIL" style="width:120px;padding:6px;border:2px inset #b0b0b0;background:#fff;text-transform:uppercase;margin-top:4px">
+                    ${editAccountData?.hasPassword
+                        ? '<input type="password" id="del-pwd" placeholder="Şifren" style="width:200px;padding:6px;border:2px inset #b0b0b0;background:#fff;margin-top:4px;margin-left:6px">'
+                        : ''}
+                    <br>
+                    <button class="p-btn danger" style="margin-top:10px" onclick="deleteAccount()">🗑️ Hesabımı Kalıcı Sil</button>
+                </div>
+            `;
+        }
+
+        function cancelEdit() { renderProfile(); }
+
+        async function saveProfile() {
+            const btn = document.getElementById('save-btn');
+            btn.disabled = true; btn.textContent = '⏳ Kaydediliyor...';
+            const body = {
+                avatar: document.getElementById('e-avatar').value,
+                status: document.getElementById('e-status').value,
+                personal_msg: document.getElementById('e-pmsg').value,
+                bio: document.getElementById('e-bio').value,
+                about: document.getElementById('e-about').value,
+                birthYear: document.getElementById('e-byear').value,
+                city: document.getElementById('e-city').value,
+                musicTaste: document.getElementById('e-music').value,
+                instagram: document.getElementById('e-instagram').value,
+                twitter: document.getElementById('e-twitter').value,
+            };
+            try {
+                const res = await fetch('/api/profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('retrosesler_token') },
+                    body: JSON.stringify(body),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    toast('Profilin kaydedildi!', 'ok');
+                    await loadProfile(); // tekrar çek + render
+                } else {
+                    toast('❌ ' + (data.error || 'Hata'), 'error');
+                    btn.disabled = false; btn.textContent = '💾 Kaydet';
+                }
+            } catch (err) {
+                toast('❌ Sunucu hatası', 'error');
+                btn.disabled = false; btn.textContent = '💾 Kaydet';
+            }
+        }
+
+        // ============ ARKADAŞLIK İSTEĞİ (REQUEST FLOW) ============
+        async function reloadFriendsAndRequests() {
+            const tok = localStorage.getItem('retrosesler_token');
+            if (!tok) return;
+            try {
+                const [fr, fre] = await Promise.all([
+                    fetch('/api/friends/list', { headers: { 'Authorization': 'Bearer ' + tok } }),
+                    fetch('/api/friends/requests', { headers: { 'Authorization': 'Bearer ' + tok } }),
+                ]);
+                const fd = await fr.json();
+                const fed = await fre.json();
+                if (fd.success) myFriends = fd.friends || [];
+                if (fed.success) pendingFR = { incoming: fed.incoming || [], outgoing: fed.outgoing || [] };
+            } catch {}
+        }
+
+        async function sendFR(targetNick) {
+            const tok = localStorage.getItem('retrosesler_token');
+            if (!tok) { toast('Giriş yapmalısın', 'warn'); return; }
+            try {
+                const res = await fetch('/api/friends/request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+                    body: JSON.stringify({ nick: targetNick }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    if (data.auto_accepted) {
+                        toast(`🤝 ${targetNick} arkadaşın oldu (karşı taraftan istek vardı)`, 'ok');
+                    } else {
+                        toast('📨 İstek gönderildi — onay bekliyor', 'ok');
+                    }
+                    await reloadFriendsAndRequests();
+                    renderProfile();
+                } else {
+                    toast(data.error || 'İstek gönderilemedi', 'error');
+                }
+            } catch { toast('Sunucu hatası', 'error'); }
+        }
+
+        async function acceptFR(reqId) {
+            const tok = localStorage.getItem('retrosesler_token');
+            try {
+                const res = await fetch('/api/friends/requests/' + encodeURIComponent(reqId) + '/accept', {
+                    method: 'POST', headers: { 'Authorization': 'Bearer ' + tok },
+                });
+                const data = await res.json();
+                if (data.success) {
+                    toast('🤝 Artık arkadaşsınız!', 'ok');
+                    await reloadFriendsAndRequests();
+                    renderProfile();
+                } else {
+                    toast(data.error || 'Kabul edilemedi', 'error');
+                }
+            } catch { toast('Sunucu hatası', 'error'); }
+        }
+
+        async function rejectFR(reqId) {
+            const ok = await retroConfirm('Bu arkadaşlık isteğini reddet?', {
+                title: 'İstek Reddet', icon: '❌', okText: 'Evet, reddet', cancelText: 'Vazgeç', danger: true,
+            });
+            if (!ok) return;
+            const tok = localStorage.getItem('retrosesler_token');
+            try {
+                const res = await fetch('/api/friends/requests/' + encodeURIComponent(reqId) + '/reject', {
+                    method: 'POST', headers: { 'Authorization': 'Bearer ' + tok },
+                });
+                const data = await res.json();
+                if (data.success) {
+                    toast('İstek reddedildi', 'ok');
+                    await reloadFriendsAndRequests();
+                    renderProfile();
+                } else {
+                    toast(data.error || 'Reddedilemedi', 'error');
+                }
+            } catch { toast('Sunucu hatası', 'error'); }
+        }
+
+        async function cancelFR(reqId) {
+            const ok = await retroConfirm('İsteği geri çekmek istiyor musun?', {
+                title: 'İstek Geri Çek', icon: '↩️', okText: 'Evet, geri çek', cancelText: 'Vazgeç',
+            });
+            if (!ok) return;
+            const tok = localStorage.getItem('retrosesler_token');
+            try {
+                const res = await fetch('/api/friends/requests/' + encodeURIComponent(reqId), {
+                    method: 'DELETE', headers: { 'Authorization': 'Bearer ' + tok },
+                });
+                const data = await res.json();
+                if (data.success) {
+                    toast('İstek geri çekildi', 'ok');
+                    await reloadFriendsAndRequests();
+                    renderProfile();
+                } else {
+                    toast(data.error || 'Geri çekilemedi', 'error');
+                }
+            } catch { toast('Sunucu hatası', 'error'); }
+        }
+
+        // ============ ENGELLE / ENGEL KALDIR (Codex D paketi) ============
+        async function blockUser(targetNick) {
+            const ok = await retroConfirm(
+                `@${targetNick} engellenecek. Engellediğinde:\n\n• O kullanıcı sana DM atamaz\n• Sen de ona DM atamazsın\n• Arkadaşlığınız varsa silinir\n• O kullanıcı profilini açamaz\n\nDevam edilsin mi?`,
+                { title: 'Kullanıcıyı Engelle', icon: '🚫', okText: 'Evet, engelle', cancelText: 'Vazgeç', danger: true }
+            );
+            if (!ok) return;
+            const tok = localStorage.getItem('retrosesler_token');
+            try {
+                const res = await fetch('/api/blocks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+                    body: JSON.stringify({ nick: targetNick }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    retroToast(`@${targetNick} engellendi`, 'ok');
+                    window.myBlocks = data.blocked || [];
+                    // Arkadaşlık otomatik silindi (backend); local listeyi de güncelle
+                    myFriends = myFriends.filter(f => f.toLowerCase() !== targetNick.toLowerCase());
+                    renderProfile();
+                } else {
+                    retroToast(data.error || 'Engellenemedi', 'error');
+                }
+            } catch { retroToast('Sunucu hatası', 'error'); }
+        }
+
+        async function unblockUser(targetNick) {
+            const ok = await retroConfirm(`@${targetNick} engelini kaldırasın mı?`, {
+                title: 'Engeli Kaldır', icon: '✅', okText: 'Evet, kaldır', cancelText: 'Vazgeç'
+            });
+            if (!ok) return;
+            const tok = localStorage.getItem('retrosesler_token');
+            try {
+                const res = await fetch('/api/blocks/' + encodeURIComponent(targetNick), {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + tok },
+                });
+                const data = await res.json();
+                if (data.success) {
+                    retroToast(`@${targetNick} engeli kaldırıldı`, 'ok');
+                    window.myBlocks = data.blocked || [];
+                    renderProfile();
+                } else {
+                    retroToast(data.error || 'Kaldırılamadı', 'error');
+                }
+            } catch { retroToast('Sunucu hatası', 'error'); }
+        }
+
+        async function removeFriend(targetNick) {
+            const ok = await retroConfirm(`@${targetNick} arkadaşlıktan çıkarılsın mı?`, {
+                title: 'Arkadaşlıktan Çıkar', icon: '👋',
+                okText: 'Evet, çıkar', cancelText: 'Vazgeç', danger: true,
+            });
+            if (!ok) return;
+            const tok = localStorage.getItem('retrosesler_token');
+            try {
+                const res = await fetch('/api/friends/remove', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+                    body: JSON.stringify({ nick: targetNick }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    toast('Çıkarıldı', 'ok');
+                    myFriends = data.friends || [];
+                    renderProfile();
+                } else {
+                    toast(data.error || 'Çıkarılamadı', 'error');
+                }
+            } catch { toast('Sunucu hatası', 'error'); }
+        }
+
+        // ============ HESAP YÖNETİMİ ACTIONS ============
+        async function apiCall(url, method, body) {
+            const tok = localStorage.getItem('retrosesler_token');
+            const opts = { method, headers: { 'Authorization': 'Bearer ' + tok } };
+            if (body) {
+                opts.headers['Content-Type'] = 'application/json';
+                opts.body = JSON.stringify(body);
+            }
+            const res = await fetch(url, opts);
+            return { ok: res.ok, status: res.status, data: await res.json().catch(() => ({})) };
+        }
+
+        async function saveEmail() {
+            const val = (document.getElementById('acc-email')?.value || '').trim();
+            const r = await apiCall('/api/account/email', 'POST', { email: val });
+            if (r.data.success) {
+                toast('Email kaydedildi: ' + (r.data.email || 'temizlendi'), 'ok');
+                editAccountData.email = r.data.email;
+            } else {
+                toast(r.data.error || 'Hata', 'error');
+            }
+        }
+
+        async function saveBirthYear() {
+            const by = parseInt(document.getElementById('acc-byear')?.value);
+            if (!by) { toast('Doğum yılını seç', 'warn'); return; }
+            const r = await apiCall('/api/account/birth-year', 'POST', { birthYear: by });
+            if (r.data.success) {
+                toast(`🎂 Doğum yılı kaydedildi: ${r.data.birthYear} (${r.data.age} yaş)`, 'ok');
+                editAccountData.birthYear = r.data.birthYear;
+                renderEditMode();  // Tab tekrar render — artık readonly görünür
+                switchEditTab('account');
+            } else {
+                toast(r.data.error || 'Hata', 'error');
+            }
+        }
+
+        async function saveNewPassword() {
+            const newp = document.getElementById('acc-newpwd')?.value;
+            const curp = document.getElementById('acc-curpwd')?.value;
+            if (!newp || newp.length < 4) { toast('Yeni şifre en az 4 karakter', 'warn'); return; }
+            const r = await apiCall('/api/account/password', 'POST', { currentPassword: curp, newPassword: newp });
+            if (r.data.success) {
+                toast(r.data.message || 'Şifre değişti', 'ok');
+                document.getElementById('acc-newpwd').value = '';
+                if (document.getElementById('acc-curpwd')) document.getElementById('acc-curpwd').value = '';
+                editAccountData.hasPassword = true;
+                switchEditTab('account'); // refresh
+            } else {
+                toast(r.data.error || 'Hata', 'error');
+            }
+        }
+
+        async function saveNewNick() {
+            const newNick = (document.getElementById('acc-nick')?.value || '').trim();
+            if (!newNick) { toast('Nick boş olamaz', 'warn'); return; }
+            if (newNick === profileData.nick) { toast('Yeni nick eskisiyle aynı', 'warn'); return; }
+            const ok = await retroConfirm(`Nick'ini @${profileData.nick} → @${newNick} olarak değiştirmek istiyor musun?\n\n⚠️ 24 saatte sadece 1 kez değiştirebilirsin.`, {
+                title: 'Nick Değiştir', icon: '✏️', okText: 'Değiştir', cancelText: 'Vazgeç',
+            });
+            if (!ok) return;
+            const r = await apiCall('/api/account/nick', 'POST', { newNick });
+            if (r.data.success) {
+                // Yeni JWT ile localStorage güncelle
+                if (r.data.token) localStorage.setItem('retrosesler_token', r.data.token);
+                localStorage.setItem('retrosesler_nick', r.data.nick);
+                toast('Nick değişti! Yönlendiriliyorsun...', 'ok');
+                setTimeout(() => { window.location.href = '/u/' + encodeURIComponent(r.data.nick); }, 1200);
+            } else {
+                toast(r.data.error || 'Hata', 'error');
+            }
+        }
+
+        async function savePreferences() {
+            const body = {
+                nudge_pref: document.getElementById('pref-nudge').value,
+                sound_enabled: document.getElementById('pref-sound').checked,
+            };
+            const r = await apiCall('/api/account/preferences', 'POST', body);
+            if (r.data.success) {
+                toast('Tercihlerin kaydedildi', 'ok');
+                if (editAccountData) {
+                    editAccountData.nudge_pref = r.data.nudge_pref;
+                    editAccountData.sound_enabled = r.data.sound_enabled;
+                }
+            } else {
+                toast(r.data.error || 'Hata', 'error');
+            }
+        }
+
+        async function refreshInvite() {
+            const ok = await retroConfirm('Davet linkin yenilenecek — eski link geçersiz olur. Emin misin?', {
+                title: 'Davet Linki Yenile', icon: '🔄', danger: true, okText: 'Yenile',
+            });
+            if (!ok) return;
+            const r = await apiCall('/api/account/invite-refresh', 'POST', {});
+            if (r.data.success) {
+                toast('Yeni davet linkin hazır!', 'ok');
+                await loadProfile(); // tüm profili yenile
+            } else {
+                toast(r.data.error || 'Hata', 'error');
+            }
+        }
+
+        async function deleteAccount() {
+            const confirmText = (document.getElementById('del-confirm')?.value || '').trim().toUpperCase();
+            const pwd = document.getElementById('del-pwd')?.value || '';
+            if (confirmText !== 'SIL') {
+                toast('Onay için "SIL" yazmalısın', 'warn');
+                return;
+            }
+            const ok = await retroConfirm(`SON UYARI: Hesabın anında ve KALICI olarak silinecek.\n\nNick: @${profileData.nick}\n\nEmin misin?`, {
+                title: '⚠️ Hesap Silme — Son Uyarı', icon: '⚠️',
+                danger: true, okText: 'EVET, SİL', cancelText: 'Vazgeç',
+            });
+            if (!ok) return;
+            const r = await apiCall('/api/account/delete', 'POST', { confirmText: 'SIL', currentPassword: pwd });
+            if (r.data.success) {
+                localStorage.removeItem('retrosesler_token');
+                localStorage.removeItem('retrosesler_nick');
+                localStorage.removeItem('retrosesler_role');
+                toast('Hesabın silindi. Hoşça kal!', 'ok');
+                setTimeout(() => { window.location.href = '/'; }, 2000);
+            } else {
+                toast(r.data.error || 'Hata', 'error');
+            }
+        }
+
+        async function removeFriendFromEdit(targetNick) {
+            const target = targetNick.replace(/&apos;/g, "'");
+            const ok = await retroConfirm(`@${target} arkadaşlıktan çıkarılsın mı?`, {
+                title: 'Arkadaşlıktan Çıkar', icon: '👋',
+                okText: 'Evet, çıkar', cancelText: 'Vazgeç', danger: true,
+            });
+            if (!ok) return;
+            const r = await apiCall('/api/friends/remove', 'POST', { nick: target });
+            if (r.data.success) {
+                toast(`@${target} listenden çıkarıldı`, 'ok');
+                editFullFriends = r.data.friends || [];
+                myFriends = editFullFriends; // sync
+                switchEditTab('friends'); // refresh
+            } else {
+                toast(r.data.error || 'Hata', 'error');
+            }
+        }
+
+        function panelHtml(title, bodyHtml) {
+            return `<div class="win-panel"><div class="win-titlebar"><span>👤</span><span>${title}</span></div><div class="win-body">${bodyHtml}</div></div>`;
+        }
+        function notFoundHtml(icon, msg) {
+            return `<div class="p-not-found"><span class="big-icon">${icon}</span><div>${msg}</div></div>`;
+        }
+
+        loadProfile();
+    </script>
+</body>
+</html>

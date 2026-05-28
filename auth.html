@@ -6,9 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="RetroSesler.com — Kayıt ol veya giriş yap. 2000'lerin efsanevi sohbet kültürü geri döndü!">
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎙️</text></svg>">
+    <link rel="icon" type="image/png" href="assets/mikrofon.png">
+    <link rel="apple-touch-icon" href="assets/mikrofon.png">
     <title>RetroSesler.com — Giriş / Kayıt</title>
+    <meta name="description" content="RetroSesler.com'a giriş yap veya ücretsiz kayıt ol — 2000'lerin sesli & görüntülü sohbet kültürü modern teknolojiyle.">
+    <meta property="og:title" content="RetroSesler.com — Giriş">
+    <meta property="og:description" content="Saniyeler içinde kayıt ol veya mevcut hesabınla gir, retro odalara katıl.">
+    <meta property="og:image" content="https://retrosesler.com/assets/og-image.png">
+    <meta property="og:url" content="https://retrosesler.com/giris">
+    <meta name="theme-color" content="#1a1a2e">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Tahoma&display=swap" rel="stylesheet">
     <style>
         * {
@@ -27,10 +33,11 @@
                 radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0), transparent);
             min-height: 100vh;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             color: #222;
-            overflow: hidden;
+            padding: 24px 0;
+            box-sizing: border-box;
         }
 
         /* Animated stars */
@@ -79,7 +86,24 @@
             text-align: center;
             margin-bottom: 24px;
         }
-
+        .auth-logo-row {
+            text-align: center;
+            padding-top: 14px;
+        }
+        .auth-logo-inner {
+            display: inline-block;
+            position: relative;
+        }
+        .auth-logo-img {
+            position: absolute;
+            right: calc(100% + 2px);
+            top: 50%;
+            transform: translateY(-58%);
+            width: 72px;
+            height: 72px;
+            display: block;
+            filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.35));
+        }
         .auth-logo a {
             font-family: 'Press Start 2P', monospace;
             font-size: 22px;
@@ -87,6 +111,12 @@
             text-shadow: 2px 2px 0 #C0392B, 4px 4px 0 rgba(0, 0, 0, 0.4);
             text-decoration: none;
             letter-spacing: 3px;
+            white-space: nowrap;
+        }
+        @media (max-width: 480px) {
+            .auth-logo-img { width: 58px; height: 58px; right: calc(100% + 1px); }
+            .auth-logo a { font-size: 18px; letter-spacing: 2px; }
+            .auth-logo-row { padding-top: 10px; }
         }
 
         .auth-logo a span {
@@ -161,10 +191,12 @@
         }
 
         .banner-icon {
-            font-size: 48px;
-            margin-bottom: 8px;
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 8px;
             display: block;
             animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.4));
         }
 
         @keyframes float {
@@ -443,17 +475,112 @@
             letter-spacing: 0.5px;
             margin-top: 8px;
         }
+
+        /* ===== Google Login (2006 retro) ===== */
+        .google-divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 16px 0 12px;
+            color: #888;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+        .google-divider::before,
+        .google-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #c8c3b5, transparent);
+        }
+        /* Retro Google buton + üzerinde transparan gerçek GIS butonu (overlay click pattern) */
+        .google-btn-stack {
+            position: relative;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+        .google-btn-retro {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 8px 14px;
+            background: #ffffff;
+            border: 2px outset #d4d0c8;
+            border-radius: 0;
+            cursor: pointer;
+            font-family: Tahoma, Verdana, sans-serif;
+            font-size: 13px;
+            color: #1a1a1a;
+            box-shadow: 1px 2px 0 rgba(0,0,0,0.18);
+            transition: background .08s ease;
+            box-sizing: border-box;
+        }
+        .google-btn-retro:hover { background: #fafaf5; }
+        .google-btn-retro:active { border-style: inset; transform: translateY(1px); box-shadow: none; }
+        .google-btn-retro:focus { outline: 1px dotted #555; outline-offset: -4px; }
+        .google-btn-retro img {
+            display: block;
+            width: 80px;
+            height: auto;
+            image-rendering: -webkit-optimize-contrast;
+        }
+        .google-btn-retro span {
+            font-weight: bold;
+            letter-spacing: 0.3px;
+        }
+        /* Gerçek GIS butonu — retro butonun üzerinde transparan overlay */
+        .google-btn-wrap {
+            position: absolute;
+            inset: 0;
+            opacity: 0.001;             /* popup blocker trust için 0 değil */
+            overflow: hidden;
+            z-index: 2;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .google-btn-wrap > div {
+            width: 100% !important;
+            height: 100% !important;
+            min-width: 0 !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+        }
+        .google-btn-wrap iframe {
+            width: 100% !important;
+            height: 100% !important;
+            min-width: 0 !important;
+        }
+        .google-fallback {
+            display: none;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            padding: 8px;
+        }
+        .google-fallback.show { display: block; }
     </style>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="/assets/retro-ui.js"></script>
+    <link rel="stylesheet" href="/assets/tokens.css">
 </head>
 
 <body>
     <div class="auth-container">
         <!-- Logo -->
         <div class="auth-logo">
-            <a href="/">Retro<span>Sesler</span>.com</a>
-            <div class="auth-subtitle">🎙️ Sesli & Görüntülü Sohbet — 2000'lerin Ruhu, Modern Teknoloji</div>
+            <div class="auth-logo-row">
+                <span class="auth-logo-inner">
+                    <img class="auth-logo-img" src="assets/mik3.png" alt="RetroSesler">
+                    <a href="/">Retro<span>Sesler</span></a>
+                </span>
+            </div>
+            <div class="auth-subtitle">Sesli & Görüntülü Sohbet — 2000'lerin Ruhu, Modern Teknoloji</div>
             <div class="auth-tagline">"Her bağlantı bir nostalji, her sohbet bir macera"</div>
-            <div class="retro-badge">🔥 ÜCRETSİZ ÜYELİK</div>
         </div>
 
         <!-- Auth Window -->
@@ -466,11 +593,10 @@
                 </div>
             </div>
 
-            <!-- Welcome Banner -->
+            <!-- Welcome Banner — ücretsiz vurgusu yerine eylem odaklı (kullanıcı feedback) -->
             <div class="auth-banner">
-                <span class="banner-icon">🎙️</span>
                 <div class="banner-title">Hoş Geldin, Retro Kaşif!</div>
-                <div class="banner-desc">Giriş yap veya ücretsiz kayıt ol — 9 farklı sohbet odası seni bekliyor</div>
+                <div class="banner-desc">Giriş yap; mevcut retro odalara katıl ya da saniyeler içinde kendi odanı aç — hepsi ücretsiz.</div>
             </div>
 
             <!-- Tabs -->
@@ -482,15 +608,21 @@
             <div class="auth-body">
                 <!-- Login Form -->
                 <form class="auth-form active" id="login-form" onsubmit="doLogin(event)">
+                    <!-- Browser autofill engelleme: fake hidden input + readonly trick -->
+                    <input type="text" name="fake-user" autocomplete="username" style="position:absolute;left:-9999px;height:0;width:0;opacity:0" tabindex="-1" aria-hidden="true">
+                    <input type="password" name="fake-pwd" autocomplete="current-password" style="position:absolute;left:-9999px;height:0;width:0;opacity:0" tabindex="-1" aria-hidden="true">
                     <div class="form-group">
                         <label>👤 Kullanıcı Adı (Nick)</label>
                         <input type="text" id="login-nick" placeholder="Rumuzunuzu girin..." required maxlength="20"
-                            autocomplete="username">
+                            autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
                     </div>
                     <div class="form-group">
                         <label>🔒 Şifre</label>
                         <input type="password" id="login-pass" placeholder="Şifrenizi girin..." required minlength="4"
-                            autocomplete="current-password">
+                            autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')">
+                        <div style="text-align:right;margin-top:4px">
+                            <a href="#" onclick="openForgotPwd(event)" style="font-size:11px;color:#1E5AA8;text-decoration:underline">Şifremi unuttum →</a>
+                        </div>
                     </div>
                     <button class="auth-btn" type="submit">GİRİŞ YAP ▶</button>
                     <div class="auth-msg" id="login-msg"></div>
@@ -502,6 +634,12 @@
                         <label>👤 Kullanıcı Adı (Nick) — benzersiz olmalı</label>
                         <input type="text" id="reg-nick" placeholder="Örn: retro_kaşif, dj_nostalji" required
                             maxlength="20" pattern="[a-zA-Z0-9_çğıöşüÇĞİÖŞÜ]+" title="Sadece harf, rakam ve alt çizgi">
+                    </div>
+                    <div class="form-group">
+                        <label>📧 Email (opsiyonel) — şifreni unutursan reset için lazım</label>
+                        <input type="email" id="reg-email" placeholder="ornek@gmail.com (boş bırakabilirsin)"
+                            maxlength="80" autocomplete="email">
+                        <div style="font-size:10px;color:#888;margin-top:2px">Email vermek isteğine bağlı ama önerilir. Spam atmıyoruz.</div>
                     </div>
                     <div class="form-group">
                         <label>🔒 Şifre (en az 4 karakter)</label>
@@ -516,9 +654,29 @@
                         <input type="password" id="reg-pass2" placeholder="Şifrenizi tekrar girin..." required
                             minlength="4" autocomplete="new-password">
                     </div>
+                    <div class="form-group">
+                        <label>🎂 Doğum Yılı — yaş doğrulamak için zorunlu (13 yaş altı kayıt yok)</label>
+                        <select id="reg-byear" required style="width:100%;padding:8px;border:2px inset #b0b0b0;font-family:Tahoma;font-size:13px;background:#fff;box-sizing:border-box">
+                            <option value="">— seçiniz —</option>
+                        </select>
+                        <div style="font-size:10px;color:#888;margin-top:2px">Sadece yaş kontrolü için kullanılır; yaşın profilinde gösterilmez (özel ayarda açabilirsin).</div>
+                    </div>
                     <button class="auth-btn" type="submit">KAYIT OL ▶</button>
                     <div class="auth-msg" id="reg-msg"></div>
                 </form>
+
+                <!-- Google Login (2006 retro) — retro buton görsel, üstte transparan gerçek GIS butonu -->
+                <div class="google-divider">VEYA</div>
+                <div class="google-btn-stack">
+                    <button type="button" class="google-btn-retro" id="google-btn-retro" onclick="triggerGoogleSignIn()" aria-label="Google ile giriş yap">
+                        <img src="/assets/google-2006.gif" alt="Google 2006" />
+                        <span>ile Giriş Yap</span>
+                    </button>
+                    <div class="google-btn-wrap" id="google-btn-wrap" aria-hidden="true"></div>
+                </div>
+                <div class="google-fallback" id="google-fallback">
+                    Google girişi henüz yapılandırılmamış.
+                </div>
 
                 <!-- Loading -->
                 <div class="auth-loading" id="auth-loading">
@@ -527,24 +685,17 @@
                     </div>
                 </div>
 
-                <!-- Features -->
-                <div class="auth-features">
-                    <div class="feature-item"><span class="feature-icon">🎤</span>Sesli Sohbet</div>
-                    <div class="feature-item"><span class="feature-icon">📹</span>Kamera</div>
-                    <div class="feature-item"><span class="feature-icon">💬</span>Özel Mesaj</div>
-                    <div class="feature-item"><span class="feature-icon">📳</span>MSN Titreşim</div>
-                    <div class="feature-item"><span class="feature-icon">👤</span>Profil Sistemi</div>
-                    <div class="feature-item"><span class="feature-icon">📻</span>Nostalji</div>
-                </div>
-
                 <div class="guest-link">
-                    veya <a href="/">👻 misafir olarak devam et →</a>
+                    veya <a href="#" onclick="event.preventDefault();authGuest()">👻 misafir olarak devam et →</a>
                 </div>
             </div>
         </div>
 
         <div class="auth-footer">
-            © 2025 <a href="/">RetroSesler.com</a> — Tüm hakları saklıdır.
+            © <span id="ay"></span> <a href="/">RetroSesler.com</a> ·
+            <a href="/hakkimizda">hakkımızda</a> ·
+            <a href="/gizlilik">gizlilik</a>
+            <script>document.getElementById('ay').textContent = new Date().getFullYear();</script>
         </div>
     </div>
 
@@ -587,6 +738,35 @@
             bar.style.background = pct < 40 ? '#E74C3C' : pct < 70 ? '#F39C12' : '#27AE60';
         }
 
+        // ============ ŞİFREMİ UNUTTUM ============
+        async function openForgotPwd(e) {
+            if (e) e.preventDefault();
+            // Mevcut nick'ten email türetmeye çalışma — direkt sor
+            const email = await retroPrompt('Hesabınla bağlı email adresini gir. Şifre sıfırlama linki gönderilecek.', {
+                title: 'Şifremi Unuttum',
+                icon: '🔑',
+                placeholder: 'ornek@gmail.com',
+                type: 'text',
+                okText: 'Link Gönder',
+            });
+            if (!email) return;
+            try {
+                const res = await fetch('/api/account/password-reset/request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email.trim() }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    retroToast(data.message || 'Eğer email kayıtlıysa link gönderildi. Spam klasörünü de kontrol et.', 'ok', { title: '📧 Email Gönderildi', timeout: 8000 });
+                } else {
+                    retroToast(data.error || 'Hata', 'error', { title: 'Gönderilemedi' });
+                }
+            } catch (err) {
+                retroToast('Sunucu hatası: ' + err.message, 'error');
+            }
+        }
+
         async function doLogin(e) {
             e.preventDefault();
             const nick = document.getElementById('login-nick').value.trim();
@@ -609,6 +789,21 @@
                     localStorage.setItem('retrosesler_role', data.role || 'user');
                     showMsg('login-msg', '✅ Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
                     setTimeout(() => { window.location.href = '/'; }, 1000);
+                } else if (data.code === 'google_only') {
+                    // Özel mesaj + Google butonunu vurgula
+                    showMsg('login-msg', '🔵 ' + (data.error || 'Bu hesap Google ile bağlı'), 'error');
+                    // Google butonunu pulse anim ile dikkat çek
+                    const gWrap = document.getElementById('google-btn-retro') || document.querySelector('.google-fallback') || document.querySelector('[id*="google"]');
+                    if (gWrap) {
+                        gWrap.style.transition = 'box-shadow 0.3s, transform 0.3s';
+                        gWrap.style.boxShadow = '0 0 0 4px rgba(74,144,217,0.4), 0 4px 12px rgba(0,0,0,0.2)';
+                        gWrap.style.transform = 'scale(1.05)';
+                        setTimeout(() => {
+                            gWrap.style.boxShadow = '';
+                            gWrap.style.transform = '';
+                        }, 2500);
+                        gWrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
                 } else {
                     showMsg('login-msg', '❌ ' + (data.error || 'Giriş başarısız'), 'error');
                 }
@@ -618,24 +813,51 @@
             }
         }
 
+        // Doğum yılı dropdown'unu doldur — current-13 (en genç kayıt) → 1925 (en yaşlı)
+        (function fillBirthYears() {
+            const sel = document.getElementById('reg-byear');
+            if (!sel) return;
+            const cy = new Date().getFullYear();
+            const max = cy - 13;
+            const min = cy - 100;
+            for (let y = max; y >= min; y--) {
+                const opt = document.createElement('option');
+                opt.value = String(y);
+                opt.textContent = String(y);
+                sel.appendChild(opt);
+            }
+        })();
+
         async function doRegister(e) {
             e.preventDefault();
             const nick = document.getElementById('reg-nick').value.trim();
+            const email = (document.getElementById('reg-email')?.value || '').trim();
             const pass = document.getElementById('reg-pass').value;
             const pass2 = document.getElementById('reg-pass2').value;
+            const birthYear = parseInt(document.getElementById('reg-byear')?.value);
 
             if (pass !== pass2) {
                 showMsg('reg-msg', '❌ Şifreler uyuşmuyor!', 'error');
                 return;
             }
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showMsg('reg-msg', '❌ Geçersiz email (veya boş bırakın)', 'error');
+                return;
+            }
+            if (!birthYear) {
+                showMsg('reg-msg', '❌ Doğum yılını seç (yaş kontrolü için zorunlu)', 'error');
+                return;
+            }
 
             showLoading('📝 Kayıt oluşturuluyor...');
 
+            const body = { nick, password: pass, birthYear };
+            if (email) body.email = email;
             try {
                 const res = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nick, password: pass })
+                    body: JSON.stringify(body)
                 });
                 const data = await res.json();
                 hideLoading();
@@ -663,6 +885,134 @@
             }).then(r => r.json()).then(d => {
                 if (d.success) window.location.href = '/';
             }).catch(() => { });
+        }
+
+        /* ============ Google Sign-In ============ */
+        async function handleGoogleCredential(response) {
+            showLoading('🔐 Google ile giriş yapılıyor...');
+            try {
+                const res = await fetch('/api/auth/google', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ credential: response.credential })
+                });
+                const data = await res.json();
+                hideLoading();
+                if (data.success) {
+                    localStorage.setItem('retrosesler_token', data.token);
+                    localStorage.setItem('retrosesler_nick', data.nick);
+                    localStorage.setItem('retrosesler_role', data.role || 'user');
+                    showMsg('login-msg', '✅ Google girişi başarılı! Yönlendiriliyorsunuz...', 'success');
+                    setTimeout(() => { window.location.href = '/'; }, 800);
+                } else {
+                    showMsg('login-msg', '❌ ' + (data.error || 'Google girişi başarısız'), 'error');
+                }
+            } catch (err) {
+                hideLoading();
+                showMsg('login-msg', '❌ Sunucu hatası: ' + err.message, 'error');
+            }
+        }
+
+        // GIS native buton retro butonun üzerine transparan overlay olarak render edilir.
+        // Kullanıcı retro butonu görür, click gerçek GIS butonuna iletilir → ID-token alır →
+        // backend credential olarak doğrular. Bu yöntem mobile/desktop hepsinde stabil çalışır
+        // ve client_secret gerektirmez.
+        let googleClientId = null;
+
+        // Retro butona click gelirse One Tap'i de prompt et (kullanıcı görsel butona basabilir)
+        function triggerGoogleSignIn() {
+            if (window.google?.accounts?.id?.prompt) {
+                google.accounts.id.prompt();
+            } else {
+                retroToast('Google giriş servisi henüz hazır değil — bir saniye bekleyip tekrar dene.', 'warn', { title: 'Hazırlanıyor', icon: '⏳' });
+            }
+        }
+
+        function renderGoogleOverlayButton() {
+            const wrap = document.getElementById('google-btn-wrap');
+            if (!wrap || !window.google?.accounts?.id?.renderButton) return;
+            // Genişliği retro butonun gerçek pikselinden hesapla — Google butonu mobilde 400px max kabul ediyor.
+            const stack = document.querySelector('.google-btn-stack');
+            const w = Math.min(400, Math.max(200, stack ? stack.getBoundingClientRect().width : 320));
+            wrap.innerHTML = '';
+            try {
+                google.accounts.id.renderButton(wrap, {
+                    type: 'standard',
+                    theme: 'outline',
+                    size: 'large',
+                    text: 'signin_with',
+                    shape: 'rectangular',
+                    logo_alignment: 'center',
+                    width: Math.floor(w),
+                });
+            } catch (e) {
+                console.warn('[Google] renderButton fail:', e.message);
+            }
+        }
+
+        // GIS init — Client ID backend'den çekilir, ID-token flow kurulur
+        function initGoogleSignIn() {
+            const fallback = document.getElementById('google-fallback');
+            const retroBtn = document.getElementById('google-btn-retro');
+            if (!window.google || !window.google.accounts) {
+                setTimeout(initGoogleSignIn, 300);
+                return;
+            }
+            fetch('/api/config').then(r => r.json()).then(cfg => {
+                if (!cfg.googleClientId) {
+                    if (retroBtn) retroBtn.style.display = 'none';
+                    fallback.classList.add('show');
+                    return;
+                }
+                googleClientId = cfg.googleClientId;
+                if (google.accounts.id) {
+                    google.accounts.id.initialize({
+                        client_id: googleClientId,
+                        callback: handleGoogleCredential,
+                        ux_mode: 'popup',
+                        auto_select: false,
+                        cancel_on_tap_outside: true,
+                    });
+                    renderGoogleOverlayButton();
+                    // Yeniden boyutlanırsa overlay'i tekrar render et
+                    let resizeTO;
+                    window.addEventListener('resize', () => {
+                        clearTimeout(resizeTO);
+                        resizeTO = setTimeout(renderGoogleOverlayButton, 250);
+                    });
+                }
+            }).catch(() => {
+                if (retroBtn) retroBtn.style.display = 'none';
+                fallback.classList.add('show');
+            });
+        }
+        // Sayfa yüklendikten sonra başlat
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initGoogleSignIn);
+        } else {
+            initGoogleSignIn();
+        }
+
+        // Misafir olarak devam et — anasayfa lobbyGuest ile aynı akış
+        async function authGuest() {
+            showLoading('👀 Misafir hesabı oluşturuluyor...');
+            try {
+                const res = await fetch('/api/auth/guest', { method: 'POST', headers: {'Content-Type':'application/json'} });
+                const data = await res.json();
+                hideLoading();
+                if (data.success) {
+                    localStorage.setItem('retrosesler_token', data.token);
+                    localStorage.setItem('retrosesler_nick', data.nick);
+                    localStorage.setItem('retrosesler_role', data.role);
+                    showMsg('login-msg', '✅ Hoş geldin ' + data.nick + '!', 'success');
+                    setTimeout(() => { window.location.href = '/'; }, 600);
+                } else {
+                    showMsg('login-msg', '❌ ' + (data.error || 'Hata'), 'error');
+                }
+            } catch (err) {
+                hideLoading();
+                showMsg('login-msg', '❌ Sunucu hatası: ' + err.message, 'error');
+            }
         }
     </script>
 </body>
