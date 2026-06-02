@@ -17,30 +17,41 @@
         body {
             font-family: Tahoma, Verdana, sans-serif;
             font-size: 13px;
-            background: #1a1a2e;
-            color: #E0E0E0;
+            background: #3A6EA5;
+            background-image:
+                radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.08), transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(0, 60, 120, 0.15), transparent 50%),
+                linear-gradient(180deg, #3A6EA5 0%, #2B5A8C 50%, #1E4070 100%);
+            color: #222;
             min-height: 100vh;
+            padding-bottom: 30px;
         }
 
-        /* Header */
+        /* Top Bar - Classic toolbar style */
         .admin-header {
-            background: linear-gradient(90deg, #0A246A, #1a1a4e);
-            padding: 12px 24px;
+            background: linear-gradient(180deg, #FAF9F5 0%, #F5F3EB 100%);
+            border-bottom: 2px solid #B5B0A1;
+            padding: 8px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 3px solid #C0392B;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .admin-header h1 {
-            font-size: 16px;
-            color: #fff;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 14px;
+            line-height: 1;
+            color: #C0392B;
+            text-shadow: 2px 2px 0 #E74C3C, 3px 3px 0 rgba(0, 0, 0, 0.15);
+            letter-spacing: 1px;
         }
 
         .admin-header h1 span {
-            color: #E74C3C;
+            color: #2E86C1;
         }
 
         .admin-header-actions {
@@ -51,56 +62,62 @@
 
         .admin-header-actions .admin-nick {
             font-size: 12px;
-            color: #85C1E9;
+            color: #222;
             padding: 4px 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
+            background: #E8E4D9;
+            border: 2px inset #808080;
+            font-weight: bold;
         }
 
         .header-btn {
             padding: 6px 14px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            border: 2px outset #ffffff;
+            background: linear-gradient(180deg, #FFF 0%, #ECE9D8 100%);
+            color: #222;
             font-family: inherit;
             font-size: 12px;
             cursor: pointer;
-            transition: all 0.2s;
+            box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
         }
 
         .header-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: #F5F3EB;
         }
 
-        /* Stats bar */
+        .header-btn:active {
+            border: 2px inset #ffffff;
+        }
+
+        /* Stats Bar - XP styled status boxes */
         .stats-bar {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
             padding: 16px 24px;
-            background: linear-gradient(180deg, #16213e, #1a1a2e);
-            border-bottom: 1px solid #2C3E50;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .stat-card {
-            flex: 1;
-            background: linear-gradient(135deg, #2C3E50, #34495E);
-            padding: 16px;
-            border-radius: 6px;
+            background: #ECE9D8;
+            padding: 12px;
+            border: 2px outset #ffffff;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.15);
             text-align: center;
-            border: 1px solid #3d566e;
         }
 
         .stat-number {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+            color: #0A246A;
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
         }
 
         .stat-label {
             font-size: 11px;
-            color: #95A5A6;
+            color: #444;
             margin-top: 4px;
+            font-weight: bold;
         }
 
         /* Main layout */
@@ -110,150 +127,189 @@
             gap: 16px;
             padding: 16px 24px;
             max-width: 1400px;
+            margin: 0 auto;
         }
 
-        /* Panel */
-        .panel {
-            background: #16213e;
-            border: 1px solid #2C3E50;
-            border-radius: 6px;
-            overflow: hidden;
+        .admin-main .row {
+            grid-column: span 2;
         }
 
-        .panel-header {
-            background: linear-gradient(90deg, #0A246A, #1B3A5C);
-            padding: 10px 16px;
+        /* Panel - WinXP classic window object */
+        .panel, .card-section {
+            background: #ECE9D8;
+            border: 2px outset #ffffff;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header, .section-title {
+            background: linear-gradient(180deg, #4A90D9 0%, #2E6BBF 40%, #1E5AA8 100%);
+            padding: 6px 12px;
             font-weight: bold;
             font-size: 13px;
             color: #fff;
+            text-shadow: 1px 1px 1px #0A246A;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid #1E5AA8;
         }
 
-        .panel-body {
+        .panel-body, #user-rooms-panel, #reports-panel, #mod-log-panel {
             padding: 12px;
+            background: #ECE9D8;
             max-height: 400px;
             overflow-y: auto;
         }
 
         .panel-body::-webkit-scrollbar {
-            width: 6px;
+            width: 16px;
+        }
+
+        .panel-body::-webkit-scrollbar-track {
+            background: #F1F1F1;
+            border-left: 1px solid #D8D2BD;
         }
 
         .panel-body::-webkit-scrollbar-thumb {
-            background: #34495E;
-            border-radius: 3px;
+            background: #ECE9D8;
+            border: 2px outset #ffffff;
         }
 
-        /* Tables */
+        /* ListView Tables */
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
+            background: #FFF;
+            border: 2px inset #808080;
         }
 
         th {
-            background: #2C3E50;
-            padding: 8px 10px;
+            background: linear-gradient(180deg, #FFF 0%, #ECE9D8 100%);
+            border: 1px solid #FFF;
+            border-right: 1px solid #808080;
+            border-bottom: 1px solid #808080;
+            padding: 5px 8px;
             text-align: left;
             font-size: 11px;
-            color: #95A5A6;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: #000;
+            font-weight: normal;
         }
 
         td {
-            padding: 8px 10px;
-            border-bottom: 1px solid #2C3E50;
+            padding: 6px 8px;
+            border: 1px solid #E8E3D2;
+            color: #000;
+            vertical-align: middle;
         }
 
-        tr:hover {
-            background: rgba(52, 152, 219, 0.1);
+        tr:nth-child(even) td {
+            background: #F9F8F4;
+        }
+
+        tr:hover td {
+            background: #FFE4B5 !important; /* light orange row hover like XP selection */
         }
 
         /* Badges */
         .role-badge {
             padding: 2px 8px;
-            border-radius: 10px;
+            border: 1px solid rgba(0,0,0,0.15);
             font-size: 10px;
             font-weight: bold;
             text-transform: uppercase;
+            display: inline-block;
         }
 
         .role-admin {
-            background: #E74C3C;
-            color: #fff;
+            background: #FADBD8;
+            color: #C0392B;
+            border-color: #E74C3C;
         }
 
         .role-mod {
-            background: #F39C12;
-            color: #fff;
+            background: #FCF3CF;
+            color: #D68910;
+            border-color: #F39C12;
         }
 
         .role-user {
-            background: #2ECC71;
-            color: #fff;
+            background: #D5F5E3;
+            color: #1E8449;
+            border-color: #2ECC71;
         }
 
-        /* Action buttons */
+        /* Action buttons - classic XP styled */
         .act-btn {
             padding: 3px 10px;
-            border: none;
-            border-radius: 3px;
+            border: 2px outset #ffffff;
+            background: linear-gradient(180deg, #FFF 0%, #ECE9D8 100%);
+            color: #000;
             font-family: inherit;
             font-size: 11px;
             cursor: pointer;
-            transition: all 0.2s;
+            box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
             margin: 0 2px;
         }
 
+        .act-btn:hover {
+            background: #F5F3EB;
+        }
+
+        .act-btn:active {
+            border: 2px inset #ffffff;
+        }
+
         .act-ban {
-            background: #E74C3C;
-            color: #fff;
+            background: linear-gradient(180deg, #FFF0F0 0%, #FADBD8 100%);
+            color: #C0392B;
+            border: 1px solid #E74C3C;
         }
 
         .act-ban:hover {
-            background: #C0392B;
+            background: #FADBD8;
         }
 
         .act-unban {
-            background: #27AE60;
-            color: #fff;
+            background: linear-gradient(180deg, #F0FFF0 0%, #D5F5E3 100%);
+            color: #1E8449;
+            border: 1px solid #2ECC71;
         }
 
         .act-unban:hover {
-            background: #1E8449;
+            background: #D5F5E3;
         }
 
         .act-role {
-            background: #3498DB;
-            color: #fff;
+            background: linear-gradient(180deg, #F0F8FF 0%, #D6EAF8 100%);
+            color: #2980B9;
+            border: 1px solid #3498DB;
         }
 
         .act-role:hover {
-            background: #2980B9;
+            background: #D6EAF8;
         }
 
         .act-lock {
-            background: #E67E22;
-            color: #fff;
+            background: linear-gradient(180deg, #FFFDF0 0%, #FCF3CF 100%);
+            color: #D68910;
+            border: 1px solid #F39C12;
         }
 
         .act-lock:hover {
-            background: #D35400;
+            background: #FCF3CF;
         }
 
         .act-unlock {
-            background: #2ECC71;
-            color: #fff;
+            background: linear-gradient(180deg, #F0FFF0 0%, #D5F5E3 100%);
+            color: #1E8449;
+            border: 1px solid #2ECC71;
         }
 
-        .act-unlock:hover {
-            background: #27AE60;
-        }
-
-        /* Forms */
+        /* 3D Inputs & select fields */
         .form-row {
             display: flex;
             gap: 8px;
@@ -262,26 +318,27 @@
 
         .form-input {
             flex: 1;
-            padding: 7px 10px;
-            border: 1px solid #34495E;
-            background: #2C3E50;
-            color: #ECF0F1;
+            padding: 5px 8px;
+            border: 2px inset #808080;
+            background: #FFFFFF;
+            color: #000000;
             font-family: inherit;
             font-size: 12px;
             outline: none;
         }
 
         .form-input:focus {
-            border-color: #3498DB;
+            border-color: #3A6EA5;
         }
 
         .form-select {
-            padding: 7px 10px;
-            border: 1px solid #34495E;
-            background: #2C3E50;
-            color: #ECF0F1;
+            padding: 4px 8px;
+            border: 2px inset #808080;
+            background: #FFFFFF;
+            color: #000000;
             font-family: inherit;
             font-size: 12px;
+            outline: none;
         }
 
         /* Room cards */
@@ -291,9 +348,8 @@
             align-items: center;
             padding: 10px 12px;
             margin-bottom: 8px;
-            background: #1a2642;
-            border: 1px solid #2C3E50;
-            border-radius: 4px;
+            background: #FFFFFF;
+            border: 2px inset #808080;
         }
 
         .room-card-info {
@@ -303,18 +359,18 @@
         .room-card-name {
             font-weight: bold;
             font-size: 13px;
-            color: #ECF0F1;
+            color: #000;
         }
 
         .room-card-meta {
             font-size: 11px;
-            color: #7F8C8D;
+            color: #666;
             margin-top: 2px;
         }
 
         .room-locked {
             border-color: #E74C3C;
-            background: #2C1A1A;
+            background: #FADBD8;
         }
 
         .lock-icon {
@@ -330,9 +386,9 @@
             padding: 12px 20px;
             background: #27AE60;
             color: #fff;
-            border-radius: 6px;
+            border: 2px outset #ffffff;
             font-size: 13px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
             opacity: 0;
             transition: opacity 0.3s;
             z-index: 9999;
@@ -346,21 +402,88 @@
             opacity: 1;
         }
 
-        /* Access denied */
+        /* Access Denied Dialog Box (WinXP Warning Center Box) */
         .access-denied {
             display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 380px;
+            max-width: 95vw;
+            background: #ECE9D8;
+            border: 2px outset #ffffff;
+            box-shadow: 4px 4px 12px rgba(0,0,0,0.3);
+            font-family: Tahoma, Arial, sans-serif;
+            z-index: 10000;
+            text-align: left;
+            padding: 0;
+        }
+
+        .access-denied-header {
+            background: linear-gradient(180deg, #4A90D9 0%, #2E6BBF 40%, #1E5AA8 100%);
+            color: #fff;
+            padding: 5px 8px;
+            font-weight: bold;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-shadow: 1px 1px 1px #0A246A;
+        }
+
+        .access-denied-body {
+            padding: 16px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            background: #ECE9D8;
+        }
+
+        .access-denied-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .access-denied-message {
+            font-size: 12px;
+            color: #000;
+            line-height: 1.5;
+        }
+
+        .access-denied-footer {
+            padding: 10px;
             text-align: center;
-            padding: 60px 20px;
+            border-top: 1px solid #D8D2BD;
+            background: #ECE9D8;
         }
 
-        .access-denied h2 {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-
-        .access-denied p {
-            color: #95A5A6;
-            font-size: 14px;
+        /* Mobile Stacking & Responsiveness */
+        @media (max-width: 768px) {
+            .admin-main {
+                grid-template-columns: 1fr;
+                padding: 10px 12px;
+                gap: 12px;
+            }
+            .admin-main .row, .panel {
+                grid-column: span 1 !important;
+            }
+            .panel-body, #user-rooms-panel, #reports-panel, #mod-log-panel {
+                overflow-x: auto;
+            }
+            .admin-header {
+                padding: 8px 12px;
+                flex-direction: column;
+                gap: 8px;
+                align-items: stretch;
+            }
+            .admin-header h1 {
+                text-align: center;
+                font-size: 12px;
+            }
+            .admin-header-actions {
+                justify-content: space-between;
+            }
         }
     </style>
     <link rel="stylesheet" href="/assets/tokens.css">
@@ -370,10 +493,19 @@
 <body>
     <!-- Access Denied -->
     <div class="access-denied" id="access-denied">
-        <h2>🚫</h2>
-        <p>Bu sayfaya erişim yetkiniz yok.<br>Sadece Admin kullanıcılar bu paneli görebilir.</p>
-        <br>
-        <button class="header-btn" onclick="window.location.href='/'">← Lobiye Dön</button>
+        <div class="access-denied-header">
+            <span>Erişim Engellendi</span>
+            <span style="cursor:pointer;background:#D04040;color:#fff;width:16px;height:14px;font-size:9px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #800;font-weight:bold;" onclick="window.location.href='/'">×</span>
+        </div>
+        <div class="access-denied-body">
+            <div class="access-denied-icon">❌</div>
+            <div class="access-denied-message">
+                Bu sayfaya erişim yetkiniz yok.<br>Sadece yetkili yöneticiler bu paneli görebilir.
+            </div>
+        </div>
+        <div class="access-denied-footer">
+            <button class="header-btn" onclick="window.location.href='/'" style="min-width: 80px;">Tamam</button>
+        </div>
     </div>
 
     <!-- Admin Panel -->
@@ -419,7 +551,8 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Nick</th>
+                                <th>Nick / E-posta</th>
+                                <th>Giriş Tipi</th>
                                 <th>Rol</th>
                                 <th>Kayıt</th>
                                 <th>İşlemler</th>
@@ -885,21 +1018,26 @@
                 if (!data.success) return;
                 document.getElementById('user-count-label').textContent = data.users.length + ' kullanıcı';
                 const tbody = document.getElementById('users-table');
-                tbody.innerHTML = data.users.map(u => `
-                    <tr>
-                        <td><b>${esc(u.nick)}</b></td>
-                        <td><span class="role-badge role-${u.role}">${u.role}</span></td>
-                        <td style="font-size:11px;color:#7F8C8D">${new Date(u.createdAt).toLocaleDateString('tr')}</td>
-                        <td>
-                            <select onchange="changeRole('${u.id}', this.value)" class="form-select" style="padding:2px 6px;font-size:11px">
-                                <option value="user" ${u.role === 'user' ? 'selected' : ''}>user</option>
-                                <option value="mod" ${u.role === 'mod' ? 'selected' : ''}>mod</option>
-                                <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>admin</option>
-                            </select>
-                            <button class="act-btn act-ban" onclick="quickBan('${esc(u.nick)}')">🚫</button>
-                        </td>
-                    </tr>
-                `).join('');
+                tbody.innerHTML = data.users.map(u => {
+                    const loginType = u.google_sub ? '<span style="color:#4285F4;font-size:11px;font-weight:bold">🔵 Google</span>' : '<span style="color:#2ECC71;font-size:11px;font-weight:bold">📧 Klasik</span>';
+                    const emailStr = u.email ? `<br><span style="font-size:10px;color:#7F8C8D">${esc(u.email)}</span>` : '';
+                    return `
+                        <tr>
+                            <td><b>${esc(u.nick)}</b>${emailStr}</td>
+                            <td>${loginType}</td>
+                            <td><span class="role-badge role-${u.role}">${u.role}</span></td>
+                            <td style="font-size:11px;color:#7F8C8D">${new Date(u.createdAt).toLocaleDateString('tr')}</td>
+                            <td>
+                                <select onchange="changeRole('${u.id}', this.value)" class="form-select" style="padding:2px 6px;font-size:11px">
+                                    <option value="user" ${u.role === 'user' ? 'selected' : ''}>user</option>
+                                    <option value="mod" ${u.role === 'mod' ? 'selected' : ''}>mod</option>
+                                    <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>admin</option>
+                                </select>
+                                <button class="act-btn act-ban" onclick="quickBan('${esc(u.nick)}')">🚫</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
             } catch { }
         }
 

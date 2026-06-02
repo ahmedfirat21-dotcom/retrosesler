@@ -3,10 +3,9 @@
  * ═══════════════════════════════════════════
  * 1. Türkçe-aware küfür filtresi (BAD_WORDS — SopranoChat'ten)
  * 2. 3-strike sistemi (in-memory, nick → strike count + reset timer)
- * 3. Opsiyonel: Gemini API ile bağlamsal analiz (env'de GEMINI_API_KEY varsa)
- *
- * Sonuç: { safe, severity (0-3), reason, action ('warn'|'delete'|'mute_5m') }
+ * 3. Opsiyonel: AI Service
  */
+const aiService = require('./ai');
 
 // === SopranoChat'ten alınan Türkçe küfür listesi ===
 const BAD_WORDS = [
@@ -65,8 +64,49 @@ function countBadWords(text) {
     return count;
 }
 
-// === 3-strike sistem (in-memory, nick bazlı) ===
-const _strikes = new Map(); // nick → { count, lastResetAt, mutedUntil, totalOffenses }
+// === 3-strike sistem (disk-persisted, nick bazlı) ===
+const path = require('path');
+const fs = require('fs');
+const STRIKES_FILE = path.join(__dirname, '..', 'data', 'mod_strikes.json');
+
+// Diskten yükle
+function _loadStrikes() {
+    try {
+        if (fs.existsSync(STRIKES_FILE)) {
+            const raw = JSON.parse(fs.readFileSync(STRIKES_FILE, 'utf8'));
+            const map = new Map();
+            for (const [k, v] of Object.entries(raw)) {
+                map.set(k, v);
+            }
+            console.log(`[MOD] ${map.size} kullanıcı strike verisi diskten yüklendi`);
+            return map;
+        }
+    } catch (e) {
+        console.warn('[MOD] Strike verisi yükleme hatası:', e.message);
+    }
+    return new Map();
+}
+
+const _strikes = _loadStrikes(); // nick → { count, lastResetAt, mutedUntil, totalOffenses }
+
+// Diske kaydet (debounced — 2sn içinde tekrar yazma)
+let _saveTimer = null;
+function _saveStrikes() {
+    if (_saveTimer) return;
+    _saveTimer = setTimeout(() => {
+        _saveTimer = null;
+        try {
+            const dir = path.dirname(STRIKES_FILE);
+            if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+            const obj = {};
+            for (const [k, v] of _strikes) obj[k] = v;
+            fs.writeFileSync(STRIKES_FILE, JSON.stringify(obj, null, 2));
+        } catch (e) {
+            console.warn('[MOD] Strike kayıt hatası:', e.message);
+        }
+    }, 2000);
+}
+
 const STRIKE_RESET_MS = 30 * 60 * 1000;  // 30 dk strike dinlenir
 const MUTE_DURATION_MS = 5 * 60 * 1000;  // 3 strike → 5 dk mute
 const MAX_STRIKES = 3;
@@ -81,6 +121,7 @@ function applyMute(nick, action) {
     const s = _getStrike(nick);
     const dur = MUTE_DURATIONS[action] || MUTE_DURATIONS.mute_5m;
     s.mutedUntil = Date.now() + dur;
+    _saveStrikes();
     return Math.round(dur / 1000);
 }
 
@@ -90,6 +131,7 @@ function _getStrike(nick) {
     if (!s) {
         s = { count: 0, lastResetAt: now, mutedUntil: 0, totalOffenses: 0 };
         _strikes.set(nick, s);
+        _saveStrikes();
     } else if (now - s.lastResetAt > STRIKE_RESET_MS) {
         // Strike soğumuş
         s.count = 0;
@@ -117,6 +159,7 @@ function addStrike(nick) {
     } else if (s.count === MAX_STRIKES - 1) {
         action = 'final_warn';
     }
+    _saveStrikes();
     return { count: s.count, mutedUntil: s.mutedUntil, action };
 }
 
@@ -157,8 +200,7 @@ function isShouting(text) {
 // Sadece env'de GEMINI_API_KEY varsa kullanılır
 // aiLevel: 'off' (AI çağrılmaz), 'standard' (default), 'strict' (küçük ihlalleri de yakala)
 async function analyzeWithGemini(text, context = {}) {
-    const key = process.env.GEMINI_API_KEY;
-    if (!key) return null;
+    if (!aiService.hasAiService) return null;
     const aiLevel = context.aiLevel || 'standard';
     if (aiLevel === 'off') return null;
     try {
@@ -184,19 +226,13 @@ Aksiyon ölçeği:
 Sicili kabarık kullanıcılar için bir tık üstüne çık.
 
 Mesaj: "${text.replace(/"/g, "'").slice(0, 400)}"`;
-        // gemini-2.5-flash-lite — free tier'da yeterli kota + moderasyon için yeterince akıllı + hızlı
-        const resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=' + encodeURIComponent(key), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }],
-                generationConfig: { temperature: 0.2, maxOutputTokens: 180 },
-            }),
+        
+        const out = await aiService.generateText({
+            prompt,
+            responseMimeType: 'application/json',
+            model: 'gemini-2.5-flash-lite'
         });
-        if (!resp.ok) return null;
-        const data = await resp.json();
-        const out = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-        // JSON parse — Gemini bazen markdown sarmalı koyar
+        if (!out) return null;
         const json = out.replace(/^```json\s*|\s*```$/g, '').trim();
         const parsed = JSON.parse(json);
         const validActions = ['none', 'warn', 'mute_15m', 'mute_1h', 'kick', 'ban_24h', 'ban_perm'];
@@ -209,7 +245,7 @@ Mesaj: "${text.replace(/"/g, "'").slice(0, 400)}"`;
             action: aiAction,
         };
     } catch (err) {
-        console.warn('[Moderation] Gemini hatası:', err.message);
+        console.warn('[Moderation] AI analiz hatası:', err.message);
         return null;
     }
 }
@@ -290,8 +326,25 @@ async function moderateMessage({ nick, text, room, aiLevel = 'standard' }) {
     }
     // 5. Gemini AI bağlamsal analiz (varsa) — eskalasyon yapabilir.
     //    aiLevel='off' ise AI çağrısı atlanır (yalnızca local küfür filtresi + strike).
+    // Yapay zeka maliyetini, hızını ve kota limitlerini korumak için:
+    // - Eğer aiLevel 'standard' ise, mesaj yerel filtrede temiz çıkmışsa (baseResult yoksa), 
+    //   kullanıcının geçmiş sicili temizse, mesaj kısa ise (< 50 karakter) ve şüpheli kelimeler içermiyorsa 
+    //   doğrudan temiz kabul edip yapay zeka API çağrısını atlıyoruz.
     const totalOffenses = getTotalOffenses(nick);
-    const ai = await analyzeWithGemini(text, { totalOffenses, aiLevel });
+    let ai = null;
+    
+    let shouldCallAI = true;
+    if (aiLevel === 'standard' && !baseResult && totalOffenses === 0 && text.length < 50) {
+        // Hassas/tehditkar olabilecek bazı kelime köklerini ve kalıplarını kontrol edelim
+        const containsSuspicious = /(oldur|öldür|geber|asaca|kesece|bicak|bıçak|silah|tehdit|saldir|saldır|politika|siyaset|erdogan|tayyip|chp|akp|mhp|kurt\b|kürt\b|turk\b|türk\b|multeci|mülteci|hirsiz|hırsız|doland|sahtek|kopek|köpek|hayvan|pislik|salak|aptal|gerizek|manyak|din\b|allah|peygamb|yahudi|hristiyan|müslüman|musluman|suni\b|alevi\b)/i.test(text);
+        if (!containsSuspicious) {
+            shouldCallAI = false;
+        }
+    }
+    
+    if (shouldCallAI) {
+        ai = await analyzeWithGemini(text, { totalOffenses, aiLevel });
+    }
     if (ai && !ai.safe && ai.severity >= 1) {
         // Strike — eğer küfür filtresi tetiklemediyse şimdi ekle
         const s = baseResult ? { count: baseResult.strikes, action: baseResult.action } : addStrike(nick);
@@ -332,6 +385,7 @@ function forceMute(nick, action) {
 }
 function clearStrikes(nick) {
     _strikes.delete(nick);
+    _saveStrikes();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -339,28 +393,14 @@ function clearStrikes(nick) {
 // ═══════════════════════════════════════════════════════
 // Kullanıcı "🚨 Bildir" basınca → o anki ses snippet'i ve/veya kamera frame'i Gemini'ye gider.
 
-const GEMINI_MODEL = 'gemini-2.5-flash-lite';
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
-
 async function callGeminiMultimodal(parts) {
-    const key = process.env.GEMINI_API_KEY;
-    if (!key) return null;
+    if (!aiService.hasAiService) return null;
     try {
-        const resp = await fetch(GEMINI_URL + '?key=' + encodeURIComponent(key), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts }],
-                generationConfig: { temperature: 0.1, maxOutputTokens: 300 },
-            }),
+        const out = await aiService.generateMultimodal({
+            parts,
+            model: 'gemini-2.5-flash-lite'
         });
-        if (!resp.ok) {
-            const err = await resp.text();
-            console.warn('[Moderation-MM] Gemini HTTP', resp.status, err.slice(0, 200));
-            return null;
-        }
-        const data = await resp.json();
-        const out = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        if (!out) return null;
         const json = out.replace(/^```json\s*|\s*```$/g, '').trim();
         const parsed = JSON.parse(json);
         const validActions = ['none', 'warn', 'mute_15m', 'mute_1h', 'kick', 'ban_24h', 'ban_perm'];
@@ -370,7 +410,7 @@ async function callGeminiMultimodal(parts) {
             severity: Math.max(0, Math.min(3, parsed.severity || 0)),
             category: String(parsed.category || 'sair').slice(0, 30),
             reason: String(parsed.reason || '').slice(0, 200),
-            transcript: String(parsed.transcript || '').slice(0, 500), // ses ise ne dediği
+            transcript: String(parsed.transcript || '').slice(0, 500),
             action: aiAction,
         };
     } catch (err) {

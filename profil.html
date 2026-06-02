@@ -6,8 +6,17 @@
     <title>Profil — RetroSesler.com</title>
     <link rel="icon" type="image/png" href="assets/mikrofon.png">
     <link rel="apple-touch-icon" href="assets/mikrofon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Tahoma&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
+        @font-face {
+            font-family: 'Press Start 2P';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url(/assets/press-start-2p.ttf) format('truetype');
+        }
         * { box-sizing: border-box; margin: 0; padding: 0 }
         body {
             font-family: Tahoma, Verdana, sans-serif; font-size: 13px;
@@ -27,15 +36,25 @@
             display: flex; align-items: center; justify-content: space-between;
             box-shadow: 0 2px 6px rgba(0,0,0,0.15);
         }
-        .topbar a.brand {
-            font-family: 'Press Start 2P', monospace; font-size: 14px;
-            color: #C0392B; text-decoration: none;
-            text-shadow: 2px 2px 0 #E74C3C, 3px 3px 0 rgba(0,0,0,0.15);
-            letter-spacing: 1px;
-            display: inline-flex; align-items: center; gap: 8px;
+        .topbar-logo {
+            font-family: 'Press Start 2P', monospace !important;
+            font-size: 14px !important;
+            line-height: 1 !important;
+            color: #C0392B !important;
+            text-shadow: 2px 2px 0 #E74C3C, 3px 3px 0 rgba(0, 0, 0, 0.15) !important;
+            letter-spacing: 1px !important;
+            cursor: pointer;
+            text-decoration: none !important;
+            transition: transform .15s;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px;
+            white-space: nowrap !important;
         }
-        .topbar a.brand span { color: #2E86C1 }
-        .topbar a.brand img { width: 28px; height: 28px; display: block; filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.25)); }
+        .topbar-logo:hover {
+            transform: scale(1.05);
+        }
+        .topbar-logo span { color: #2E86C1 !important; }
         .topbar-back {
             font-family: Tahoma; font-size: 11px;
             background: #fff; border: 2px outset #d4d0c8;
@@ -77,7 +96,7 @@
             gap: 22px;
             align-items: flex-start;
         }
-        .p-avatar-wrap { position: relative; }
+        .p-avatar-wrap { position: relative; width: 120px; }
         .p-avatar {
             width: 120px; height: 120px;
             background: linear-gradient(135deg, #E8F4FD, #B8D8F8);
@@ -224,10 +243,12 @@
         }
         @media (max-width: 600px) {
             .p-hero { grid-template-columns: 1fr; text-align: center }
-            .p-avatar { margin: 0 auto }
+            .p-avatar-wrap { margin: 0 auto }
+            .p-avatar { margin: 0 }
             .p-nick-row { justify-content: center }
             .p-meta-row { justify-content: center }
             .p-actions { justify-content: center }
+            .p-home-btn { display: none !important; }
         }
 
         /* ============ ROZETLER ============ */
@@ -429,14 +450,451 @@
         .toast.ok { background: #2ecc71 }
         .toast.error { background: #e74c3c }
         .toast.warn { background: #f39c12 }
+        /* ============ RETRO PROFILE THEMES ============ */
+        /* Sakir (Coffeehouse) Theme */
+        body[data-profile-theme="sakir"] {
+            background: #613D2D;
+            background-image: radial-gradient(ellipse at 30% 20%, rgba(212,160,23,0.15), transparent 60%), linear-gradient(180deg, #613D2D 0%, #3E271D 100%) !important;
+            color: #3E271D;
+        }
+        body[data-profile-theme="sakir"] .win-panel {
+            background: linear-gradient(180deg, #FDF9EE 0%, #F3ECD8 100%) !important;
+            border-color: #7A624E !important;
+            color: #3E271D !important;
+            box-shadow: 2px 3px 12px rgba(0,0,0,0.35) !important;
+        }
+        body[data-profile-theme="sakir"] .win-titlebar {
+            background: linear-gradient(180deg, #A83232 0%, #701C1C 100%) !important;
+            border-bottom: 2px solid #5C1414 !important;
+        }
+        body[data-profile-theme="sakir"] .p-avatar {
+            border-color: #A83232 !important;
+            background: linear-gradient(135deg, #FDF9EE, #EADCB9) !important;
+        }
+        body[data-profile-theme="sakir"] .p-nick { color: #701C1C !important; }
+        body[data-profile-theme="sakir"] a { color: #A83232 !important; }
+
+        /* Gece (Neon Dark) Theme */
+        body[data-profile-theme="gece"] {
+            background: #020617;
+            background-image: radial-gradient(ellipse at 50% 20%, rgba(147,51,234,0.25), transparent 60%), radial-gradient(ellipse at 30% 80%, rgba(6,182,212,0.15), transparent 50%) !important;
+            color: #E2E8F0;
+        }
+        body[data-profile-theme="gece"] .win-panel {
+            background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%) !important;
+            border-color: #06B6D4 !important;
+            color: #E2E8F0 !important;
+            box-shadow: 0 0 15px rgba(6,182,212,0.25) !important;
+        }
+        body[data-profile-theme="gece"] .win-titlebar {
+            background: linear-gradient(180deg, #7C3AED 0%, #4C1D95 100%) !important;
+            border-bottom: 2px solid #06B6D4 !important;
+        }
+        body[data-profile-theme="gece"] .p-avatar {
+            border-color: #06B6D4 !important;
+            background: linear-gradient(135deg, #1E293B, #0F172A) !important;
+            color: #06B6D4 !important;
+        }
+        body[data-profile-theme="gece"] .p-nick { color: #22D3EE !important; }
+        body[data-profile-theme="gece"] a { color: #38BDF8 !important; }
+        body[data-profile-theme="gece"] .p-btn {
+            background: #1E293B !important; border-color: #475569 !important; color: #E2E8F0 !important;
+        }
+        body[data-profile-theme="gece"] .p-btn:hover { background: #334155 !important; }
+        body[data-profile-theme="gece"] .p-tagline { color: #94A3B8 !important; }
+        body[data-profile-theme="gece"] .p-meta-row { color: #94A3B8 !important; }
+        body[data-profile-theme="gece"] .p-meta-row b { color: #E2E8F0 !important; }
+
+        /* Pera (Vintage Purple) Theme */
+        body[data-profile-theme="pera"] {
+            background: #2A2130;
+            background-image: linear-gradient(180deg, #4C3F54 0%, #2A2130 100%) !important;
+            color: #2C1F2A;
+        }
+        body[data-profile-theme="pera"] .win-panel {
+            background: linear-gradient(180deg, #FAEDF6 0%, #EFE0EC 100%) !important;
+            border-color: #8A6A82 !important;
+            color: #2C1F2A !important;
+        }
+        body[data-profile-theme="pera"] .win-titlebar {
+            background: linear-gradient(180deg, #7C5C7A 0%, #4C354A 100%) !important;
+            border-bottom: 2px solid #8A6A82 !important;
+        }
+        body[data-profile-theme="pera"] .p-avatar {
+            border-color: #7C5C7A !important;
+            background: linear-gradient(135deg, #FAEDF6, #D8C0D0) !important;
+        }
+        body[data-profile-theme="pera"] .p-nick { color: #4C354A !important; }
+        body[data-profile-theme="pera"] a { color: #8A6A82 !important; }
+
+        /* Matrix (Cyber Green) Theme */
+        body[data-profile-theme="matrix"] {
+            background: #000 !important;
+            background-image: none !important;
+            color: #00FF00;
+            font-family: 'Courier New', Courier, monospace !important;
+        }
+        body[data-profile-theme="matrix"] .win-panel {
+            background: #000 !important;
+            border: 2px solid #00FF00 !important;
+            color: #00FF00 !important;
+            box-shadow: 0 0 10px #00FF00 !important;
+            border-radius: 0 !important;
+        }
+        body[data-profile-theme="matrix"] .win-titlebar {
+            background: #003300 !important;
+            border-bottom: 2px solid #00FF00 !important;
+            color: #00FF00 !important;
+            font-family: inherit !important;
+        }
+        body[data-profile-theme="matrix"] .win-btn {
+            background: #000 !important; border: 1px solid #00FF00 !important; color: #00FF00 !important;
+        }
+        body[data-profile-theme="matrix"] .p-avatar {
+            border-color: #00FF00 !important;
+            background: #000 !important;
+            border-radius: 0 !important;
+            color: #00FF00 !important;
+        }
+        body[data-profile-theme="matrix"] .p-nick { color: #00FF00 !important; font-family: inherit !important; text-shadow: 0 0 5px #00FF00 !important; }
+        body[data-profile-theme="matrix"] a { color: #80FF80 !important; text-decoration: underline !important; }
+        body[data-profile-theme="matrix"] .p-btn {
+            background: #000 !important; border: 2px solid #00FF00 !important; color: #00FF00 !important; border-radius: 0 !important;
+        }
+        body[data-profile-theme="matrix"] .p-btn:hover { background: #002200 !important; }
+        body[data-profile-theme="matrix"] .p-tagline { color: #80FF80 !important; }
+        body[data-profile-theme="matrix"] .p-pmsg {
+            background: #000 !important; border: 1px solid #00FF00 !important; color: #80FF80 !important; border-radius: 0 !important;
+        }
+        body[data-profile-theme="matrix"] .p-meta-row b { color: #00FF00 !important; }
+        body[data-profile-theme="matrix"] .p-active-room {
+            background: #000 !important; border: 1px solid #00FF00 !important; color: #00FF00 !important; border-radius: 0 !important;
+        }
+
+        /* Bliss (WinXP) Theme */
+        body[data-profile-theme="bliss"] {
+            background: #52C234;
+            background-image: linear-gradient(180deg, #4A89FF 0%, #70A5FF 40%, #52C234 60%, #067200 100%) !important;
+            color: #222;
+        }
+        body[data-profile-theme="bliss"] .win-panel {
+            background: #F0F0EA !important;
+            border: 2px solid #0054E3 !important;
+            border-radius: 8px !important;
+            box-shadow: 3px 3px 15px rgba(0,0,0,0.3) !important;
+        }
+        body[data-profile-theme="bliss"] .win-titlebar {
+            background: linear-gradient(180deg, #0054E3 0%, #2777FF 12%, #0054E3 50%, #002C9C 100%) !important;
+            border-bottom: none !important;
+            border-radius: 6px 6px 0 0 !important;
+        }
+        body[data-profile-theme="bliss"] .p-avatar {
+            border-color: #0054E3 !important;
+            background: linear-gradient(135deg, #FFF, #B4D0FF) !important;
+        }
+        body[data-profile-theme="bliss"] .p-nick { color: #002C9C !important; }
+        body[data-profile-theme="bliss"] a { color: #0054E3 !important; }
+        body[data-profile-theme="bliss"] .p-btn.primary {
+            background: linear-gradient(180deg, #FF9A00 0%, #FF6600 100%) !important;
+            border-color: #CC4E00 !important;
+        }
+
+        /* XP Metallic Theme */
+        body[data-profile-theme="xp_metallic"] {
+            background: #A2A4B0;
+            background-image: linear-gradient(180deg, #8E8F95 0%, #D2D4DC 100%) !important;
+            color: #222;
+        }
+        body[data-profile-theme="xp_metallic"] .win-panel {
+            background: #F4F4F6 !important;
+            border: 2px solid #707177 !important;
+            border-radius: 8px !important;
+        }
+        body[data-profile-theme="xp_metallic"] .win-titlebar {
+            background: linear-gradient(180deg, #8E8F95 0%, #C6C8D6 12%, #9B9CA8 50%, #686975 100%) !important;
+            border-bottom: none !important;
+            border-radius: 6px 6px 0 0 !important;
+        }
+        body[data-profile-theme="xp_metallic"] .p-avatar {
+            border-color: #707177 !important;
+            background: linear-gradient(135deg, #FFF, #E2E3E8) !important;
+        }
+        body[data-profile-theme="xp_metallic"] .p-nick { color: #484950 !important; }
+
+        /* Space Theme */
+        body[data-profile-theme="space"] {
+            background: #090A0F;
+            background-image: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%) !important;
+            color: #FFF;
+        }
+        body[data-profile-theme="space"] .win-panel {
+            background: rgba(15, 23, 42, 0.85) !important;
+            border-color: rgba(147, 51, 234, 0.4) !important;
+            color: #FFF !important;
+            backdrop-filter: blur(10px) !important;
+        }
+        body[data-profile-theme="space"] .win-titlebar {
+            background: linear-gradient(135deg, #EC4899, #8B5CF6) !important;
+            border-bottom: none !important;
+        }
+        body[data-profile-theme="space"] .p-avatar {
+            border-color: #EC4899 !important;
+            background: linear-gradient(135deg, #1B2735, #090A0F) !important;
+            color: #FFF !important;
+        }
+        body[data-profile-theme="space"] .p-nick { color: #FF007F !important; text-shadow: 0 0 8px rgba(255, 0, 127, 0.5) !important; }
+        body[data-profile-theme="space"] a { color: #A78BFA !important; }
+        body[data-profile-theme="space"] .p-btn {
+            background: rgba(255,255,255,0.1) !important; border-color: rgba(255,255,255,0.2) !important; color: #FFF !important;
+        }
+        body[data-profile-theme="space"] .p-btn:hover { background: rgba(255,255,255,0.2) !important; }
+        body[data-profile-theme="space"] .p-meta-row b { color: #A78BFA !important; }
+
+        /* Romance Theme */
+        body[data-profile-theme="romance"] {
+            background: #FFB7B2;
+            background-image: linear-gradient(180deg, #FFB7B2 0%, #FFC6FF 100%) !important;
+            color: #5C2530;
+        }
+        body[data-profile-theme="romance"] .win-panel {
+            background: linear-gradient(180deg, #FFF0F2 0%, #FFE0E4 100%) !important;
+            border-color: #FF9AA2 !important;
+            color: #5C2530 !important;
+        }
+        body[data-profile-theme="romance"] .win-titlebar {
+            background: linear-gradient(180deg, #FF6B8B 0%, #D83A56 100%) !important;
+            border-bottom: 2px solid #FF9AA2 !important;
+        }
+        body[data-profile-theme="romance"] .p-avatar {
+            border-color: #FF6B8B !important;
+            background: linear-gradient(135deg, #FFF0F2, #FFCCD3) !important;
+        }
+        body[data-profile-theme="romance"] .p-nick { color: #D83A56 !important; }
+        body[data-profile-theme="romance"] a { color: #D83A56 !important; }
+        body[data-profile-theme="romance"] .p-pmsg {
+            background: #FFF !important; border: 1px solid #FF9AA2 !important; color: #D83A56 !important;
+        }
+        /* Custom Player & Guestbook Layout Elements */
+        .retro-player {
+            margin-bottom: 14px;
+        }
+        .wmp-screen {
+            background: #000; color: #00FF00; font-family: monospace;
+            padding: 8px; font-size: 11px; border: 2px inset #FFF;
+            margin-bottom: 6px; height: 50px; display: flex; flex-direction: column; justify-content: center;
+        }
+        .wmp-title {
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold;
+        }
+        .wmp-progress-container {
+            height: 6px; background: #333; border: 1px solid #777; margin-top: 4px; position: relative;
+        }
+        .wmp-progress-bar {
+            height: 100%; background: #00FF00; width: 0%;
+        }
+        .wmp-controls {
+            display: flex; gap: 4px; justify-content: center; margin-top: 8px;
+        }
+        .wmp-btn {
+            background: linear-gradient(180deg, #E8E4D9, #C8C4B8);
+            border: 1.5px outset #FFF; cursor: pointer; padding: 3px 8px; font-size: 11px; font-weight: bold;
+        }
+        .wmp-btn:active { border-style: inset; }
+        .wmp-btn.playing { background: #FFD0D0; border-color: #F88; }
+        
+        .gb-container {
+            display: flex; flex-direction: column; gap: 10px; margin-top: 14px;
+        }
+        .gb-form {
+            display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px;
+            padding-bottom: 14px; border-bottom: 1px dashed #A09880;
+        }
+        .gb-input {
+            width: 100%; padding: 8px; border: 2px inset #B0B0B0; font-family: inherit; font-size: 12px; resize: vertical; min-height: 50px;
+        }
+        .gb-post {
+            background: #FDFDFB; border: 1px solid #D4CFBF; padding: 10px; border-radius: 4px;
+            display: flex; gap: 10px; position: relative;
+        }
+        .gb-avatar {
+            width: 40px; height: 40px; border: 1.5px solid #2E6BBF; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center; font-size: 22px; background: #E8F4FD;
+        }
+        .gb-content {
+            flex: 1; min-width: 0;
+        }
+        .gb-header {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+        }
+        .gb-author {
+            font-weight: bold; color: #1E4070; text-decoration: none;
+        }
+        .gb-author:hover { text-decoration: underline; }
+        .gb-date {
+            font-size: 10px; color: #888;
+        }
+        .gb-text {
+            font-size: 12px; color: #333; word-break: break-word; line-height: 1.4;
+        }
+        .gb-delete {
+            position: absolute; top: 8px; right: 8px; width: 16px; height: 16px;
+            font-size: 10px; font-weight: bold; color: #C0392B; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px outset #FFF; background: #ECE9D8;
+        }
+        .gb-delete:active { border-style: inset; }
+        
+        .tab-menu {
+            display: flex; border-bottom: 2px solid #A09880; margin-bottom: 14px; background: #ECE9D8;
+        }
+        .tab-btn {
+            padding: 8px 16px; border: 2px outset #d4d0c8; border-bottom: none; background: #D8D2BE;
+            font-family: Tahoma, sans-serif; font-size: 12px; font-weight: bold; cursor: pointer;
+            border-radius: 4px 4px 0 0; margin-bottom: -2px; color: #555;
+        }
+        .tab-btn.active {
+            background: linear-gradient(180deg, #FAFAF5 0%, #F0EDE4 100%);
+            color: #1E4070; border-color: #A09880; position: relative; z-index: 1;
+        }
+        
+        .friend-status-dot {
+            width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle;
+        }
+        .friend-status-dot.online { background: #2ecc71; }
+        .friend-status-dot.away { background: #f39c12; }
+        .friend-status-dot.busy { background: #e74c3c; }
+        .friend-status-dot.brb { background: #9b59b6; }
+        .friend-status-dot.offline { background: #95a5a6; }
+        .friend-room-link {
+            font-size: 10px; color: #27ae60; margin-left: 6px; text-decoration: none; font-weight: bold;
+        }
+        .friend-room-link:hover { text-decoration: underline; }
+        .friend-card {
+            display: flex; align-items: center; gap: 8px; padding: 6px 10px;
+            background: #FDFDFB; border: 1px solid #D4CFBF; border-radius: 4px;
+        }
+        .friend-card-avatar {
+            font-size: 20px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+            background: #E8F4FD; border: 1px solid #A0C4E8; border-radius: 4px;
+        }
+        .friend-card-info {
+            flex: 1; min-width: 0;
+        }
+        .friend-card-nick {
+            font-weight: bold; color: #1E4070; text-decoration: none; display: flex; align-items: center;
+        }
+        .friend-card-nick:hover { text-decoration: underline; }
+        .friend-card-mood {
+            font-size: 10px; color: #666; font-style: italic; margin-top: 1px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* ========== MOBILE BOTTOM TAB BAR ========== */
+        .mobile-tabbar {
+            display: none;
+            position: fixed;
+            left: 0; right: 0; bottom: 0;
+            z-index: 180;
+            background: #FAF9F5;
+            border-top: 1px solid #DCD8C9;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+            padding: 4px 6px;
+            padding-bottom: calc(4px + env(safe-area-inset-bottom));
+            box-sizing: border-box;
+            gap: 6px;
+            align-items: stretch;
+            height: 62px;
+        }
+        .mobile-tabbar .mt-btn {
+            flex: 1;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            color: #555;
+            padding: 4px 2px;
+            font-family: Tahoma, sans-serif;
+            font-size: 10px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.15s ease-in-out;
+        }
+        .mobile-tabbar .mt-btn .mt-ico {
+            font-size: 15px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 24px;
+            border-radius: 4px;
+            background: #FAFAF5;
+            border: 1px solid #C0BCA8;
+            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.08);
+            margin-bottom: 2px;
+            transition: all 0.15s ease-in-out;
+        }
+        .mobile-tabbar .mt-btn[data-mtab="home"] .mt-ico {
+            background: linear-gradient(135deg, #F3E5F5, #E1BEE7);
+            border-color: #CE93D8;
+        }
+        .mobile-tabbar .mt-btn[data-mtab="myrooms"] .mt-ico {
+            background: linear-gradient(135deg, #FFF8E1, #FFE082);
+            border-color: #FFD54F;
+        }
+        .mobile-tabbar .mt-btn[data-mtab="msg"] .mt-ico {
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+            border-color: #A5D6A7;
+        }
+        .mobile-tabbar .mt-btn[data-mtab="timeline"] .mt-ico {
+            background: linear-gradient(135deg, #FFE0B2, #FFB74D);
+            border-color: #FFA726;
+        }
+        .mobile-tabbar .mt-btn[data-mtab="profile"] .mt-ico {
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+            border-color: #90CAF9;
+        }
+        .mobile-tabbar .mt-btn.active {
+            color: #5A3E00;
+            font-weight: bold;
+            background: #FFF8E8;
+            border-color: #E0D5A0;
+            box-shadow: inset 0 1px 3px rgba(224,213,160,0.2);
+        }
+        .mobile-tabbar .mt-btn.active .mt-ico {
+            transform: scale(1.15);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .mobile-tabbar .mt-badge {
+            position: absolute;
+            top: 4px; right: 18%;
+            min-width: 14px; height: 14px;
+            background: #E74C3C;
+            color: #fff;
+            font-size: 9px;
+            font-weight: bold;
+            border-radius: 7px;
+            padding: 0 4px;
+            line-height: 14px;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+        @media (max-width: 768px) {
+            .mobile-tabbar { display: flex; }
+            body { padding-bottom: calc(62px + env(safe-area-inset-bottom)) !important; }
+        }
     </style>
     <script src="/assets/retro-ui.js"></script>
     <link rel="stylesheet" href="/assets/tokens.css">
 </head>
 <body>
     <div class="topbar">
-        <a href="/" class="brand">Retro<span>Sesler</span></a>
-        <a href="/" class="topbar-back">◀ Anasayfa</a>
+        <a href="/" class="topbar-logo">Retro<span>Sesler</span></a>
+        <a href="/" class="topbar-back" onclick="try{sessionStorage.setItem('rs_mtab','home')}catch(e){}">◀ Anasayfa</a>
     </div>
 
     <div class="main">
@@ -472,8 +930,8 @@
             'star': '⭐', 'crown': '👑', 'diamond': '💎', 'fire': '🔥', 'robot': '🤖',
         };
         const statusLabel = {
-            online: '🟢 Çevrimiçi', busy: '🔴 Meşgul', brb: '🟣 Hemen dönerim',
-            away: '🟠 Uzakta', invisible: '⚪ Görünmez',
+            online: 'Çevrimiçi', busy: 'Meşgul', brb: 'Hemen dönerim',
+            away: 'Uzakta', invisible: 'Görünmez',
         };
 
         function esc(s) {
@@ -504,6 +962,15 @@
             t.textContent = msg;
             t.className = 'toast show ' + (type || 'ok');
             setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        // Avatar render helper — foto varsa foto, yoksa emoji
+        function renderAvatarHtml(avatarKey, avatarPhotoUrl, size) {
+            size = size || 24;
+            if (avatarPhotoUrl) {
+                return `<img src="${avatarPhotoUrl}" style="width:${size}px;height:${size}px;object-fit:cover;border-radius:4px;vertical-align:middle">`;
+            }
+            return `<span style="font-size:${Math.round(size * 0.7)}px;line-height:1">${avatarMap[avatarKey] || '😎'}</span>`;
         }
 
         // Global profile cache (edit mode için)
@@ -579,6 +1046,16 @@
             const inviteUrl = d.invite_code ? `${location.origin}/davet/${d.invite_code}` : '';
             const isFriend = myFriends.some(f => f.toLowerCase() === d.nick.toLowerCase());
 
+            // Profil Temasını Uygula
+            document.body.setAttribute('data-profile-theme', d.profileTheme || 'default');
+
+            // MSN Ruh Hali
+            const moodInfo = (d.moodEmoji || d.moodText)
+                ? `<span style="font-size:11px;padding:3px 8px;background:linear-gradient(135deg, #FFFCE6, #FFF4B8);border:1px solid #E0C870;border-radius:10px;color:#5a4a00;font-weight:bold;margin-left:4px" title="MSN Ruh Hali">
+                      ${d.moodEmoji ? d.moodEmoji + ' ' : ''}${esc(d.moodText || '')}
+                   </span>`
+                : '';
+
             // ----- ÜST: HERO -----
             const tagline = d.bio
                 ? `<div class="p-tagline">"${esc(d.bio)}"</div>`
@@ -598,18 +1075,17 @@
             // Aksiyon butonları
             let actions = '';
             if (isMe) {
+                const myRole = localStorage.getItem('retrosesler_role');
+                const adminBtn = (myRole === 'admin' || myRole === 'mod')
+                    ? `<a class="p-btn" href="/yonetim-r3tro" style="background:#FFF3C4;border-color:#E0C870;color:#856404;font-weight:bold;text-decoration:none">🛡️ Yönetim Paneli</a>`
+                    : '';
                 actions = `
                     <button class="p-btn primary" onclick="enterEditMode()">✏️ Profili Düzenle</button>
-                    <a class="p-btn" href="/">🏠 Anasayfa</a>
+                    <button class="p-btn danger" onclick="logout()">🚪 Çıkış Yap</button>
+                    ${adminBtn}
                 `;
             } else {
                 const tokenSet = !!localStorage.getItem('retrosesler_token');
-                // 5 farklı durum:
-                // 1. Login değil → giriş yap
-                // 2. Zaten arkadaş → çıkar butonu
-                // 3. Ona istek gönderdim, bekliyor → "İstek bekleniyor / Geri çek"
-                // 4. Bana istek göndermiş, bekliyor → "Kabul Et / Reddet"
-                // 5. Hiçbiri → "İstek Gönder"
                 const outgoingReq = pendingFR.outgoing.find(r => r.toNick.toLowerCase() === d.nick.toLowerCase());
                 const incomingReq = pendingFR.incoming.find(r => r.fromNick.toLowerCase() === d.nick.toLowerCase());
                 let friendBtn = '';
@@ -627,7 +1103,7 @@
                 } else {
                     friendBtn = `<button class="p-btn success" onclick="sendFR('${esc(d.nick)}')">👥 Arkadaşlık İsteği Gönder</button>`;
                 }
-                // Codex D paketi: kişisel güvenlik — engelle/engel kaldır butonu
+                
                 let blockBtn = '';
                 if (tokenSet) {
                     const isBlocked = (window.myBlocks || []).some(n => n.toLowerCase() === d.nick.toLowerCase());
@@ -659,12 +1135,6 @@
                 ? `<div class="about-block">${esc(d.about)}</div>`
                 : `<div class="about-block empty">${isMe ? 'Hakkında bir şey yazmadın. "Profili Düzenle"ye tıkla, kendini anlat — kimlerle tanışmak istersin?' : 'Henüz hakkında bir şey yazmamış.'}</div>`;
 
-            // ----- DETAY (yıl/şehir/email) -----
-            const detailItems = [];
-            if (d.birthYear) detailItems.push(`<dt>Doğum:</dt><dd>${d.birthYear} (${d.age} yaşında)</dd>`);
-            if (d.city) detailItems.push(`<dt>Şehir:</dt><dd>${esc(d.city)}</dd>`);
-            detailItems.push(`<dt>Katılım:</dt><dd>${fmtDate(d.createdAt)}</dd>`);
-
             // ----- MÜZİK ZEVKİ -----
             const musicHtml = d.musicTaste
                 ? `<div class="music-block">${esc(d.musicTaste)}</div>`
@@ -674,15 +1144,32 @@
             const socialLinks = [];
             if (d.instagram) socialLinks.push(`<a class="social-link instagram" href="https://instagram.com/${esc(d.instagram)}" target="_blank" rel="noopener">📷 @${esc(d.instagram)}</a>`);
             if (d.twitter) socialLinks.push(`<a class="social-link twitter" href="https://twitter.com/${esc(d.twitter)}" target="_blank" rel="noopener">🐦 @${esc(d.twitter)}</a>`);
+            if (d.tiktok) socialLinks.push(`<a class="social-link" style="background:#111;border-color:#333;color:#fff" href="https://tiktok.com/@${esc(d.tiktok)}" target="_blank" rel="noopener">🎥 @${esc(d.tiktok)}</a>`);
+            if (d.youtube) socialLinks.push(`<a class="social-link" style="background:#fee;border-color:#e74c3c;color:#c0392b" href="https://youtube.com/${esc(d.youtube.startsWith('@') || d.youtube.startsWith('UC') ? d.youtube : '@' + d.youtube)}" target="_blank" rel="noopener">▶️ ${esc(d.youtube)}</a>`);
+            if (d.discord) socialLinks.push(`<span class="social-link" style="background:#eef;border-color:#7289da;color:#5865f2">👾 ${esc(d.discord)}</span>`);
             const socialHtml = socialLinks.length > 0
                 ? `<div class="social-row">${socialLinks.join('')}</div>`
                 : (isMe ? `<div style="color:#999;font-size:12px;font-style:italic;text-align:center">Sosyal linkin yok — "Düzenle"den ekleyebilirsin</div>` : '');
 
             // ----- ARKADAŞLAR -----
-            const friendsHtml = d.friends && d.friends.length > 0
-                ? `<div class="friends-list">
-                    ${d.friends.map(f => `<a class="friend-chip" href="/u/${encodeURIComponent(f)}">@${esc(f)}</a>`).join('')}
-                    ${d.friendCount > d.friends.length ? `<span class="friend-chip" style="background:#eee">+${d.friendCount - d.friends.length} daha</span>` : ''}
+            const friendsHtml = d.friendsEnriched && d.friendsEnriched.length > 0
+                ? `<div style="display:grid;grid-template-columns:1fr;gap:6px;max-height:220px;overflow-y:auto;padding-right:4px">
+                    ${d.friendsEnriched.map(f => {
+                        const statusDot = `<span class="friend-status-dot ${f.status}" title="${f.status}"></span>`;
+                        const roomLink = f.activeRoom ? `<a class="friend-room-link" href="/oda?room=${encodeURIComponent(f.activeRoom)}&nick=${encodeURIComponent(localStorage.getItem('retrosesler_nick') || 'Misafir')}">(💬 Odaya Katıl)</a>` : '';
+                        const mood = (f.moodEmoji || f.moodText) ? `<span style="font-size:11px;color:#666"> [${f.moodEmoji} ${esc(f.moodText)}]</span>` : '';
+                        return `
+                            <div class="friend-card" style="padding:4px 8px;font-size:12px">
+                                ${renderAvatarHtml(f.avatar, f.avatarPhoto, 22)}
+                                <div class="friend-card-info" style="margin-left:4px">
+                                    <a href="/u/${encodeURIComponent(f.nick)}" style="font-weight:bold;color:#1E4070;text-decoration:none">${statusDot}@${esc(f.nick)}</a>
+                                    ${mood}
+                                    ${roomLink}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                    ${d.friendCount > d.friendsEnriched.length ? `<div style="text-align:center;font-size:11px;color:#888;padding-top:4px">+${d.friendCount - d.friendsEnriched.length} arkadaş daha</div>` : ''}
                 </div>`
                 : `<div style="color:#999;font-style:italic;font-size:12px;text-align:center;padding:6px">Henüz arkadaşı yok</div>`;
 
@@ -714,7 +1201,7 @@
             `;
 
             // ----- ANA HTML -----
-            const tbTitle = (d.status === 'online' ? '🟢 ' : '') + d.nick + ' — Profil';
+            const tbTitle = d.nick + ' — Profil';
             const inviteBoxHtml = isMe && inviteUrl ? `
                 <div class="invite-box">
                     <span>🎟️</span>
@@ -722,6 +1209,44 @@
                     <input type="text" id="inv-url" value="${esc(inviteUrl)}" readonly onclick="this.select()">
                     <button onclick="copyToClipboard('${esc(inviteUrl)}', this)">Kopyala</button>
                 </div>` : '';
+
+            // YouTube Fon Müzik
+            let wmpHtml = '';
+            if (d.profileMusic) {
+                wmpHtml = `
+                    <div class="win-panel retro-player">
+                        <div class="win-titlebar"><span>📼</span><span>Profil Müziği</span></div>
+                        <div class="win-body" style="padding:10px 14px">
+                            <div class="wmp-screen">
+                                <div class="wmp-title" id="wmp-title-text">🎵 ${esc(d.profileMusicName || 'Nostaljik Şarkı')}</div>
+                                <div style="font-size:10px;color:#00ff00;margin-top:2px" id="wmp-status-text">Yükleniyor...</div>
+                                <div class="wmp-progress-container"><div class="wmp-progress-bar" id="wmp-progress"></div></div>
+                            </div>
+                            <div class="wmp-controls">
+                                <button class="wmp-btn" onclick="toggleProfileMusic()" id="wmp-play-btn" style="color:#000">▶ Oynat</button>
+                                <button class="wmp-btn" onclick="stopProfileMusic()" style="color:#000">■ Durdur</button>
+                                <span style="font-size:11px;margin-left:auto;align-self:center;margin-right:4px;color:inherit" id="wmp-time">0:00</span>
+                            </div>
+                            <div id="wmp-yt-container" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"></div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Ortak Arkadaşlar
+            let mutualHtml = '';
+            if (d.mutualFriends && d.mutualFriends.length > 0) {
+                mutualHtml = `
+                    <div class="win-panel">
+                        <div class="win-titlebar"><span>🤝</span><span>Ortak Arkadaşlar (${d.mutualFriends.length})</span></div>
+                        <div class="win-body" style="padding:10px 12px">
+                            <div class="friends-list">
+                                ${d.mutualFriends.map(f => `<a class="friend-chip" href="/u/${encodeURIComponent(f)}">@${esc(f)}</a>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
 
             root.innerHTML = `
                 <!-- ÜST: HERO -->
@@ -736,12 +1261,13 @@
                     <div class="win-body">
                         <div class="p-hero">
                             <div class="p-avatar-wrap">
-                                <div class="p-avatar role-${roleClass}">${avatar}</div>
+                                <div class="p-avatar role-${roleClass}">${d.avatarPhoto ? `<img src="${d.avatarPhoto}" alt="${esc(d.nick)}" style="width:100%;height:100%;object-fit:cover;border-radius:9px">` : avatar}</div>
                                 <span class="p-status-dot ${d.status}" title="${statusLabel[d.status] || d.status}"></span>
                             </div>
                             <div class="p-info">
                                 <div class="p-nick-row">
                                     <div class="p-nick">${esc(d.nick)}</div>
+                                    ${moodInfo}
                                     <span class="p-role ${roleClass}">${roleLabel}</span>
                                     <span class="p-status-label">${statusLabel[d.status] || d.status}</span>
                                 </div>
@@ -773,6 +1299,8 @@
                         </div>
                     </div>
                     <div>
+                        ${wmpHtml}
+                        ${mutualHtml}
                         <div class="win-panel">
                             <div class="win-titlebar"><span>🏅</span><span>Rozetler (${d.badges?.length || 0})</span></div>
                             <div class="win-body">${badgesHtml}</div>
@@ -791,7 +1319,21 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- ZİYARETÇİ DEFTERİ -->
+                <div class="win-panel" style="margin-top:14px">
+                    <div class="win-titlebar"><span>📖</span><span>Ziyaretçi Defteri (Profil Duvarı)</span></div>
+                    <div class="win-body">
+                        <div id="guestbook-root">Yükleniyor...</div>
+                    </div>
+                </div>
             `;
+
+            // Müzik ve Ziyaretçi Defteri yüklemesini başlat
+            setTimeout(() => {
+                if (d.profileMusic) window.initWmpPlayer(d.profileMusic);
+                loadProfileGuestbook();
+            }, 50);
         }
 
         // ============ EDIT MODE — SEKMELI ============
@@ -888,7 +1430,7 @@
             else if (name === 'account') body.innerHTML = renderAccountTab();
             else if (name === 'friends') body.innerHTML = renderFriendsTab();
             else if (name === 'danger') body.innerHTML = renderDangerTab();
-            // Visible tab'ı render ettikten sonra char counter bind
+            // Visible tab'ı render ettikten sonra bind'ler
             if (name === 'visible') {
                 ['pmsg','bio','about','music'].forEach(k => {
                     const map = { pmsg: 'e-pmsg', bio: 'e-bio', about: 'e-about', music: 'e-music' };
@@ -898,6 +1440,11 @@
                     const update = () => cc.textContent = (el.value || '').length;
                     el.addEventListener('input', update); update();
                 });
+                // Tema canlı önizleme
+                const themeEl = document.getElementById('e-theme');
+                if (themeEl) themeEl.addEventListener('change', () => {
+                    document.body.setAttribute('data-profile-theme', themeEl.value || 'default');
+                });
             }
         }
 
@@ -905,24 +1452,84 @@
             const d = profileData;
             const avatarOptions = Object.keys(avatarMap).map(k => `<option value="${k}" ${d.avatar === k ? 'selected' : ''}>${avatarMap[k]} ${k}</option>`).join('');
             const statusOptions = Object.keys(statusLabel).map(k => `<option value="${k}" ${d.status === k ? 'selected' : ''}>${statusLabel[k]}</option>`).join('');
+            
+            const themes = [
+                { val: 'default', label: '💻 Standart Win98 Teal' },
+                { val: 'sakir', label: '☕ Şakir Kırmızı' },
+                { val: 'gece', label: '🌌 Gece Neon Space' },
+                { val: 'pera', label: '🏛️ Vintage Pera Purple' },
+                { val: 'matrix', label: '🟢 Matrix Green Terminal' },
+                { val: 'bliss', label: '🏞️ Windows XP Bliss' },
+                { val: 'xp_metallic', label: '💿 XP Gümüş Luna' },
+                { val: 'space', label: '🚀 Space Nebula' },
+                { val: 'romance', label: '🌹 Romance Rose Pink' }
+            ];
+            const themeOptions = themes.map(t => `<option value="${t.val}" ${d.profileTheme === t.val ? 'selected' : ''}>${t.label}</option>`).join('');
+
+            const moodEmojis = ['😎', '🎧', '🎮', '😴', '🍕', '🔥', '😭', '😡', '❤️', '🤡', '🤖', '👽', '🚀', '💎'];
+            const moodEmojiOptions = ['<option value="">— Yok —</option>', ...moodEmojis.map(e => `<option value="${e}" ${d.moodEmoji === e ? 'selected' : ''}>${e}</option>`)].join('');
+
             return `
                 <div class="grid-2col">
                     <div>
-                        <div class="edit-row"><label>Avatar</label>
-                            <select id="e-avatar">${avatarOptions}</select></div>
+                        <div class="edit-row"><label>Profil Fotoğrafı</label>
+                            <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;padding:10px;background:#F8F5EE;border:1px solid #d8cfb8;border-radius:6px">
+                                <div id="avatar-preview" style="width:72px;height:72px;border:2px solid #2E6BBF;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:36px;background:#E8F4FD;overflow:hidden;flex-shrink:0">
+                                    ${d.avatarPhoto ? `<img src="${d.avatarPhoto}" style="width:100%;height:100%;object-fit:cover">` : (avatarMap[d.avatar] || '😎')}
+                                </div>
+                                <div style="flex:1">
+                                    <input type="file" id="avatar-file" accept="image/jpeg,image/png,image/webp,image/gif" style="font-size:11px;margin-bottom:6px" onchange="previewAvatar(this)">
+                                    <div style="font-size:10px;color:#888">Max 3MB · JPEG, PNG, WebP, GIF · 200×200'e küçültülür</div>
+                                    <button class="p-btn" style="margin-top:6px;padding:4px 10px;font-size:11px" onclick="uploadAvatar()" id="upload-avatar-btn">📷 Fotoğrafı Yükle</button>
+                                    ${d.avatarPhoto ? `<button class="p-btn" style="margin-top:6px;margin-left:4px;padding:4px 10px;font-size:11px;color:#C0392B" onclick="removeAvatarPhoto()">🗑️ Fotoğrafı Kaldır</button>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="edit-row"><label>Emoji Avatar ${d.avatarPhoto ? '(fotoğraf varken gizlenir)' : ''}</label>
+                            <div id="avatar-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:4px;margin-top:4px">
+                                ${Object.entries(avatarMap).map(([k,v]) => `
+                                    <div onclick="selectAvatar('${k}')" id="av-${k}" class="avatar-opt ${d.avatar === k ? 'selected' : ''}" style="text-align:center;padding:6px 2px;background:${d.avatar === k ? 'linear-gradient(135deg,#D0E8FA,#A0C4E8)' : '#F8F5EE'};border:2px ${d.avatar === k ? 'solid #2E6BBF' : 'outset #d4d0c8'};border-radius:6px;cursor:pointer;transition:all 0.12s">
+                                        <div style="font-size:22px;line-height:1">${v}</div>
+                                        <div style="font-size:8px;color:#666;margin-top:2px">${k}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <input type="hidden" id="e-avatar" value="${esc(d.avatar || 'default')}">
+                        </div>
                         <div class="edit-row"><label>Statü</label>
                             <select id="e-status">${statusOptions}</select></div>
+                        <div class="edit-row"><label>MSN Ruh Hali Emojisi</label>
+                            <select id="e-mood-emoji">${moodEmojiOptions}</select></div>
+                        <div class="edit-row"><label>MSN Ruh Hali Mesajı</label>
+                            <input type="text" id="e-mood-text" maxlength="40" value="${esc(d.moodText || '')}" placeholder="Ne yapıyorsun? (Örn: Müzik dinliyor)"></div>
+                        <div class="edit-row"><label>Profil Teması (Retro Skin)</label>
+                            <select id="e-theme">${themeOptions}</select></div>
                         <div class="edit-row"><label>Kişisel Mesaj <span class="char-count">(<span id="cc-pmsg">0</span>/100)</span></label>
                             <input type="text" id="e-pmsg" maxlength="100" value="${esc(d.personal_msg || '')}" placeholder="Şu an Tarkan dinliyorum..."></div>
                         <div class="edit-row"><label>Tagline (kısa bio) <span class="char-count">(<span id="cc-bio">0</span>/60)</span></label>
                             <input type="text" id="e-bio" maxlength="60" value="${esc(d.bio || '')}" placeholder="90'lar fanı"></div>
-                        <div class="edit-row"><label>Hakkında <span class="char-count">(<span id="cc-about">0</span>/500)</span></label>
-                            <textarea id="e-about" maxlength="500" placeholder="Kendinden bahset...">${esc(d.about || '')}</textarea></div>
                     </div>
                     <div>
-                        <div class="edit-row"><label>Doğum Yılı</label>
-                            <input type="number" id="e-byear" min="1950" max="2020" value="${d.birthYear || ''}" placeholder="1985">
-                            <div class="hint">Yaşın profilde görünür (zorunlu değil)</div></div>
+                        <div class="edit-row"><label>Hakkında <span class="char-count">(<span id="cc-about">0</span>/500)</span></label>
+                            <textarea id="e-about" maxlength="500" placeholder="Kendinden bahset...">${esc(d.about || '')}</textarea></div>
+                        <div class="edit-row"><label>Profil Fon Müziği Seç</label>
+                            <select onchange="onPredefinedMusicChange(this)">
+                                <option value="">— Nostaljik Bir Şarkı Seçin —</option>
+                                <option value="4TWR90KJl84|Tarkan - Şımarık">Tarkan - Şımarık (1997)</option>
+                                <option value="K5KAc5CoCuk|Tarkan - Kuzu Kuzu">Tarkan - Kuzu Kuzu (2001)</option>
+                                <option value="bsIUQ6U5O48|Sezen Aksu - Hadi Bakalım">Sezen Aksu - Hadi Bakalım (1998)</option>
+                                <option value="Bx1hU6sNqDo|Sezen Aksu - Geri Dön">Sezen Aksu - Geri Dön (1995)</option>
+                                <option value="1cLgq6-KKs0|Serdar Ortaç - Karabiberim">Serdar Ortaç - Karabiberim (1996)</option>
+                                <option value="sB9b6F93fNk|Serdar Ortaç - Poşet">Serdar Ortaç - Poşet (2010)</option>
+                                <option value="xNGHqjl0HqY|Şebnem Ferah - Sil Baştan">Şebnem Ferah - Sil Baştan (2001)</option>
+                                <option value="Bh3d9aJHkTU|Teoman - İstanbul'da Sonbahar">Teoman - İstanbul'da Sonbahar (2001)</option>
+                                <option value="dyVGK1B5C-g|maNga - Cevapsız Sorular">maNga - Cevapsız Sorular (2009)</option>
+                                <option value="B76lgTpmg5c|Cartel - Cartel">Cartel - Cartel (1995)</option>
+                            </select></div>
+                        <div class="edit-row"><label>Profil YouTube Fon Müzik ID</label>
+                            <input type="text" id="e-music-id" maxlength="15" value="${esc(d.profileMusic || '')}" placeholder="Örn: 4TWR90KJl84"></div>
+                        <div class="edit-row"><label>Profil Müzik Adı</label>
+                            <input type="text" id="e-music-name" maxlength="100" value="${esc(d.profileMusicName || '')}" placeholder="Örn: Tarkan - Şımarık"></div>
                         <div class="edit-row"><label>Şehir</label>
                             <input type="text" id="e-city" maxlength="40" value="${esc(d.city || '')}" placeholder="İstanbul"></div>
                         <div class="edit-row"><label>Müzik Zevki <span class="char-count">(<span id="cc-music">0</span>/150)</span></label>
@@ -931,6 +1538,12 @@
                             <input type="text" id="e-instagram" maxlength="30" value="${esc(d.instagram || '')}" placeholder="ahmet_yilmaz"></div>
                         <div class="edit-row"><label>Twitter / X (@'sız)</label>
                             <input type="text" id="e-twitter" maxlength="15" value="${esc(d.twitter || '')}" placeholder="ahmet_yilmaz"></div>
+                        <div class="edit-row"><label>TikTok (@'sız)</label>
+                            <input type="text" id="e-tiktok" maxlength="30" value="${esc(d.tiktok || '')}" placeholder="ahmet_yilmaz"></div>
+                        <div class="edit-row"><label>YouTube Kanal</label>
+                            <input type="text" id="e-youtube" maxlength="50" value="${esc(d.youtube || '')}" placeholder="@kanaladi veya UCxxxx"></div>
+                        <div class="edit-row"><label>Discord</label>
+                            <input type="text" id="e-discord" maxlength="40" value="${esc(d.discord || '')}" placeholder="kullanici#1234 veya kullanici"></div>
                     </div>
                 </div>
                 <div style="margin-top:14px;padding-top:14px;border-top:1px dotted #c8c3b5;display:flex;gap:8px;justify-content:flex-end;">
@@ -1042,11 +1655,19 @@
                        `).join('')}
                    </div>`
                 : '';
+
+            const searchBoxHtml = editFullFriends && editFullFriends.length > 0
+                ? `<div style="margin-bottom:10px">
+                       <input type="text" placeholder="🔍 Arkadaşlarım içinde ara..." style="width:100%;padding:6px;border:2px inset #b0b0b0;background:#fff;font-family:Tahoma;font-size:12px" oninput="filterFriendsList(this.value)">
+                   </div>`
+                : '';
+
             const friendsHtml = editFullFriends && editFullFriends.length > 0
                 ? `<h4 style="font-size:12px;color:#1E4070;margin:0 0 8px;text-transform:uppercase">👥 Arkadaşların (${editFullFriends.length})</h4>
-                   <div style="display:flex;flex-direction:column;gap:6px">
+                   ${searchBoxHtml}
+                   <div id="edit-friends-list" style="display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto;padding-right:4px">
                        ${editFullFriends.map(f => `
-                           <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#F8F5EE;border:1px solid #d8cfb8;border-radius:4px">
+                           <div class="edit-friend-item" data-nick="${esc(f).toLowerCase()}" style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#F8F5EE;border:1px solid #d8cfb8;border-radius:4px">
                                <a href="/u/${encodeURIComponent(f)}" style="flex:1;color:#1E4070;font-weight:bold;text-decoration:none">@${esc(f)}</a>
                                <button class="p-btn" style="padding:3px 9px;font-size:11px;background:linear-gradient(180deg,#d9534f,#c9302c);color:#fff;border:1px solid #ac2925" onclick="removeFriendFromEdit('${esc(f).replace(/'/g,"&apos;")}')">❌ Çıkar</button>
                            </div>
@@ -1081,6 +1702,14 @@
 
         function cancelEdit() { renderProfile(); }
 
+        function logout() {
+            localStorage.removeItem('retrosesler_token');
+            localStorage.removeItem('retrosesler_role');
+            localStorage.removeItem('retrosesler_nick');
+            localStorage.removeItem('retrosesler_avatar');
+            location.href = '/';
+        }
+
         async function saveProfile() {
             const btn = document.getElementById('save-btn');
             btn.disabled = true; btn.textContent = '⏳ Kaydediliyor...';
@@ -1090,11 +1719,18 @@
                 personal_msg: document.getElementById('e-pmsg').value,
                 bio: document.getElementById('e-bio').value,
                 about: document.getElementById('e-about').value,
-                birthYear: document.getElementById('e-byear').value,
                 city: document.getElementById('e-city').value,
                 musicTaste: document.getElementById('e-music').value,
                 instagram: document.getElementById('e-instagram').value,
                 twitter: document.getElementById('e-twitter').value,
+                tiktok: document.getElementById('e-tiktok').value,
+                youtube: document.getElementById('e-youtube').value,
+                discord: document.getElementById('e-discord').value,
+                profileTheme: document.getElementById('e-theme').value,
+                profileMusic: document.getElementById('e-music-id').value,
+                profileMusicName: document.getElementById('e-music-name').value,
+                moodEmoji: document.getElementById('e-mood-emoji').value,
+                moodText: document.getElementById('e-mood-text').value,
             };
             try {
                 const res = await fetch('/api/profile', {
@@ -1104,11 +1740,13 @@
                 });
                 const data = await res.json();
                 if (data.success) {
-                    toast('Profilin kaydedildi!', 'ok');
-                    await loadProfile(); // tekrar çek + render
+                    toast('Profilin kaydedildi! ✅', 'ok');
+                    // profileData'yı güncelle ama edit modunda kal
+                    Object.assign(profileData, data);
+                    btn.disabled = false; btn.textContent = '💾 Görünür Bilgileri Kaydet';
                 } else {
                     toast('❌ ' + (data.error || 'Hata'), 'error');
-                    btn.disabled = false; btn.textContent = '💾 Kaydet';
+                    btn.disabled = false; btn.textContent = '💾 Görünür Bilgileri Kaydet';
                 }
             } catch (err) {
                 toast('❌ Sunucu hatası', 'error');
@@ -1318,7 +1956,7 @@
             if (r.data.success) {
                 toast(`🎂 Doğum yılı kaydedildi: ${r.data.birthYear} (${r.data.age} yaş)`, 'ok');
                 editAccountData.birthYear = r.data.birthYear;
-                renderEditMode();  // Tab tekrar render — artık readonly görünür
+                enterEditMode();  // Tab tekrar render — artık readonly görünür
                 switchEditTab('account');
             } else {
                 toast(r.data.error || 'Hata', 'error');
@@ -1441,7 +2079,416 @@
             return `<div class="p-not-found"><span class="big-icon">${icon}</span><div>${msg}</div></div>`;
         }
 
+        // ============ TEMA & YOUTUBE OYNATICI WIDGETI ============
+        let wmpPlayer = null;
+        let wmpTimer = null;
+
+        window.initWmpPlayer = function(videoId) {
+            if (!videoId) return;
+            if (!window.YT || !window.YT.Player) {
+                // API script'ini yükle
+                const tag = document.createElement('script');
+                tag.src = 'https://www.youtube.com/iframe_api';
+                window.onYouTubeIframeAPIReady = () => createPlayer(videoId);
+                document.head.appendChild(tag);
+            } else {
+                createPlayer(videoId);
+            }
+        };
+
+        function createPlayer(videoId) {
+            const container = document.getElementById('wmp-yt-container');
+            if (!container) return;
+            try {
+                wmpPlayer = new YT.Player('wmp-yt-container', {
+                    videoId: videoId,
+                    width: '1px', height: '1px',
+                    playerVars: { autoplay: 0, controls: 0, modestbranding: 1, rel: 0, playsinline: 1 },
+                    events: {
+                        onReady: () => {
+                            const status = document.getElementById('wmp-status-text');
+                            if (status) status.textContent = 'Oynatmaya hazır';
+                        },
+                        onStateChange: (e) => {
+                            const statusText = document.getElementById('wmp-status-text');
+                            const playBtn = document.getElementById('wmp-play-btn');
+                            if (!statusText) return;
+                            if (e.data === YT.PlayerState.PLAYING) {
+                                statusText.textContent = '🔊 Çalıyor...';
+                                if (playBtn) playBtn.textContent = '⏸ Duraklat';
+                                startProgressTimer();
+                            } else if (e.data === YT.PlayerState.PAUSED) {
+                                statusText.textContent = '⏸ Duraklatıldı';
+                                if (playBtn) playBtn.textContent = '▶ Oynat';
+                                clearInterval(wmpTimer);
+                            } else if (e.data === YT.PlayerState.ENDED) {
+                                statusText.textContent = '■ Bitti';
+                                if (playBtn) playBtn.textContent = '▶ Oynat';
+                                clearInterval(wmpTimer);
+                                const progress = document.getElementById('wmp-progress');
+                                if (progress) progress.style.width = '100%';
+                            }
+                        }
+                    }
+                });
+            } catch (err) {
+                console.error('[WMP] Oynatıcı oluşturulamadı:', err.message);
+            }
+        }
+
+        window.toggleProfileMusic = function() {
+            if (!wmpPlayer || typeof wmpPlayer.getPlayerState !== 'function') return;
+            try {
+                const state = wmpPlayer.getPlayerState();
+                if (state === YT.PlayerState.PLAYING) {
+                    wmpPlayer.pauseVideo();
+                } else {
+                    wmpPlayer.playVideo();
+                }
+            } catch {}
+        };
+
+        window.stopProfileMusic = function() {
+            if (!wmpPlayer || typeof wmpPlayer.stopVideo !== 'function') return;
+            try {
+                wmpPlayer.stopVideo();
+                const status = document.getElementById('wmp-status-text');
+                if (status) status.textContent = '■ Durduruldu';
+                const playBtn = document.getElementById('wmp-play-btn');
+                if (playBtn) playBtn.textContent = '▶ Oynat';
+                const progress = document.getElementById('wmp-progress');
+                if (progress) progress.style.width = '0%';
+                const timeEl = document.getElementById('wmp-time');
+                if (timeEl) timeEl.textContent = '0:00';
+                clearInterval(wmpTimer);
+            } catch {}
+        };
+
+        function startProgressTimer() {
+            clearInterval(wmpTimer);
+            wmpTimer = setInterval(() => {
+                if (!wmpPlayer || typeof wmpPlayer.getCurrentTime !== 'function') return;
+                try {
+                    const cur = wmpPlayer.getCurrentTime();
+                    const dur = wmpPlayer.getDuration();
+                    if (dur > 0) {
+                        const pct = (cur / dur) * 100;
+                        const progress = document.getElementById('wmp-progress');
+                        if (progress) progress.style.width = pct + '%';
+                        const timeEl = document.getElementById('wmp-time');
+                        if (timeEl) timeEl.textContent = fmtPlayerTime(cur);
+                    }
+                } catch {}
+            }, 500);
+        }
+
+        function fmtPlayerTime(sec) {
+            sec = Math.max(0, Math.round(sec || 0));
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            return m + ':' + (s < 10 ? '0' : '') + s;
+        }
+
+        // ============ ZİYARETÇİ DEFTERİ (GUESTBOOK) İŞLEMLERİ ============
+        async function loadProfileGuestbook() {
+            const root = document.getElementById('guestbook-root');
+            if (!root) return;
+            try {
+                const res = await fetch('/api/profile/' + encodeURIComponent(profileData.nick) + '/guestbook');
+                const data = await res.json();
+                if (!data.success) {
+                    root.innerHTML = '<div style="color:#e74c3c;font-size:12px;text-align:center;padding:10px">Ziyaretçi defteri yüklenemedi.</div>';
+                    return;
+                }
+                renderGuestbookUI(data.posts || []);
+            } catch (err) {
+                root.innerHTML = '<div style="color:#e74c3c;font-size:12px;text-align:center;padding:10px">Bağlantı hatası.</div>';
+            }
+        }
+
+        function renderGuestbookUI(posts) {
+            const root = document.getElementById('guestbook-root');
+            if (!root) return;
+
+            const myNick = localStorage.getItem('retrosesler_nick');
+            const token = localStorage.getItem('retrosesler_token');
+            const isGuest = localStorage.getItem('retrosesler_role') === 'guest';
+            
+            let formHtml = '';
+            if (token && !isGuest) {
+                formHtml = `
+                    <div class="gb-form">
+                        <strong>✍️ Deftere Not Bırak:</strong>
+                        <textarea class="gb-input" id="gb-msg-input" maxlength="200" placeholder="Retro esintili bir mesaj yazın... (Max 200 karakter)"></textarea>
+                        <div style="display:flex;justify-content:flex-end;margin-top:4px">
+                            <button class="p-btn success" style="padding:4px 12px;font-size:11px" onclick="submitGuestbookPost()">✍️ Defteri İmzala</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                formHtml = `<div style="font-size:11px;color:#777;margin-bottom:12px;font-style:italic">🔒 Deftere yazmak için kayıtlı üye olarak giriş yapmalısın.</div>`;
+            }
+
+            let postsHtml = '';
+            if (posts.length > 0) {
+                postsHtml = posts.map(p => {
+                    const avatarEmoji = avatarMap[p.fromAvatar] || '😎';
+                    const canDelete = myNick && (myNick.toLowerCase() === profileData.nick.toLowerCase() || myNick.toLowerCase() === p.fromNick.toLowerCase());
+                    const delBtn = canDelete ? `<div class="gb-delete" onclick="deleteGuestbookPost('${p.id}')" title="Sil">×</div>` : '';
+                    return `
+                        <div class="gb-post">
+                            <div class="gb-avatar">${avatarEmoji}</div>
+                            <div class="gb-content">
+                                <div class="gb-header">
+                                    <a class="gb-author" href="/u/${encodeURIComponent(p.fromNick)}">@${esc(p.fromNick)}</a>
+                                    <span class="gb-date">${fmtDate(p.ts)} ${new Date(p.ts).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'})}</span>
+                                </div>
+                                <div class="gb-text">${esc(p.message)}</div>
+                            </div>
+                            ${delBtn}
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                postsHtml = `<div style="color:#999;font-style:italic;font-size:12px;text-align:center;padding:20px">Henüz kimse bir şey yazmamış. İlk imzalayan sen ol! 🖋️</div>`;
+            }
+
+            root.innerHTML = `
+                <div class="gb-container">
+                    ${formHtml}
+                    <div style="display:flex;flex-direction:column;gap:8px">
+                        ${postsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        window.submitGuestbookPost = async function() {
+            const el = document.getElementById('gb-msg-input');
+            if (!el) return;
+            const message = el.value.trim();
+            if (!message) { toast('Boş mesaj yazamazsın', 'warn'); return; }
+            try {
+                const res = await fetch('/api/profile/' + encodeURIComponent(profileData.nick) + '/guestbook', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('retrosesler_token')
+                    },
+                    body: JSON.stringify({ message })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    toast('Ziyaretçi defteri imzalandı!', 'ok');
+                    loadProfileGuestbook(); // Yeniden çek
+                } else {
+                    toast(data.error || 'Yazılamadı', 'error');
+                }
+            } catch {
+                toast('Bağlantı hatası', 'error');
+            }
+        };
+
+        window.deleteGuestbookPost = async function(postId) {
+            const ok = await retroConfirm('Bu mesajı silmek istediğine emin misin?', {
+                title: 'Mesajı Sil', danger: true, okText: 'Evet, sil', cancelText: 'Vazgeç'
+            });
+            if (!ok) return;
+            try {
+                const res = await fetch('/api/profile/' + encodeURIComponent(profileData.nick) + '/guestbook/' + encodeURIComponent(postId), {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('retrosesler_token')
+                    }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    toast('Mesaj silindi', 'ok');
+                    loadProfileGuestbook();
+                } else {
+                    toast(data.error || 'Silinemedi', 'error');
+                }
+            } catch {
+                toast('Bağlantı hatası', 'error');
+            }
+        };
+
+        // ============ PROFILE EDIT HELPERS ============
+        window.onPredefinedMusicChange = function(sel) {
+            const val = sel.value;
+            if (!val) return;
+            const parts = val.split('|');
+            const musicId = document.getElementById('e-music-id');
+            const musicName = document.getElementById('e-music-name');
+            if (musicId) musicId.value = parts[0];
+            if (musicName) musicName.value = parts[1];
+        };
+
+        window.filterFriendsList = function(q) {
+            const query = String(q).trim().toLowerCase();
+            const items = document.querySelectorAll('#edit-friends-list .edit-friend-item');
+            items.forEach(el => {
+                const nick = el.getAttribute('data-nick') || '';
+                if (nick.includes(query)) {
+                    el.style.display = 'flex';
+                } else {
+                    el.style.display = 'none';
+                }
+            });
+        };
+
+        // Avatar grid seçici
+        window.selectAvatar = function(key) {
+            document.querySelectorAll('.avatar-opt').forEach(el => {
+                el.classList.remove('selected');
+                el.style.background = '#F8F5EE';
+                el.style.border = '2px outset #d4d0c8';
+            });
+            const el = document.getElementById('av-' + key);
+            if (el) {
+                el.classList.add('selected');
+                el.style.background = 'linear-gradient(135deg,#D0E8FA,#A0C4E8)';
+                el.style.border = '2px solid #2E6BBF';
+            }
+            document.getElementById('e-avatar').value = key;
+        };
+        // Fotoğraf önizleme
+        window.previewAvatar = function(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            if (file.size > 3 * 1024 * 1024) {
+                toast('Dosya çok büyük (max 3MB)', 'warn');
+                input.value = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const preview = document.getElementById('avatar-preview');
+                if (preview) preview.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover">`;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // Fotoğraf yükleme
+        window.uploadAvatar = async function() {
+            const fileInput = document.getElementById('avatar-file');
+            if (!fileInput || !fileInput.files || !fileInput.files[0]) {
+                toast('Önce bir fotoğraf seç', 'warn');
+                return;
+            }
+            const btn = document.getElementById('upload-avatar-btn');
+            if (btn) { btn.disabled = true; btn.textContent = '⏳ Yükleniyor...'; }
+
+            const formData = new FormData();
+            formData.append('avatar', fileInput.files[0]);
+
+            try {
+                const res = await fetch('/api/profile/avatar-upload', {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('retrosesler_token') },
+                    body: formData,
+                });
+                const data = await res.json();
+                if (data.success) {
+                    toast('📷 Profil fotoğrafın yüklendi!', 'ok');
+                    profileData.avatarPhoto = data.avatarUrl;
+                    profileData.avatar = 'custom';
+                    // Önizlemeyi güncelle
+                    const preview = document.getElementById('avatar-preview');
+                    if (preview) preview.innerHTML = `<img src="${data.avatarUrl}" style="width:100%;height:100%;object-fit:cover">`;
+                } else {
+                    toast('❌ ' + (data.error || 'Yükleme hatası'), 'error');
+                }
+            } catch {
+                toast('❌ Sunucu hatası', 'error');
+            }
+            if (btn) { btn.disabled = false; btn.textContent = '📷 Fotoğrafı Yükle'; }
+        };
+
+        // Fotoğrafı kaldır (emoji avatara geri dön)
+        window.removeAvatarPhoto = async function() {
+            const ok = await retroConfirm('Profil fotoğrafın kaldırılsın mı? Emoji avatara geri döneceksin.', {
+                title: 'Fotoğrafı Kaldır', icon: '🗑️', okText: 'Evet, kaldır', cancelText: 'Vazgeç', danger: true,
+            });
+            if (!ok) return;
+            try {
+                const res = await fetch('/api/profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('retrosesler_token')
+                    },
+                    body: JSON.stringify({ avatar: 'default', removePhoto: true }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    toast('Fotoğraf kaldırıldı', 'ok');
+                    profileData.avatarPhoto = null;
+                    profileData.avatar = 'default';
+                    switchEditTab('visible');
+                } else {
+                    toast(data.error || 'Hata', 'error');
+                }
+            } catch { toast('Sunucu hatası', 'error'); }
+        };
+
         loadProfile();
+
+        window.profileGoTab = function(name) {
+            if (name === 'profile') {
+                const myNick = localStorage.getItem('retrosesler_nick');
+                const pathNick = decodeURIComponent(location.pathname.split('/').pop());
+                if (myNick && myNick.toLowerCase() === pathNick.toLowerCase()) {
+                    location.reload();
+                } else if (myNick && myNick !== 'Misafir') {
+                    location.href = '/u/' + encodeURIComponent(myNick);
+                } else {
+                    location.href = '/giris';
+                }
+                return;
+            }
+            try { sessionStorage.setItem('rs_mtab', name); } catch {}
+            location.href = '/';
+        };
+
+        // Update DM unread badge if logged in
+        (async function updateProfileMsgBadge() {
+            const token = localStorage.getItem('retrosesler_token');
+            if (!token) return;
+            try {
+                const res = await fetch('/api/dm/inbox', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                if (data.success && data.totalUnread > 0) {
+                    const badge = document.getElementById('mt-msg-badge');
+                    if (badge) {
+                        badge.textContent = data.totalUnread > 99 ? '99+' : data.totalUnread;
+                        badge.style.display = '';
+                    }
+                }
+            } catch (e) {}
+        })();
     </script>
+
+    <!-- ============ MOBILE BOTTOM TAB BAR (sadece <=768px görünür) ============ -->
+    <nav class="mobile-tabbar" role="tablist" aria-label="Ana navigasyon">
+        <button class="mt-btn" data-mtab="home" role="tab" onclick="profileGoTab('home')">
+            <span class="mt-ico">🏠</span><span>Anasayfa</span>
+        </button>
+        <button class="mt-btn" data-mtab="myrooms" role="tab" onclick="profileGoTab('myrooms')">
+            <span class="mt-ico">🚪</span><span>Odalarım</span>
+        </button>
+        <button class="mt-btn" data-mtab="timeline" role="tab" onclick="profileGoTab('timeline')">
+            <span class="mt-ico">🕰️</span><span>Zaman Tüneli</span>
+        </button>
+        <button class="mt-btn" data-mtab="msg" role="tab" onclick="profileGoTab('msg')">
+            <span class="mt-ico">✉</span><span>Mesajlar</span>
+            <span class="mt-badge" id="mt-msg-badge" style="display:none">0</span>
+        </button>
+        <button class="mt-btn active" data-mtab="profile" role="tab" onclick="profileGoTab('profile')">
+            <span class="mt-ico">👤</span><span>Profil</span>
+        </button>
+    </nav>
 </body>
 </html>

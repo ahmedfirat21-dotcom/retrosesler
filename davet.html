@@ -6,8 +6,17 @@
     <title>Davet — RetroSesler.com</title>
     <link rel="icon" type="image/png" href="assets/mikrofon.png">
     <link rel="apple-touch-icon" href="assets/mikrofon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Tahoma&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
+        @font-face {
+            font-family: 'Press Start 2P';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url(/assets/press-start-2p.ttf) format('truetype');
+        }
         * { box-sizing: border-box; margin: 0; padding: 0 }
         body {
             font-family: Tahoma, Verdana, sans-serif; font-size: 13px;
@@ -40,6 +49,11 @@
             font-size: 16px; color: #C0392B; text-decoration: none;
             text-shadow: 2px 2px 0 #E74C3C, 3px 3px 0 rgba(0,0,0,0.15);
             letter-spacing: 1px; margin-bottom: 18px; display: inline-block;
+            transition: transform 0.15s;
+            cursor: pointer;
+        }
+        .brand:hover {
+            transform: scale(1.05);
         }
         .brand span { color: #2E86C1 }
         .big-icon {

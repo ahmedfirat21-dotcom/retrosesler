@@ -1,0 +1,1201 @@
+[
+  {
+    "index": 19,
+    "song": {
+      "artist": "Kenan Doğulu",
+      "title": "Shake It Up Şekerim",
+      "year": 2004,
+      "ytId": "xjPozY4XER0",
+      "duration": 181
+    },
+    "ytTitle": "Kenan Doğulu - Shake It Up [Original Version] (Official Video)",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 29,
+    "song": {
+      "artist": "Hande Yener",
+      "title": "Havadan Sudan",
+      "year": 2006,
+      "ytId": "D2G24CwNtwE",
+      "duration": 200
+    },
+    "ytTitle": "Ebru Yaşar - Havadan Sudan",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 22,
+    "song": {
+      "artist": "Serdar Ortaç",
+      "title": "No Problem",
+      "year": 2006,
+      "ytId": "QPTdg-kjcn0",
+      "duration": 186
+    },
+    "ytTitle": "MEF Ft. Serdar Ortaç - Ayrılmam",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 41,
+    "song": {
+      "artist": "Teoman",
+      "title": "N'olacak Halimiz",
+      "year": 2004,
+      "ytId": "Sdw7eaCSzhg",
+      "duration": 217
+    },
+    "ytTitle": "Teoman - N'apim Tabiatım Böyle (Official Video)",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 42,
+    "song": {
+      "artist": "Athena",
+      "title": "Fırtına",
+      "year": 2002,
+      "ytId": "pipamUl14A4",
+      "duration": 204
+    },
+    "ytTitle": "Athena - For Real - Türkiye 🇹🇷 - Grand Final - Eurovision 2004",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 44,
+    "song": {
+      "artist": "Athena",
+      "title": "Yaz",
+      "year": 2008,
+      "ytId": "rd4-JyFnmQk",
+      "duration": 143
+    },
+    "ytTitle": "Athena - Arsız Gönül (GQ Men of the Year 2016)",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 36,
+    "song": {
+      "artist": "Şebnem Ferah",
+      "title": "Sil Baştan",
+      "year": 2000,
+      "ytId": "RExyuxsd-rY",
+      "duration": 313
+    },
+    "ytTitle": "Sil Baştan",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 52,
+    "song": {
+      "artist": "İzel",
+      "title": "Bebek",
+      "year": 1997,
+      "ytId": "vTNOjOxABWM",
+      "duration": 257
+    },
+    "ytTitle": "Bebek",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 45,
+    "song": {
+      "artist": "Athena",
+      "title": "Her Yer Karanlık",
+      "year": 2006,
+      "ytId": "Duxj7uz2UHI",
+      "duration": 209
+    },
+    "ytTitle": "Günay Aksoy - Her Yer Karanlık - (Official Video)",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 53,
+    "song": {
+      "artist": "İzel Çeliköz",
+      "title": "Şıkıdım",
+      "year": 2000,
+      "ytId": "t0nmZJsqhBY",
+      "duration": 217
+    },
+    "ytTitle": "Yakışıklım( İzel) 2013 single",
+    "mismatch": {
+      "artist": true,
+      "title": true
+    }
+  },
+  {
+    "index": 66,
+    "song": {
+      "artist": "Nil Karaibrahimgil",
+      "title": "Kanatlarım Var Ruhumda",
+      "year": 2003,
+      "ytId": "2mFtDJxSgvk",
+      "duration": 193
+    },
+    "error": "Could not fetch YouTube title (private/deleted/timeout)"
+  },
+  {
+    "index": 65,
+    "song": {
+      "artist": "Mor ve Ötesi",
+      "title": "Gül Kendine",
+      "year": 2001,
+      "ytId": "Kk5jW0NDti0",
+      "duration": 260
+    },
+    "ytTitle": "Gül Kendine",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 68,
+    "song": {
+      "artist": "Nil Karaibrahimgil",
+      "title": "Star",
+      "year": 2005,
+      "ytId": "iyZgqMCIj0k",
+      "duration": 208
+    },
+    "ytTitle": "Niltemenni | Nil Karaibrahimgil - Kelebeğin Hayat Sırları",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 71,
+    "song": {
+      "artist": "Barış Manço",
+      "title": "Alla Beni Pulla Beni",
+      "year": 1983,
+      "ytId": "GUKIEjmQ1Bc",
+      "duration": 243
+    },
+    "ytTitle": "Alla Beni Pulla Beni",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 77,
+    "song": {
+      "artist": "Erkin Koray",
+      "title": "Öyle Bir Geçer Zaman Ki",
+      "year": 1978,
+      "ytId": "V9FW37WkIf0",
+      "duration": 320
+    },
+    "ytTitle": "Öyle Bir Geçer Zaman ki",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 83,
+    "song": {
+      "artist": "Sıla",
+      "title": "Zor Aşk",
+      "year": 2006,
+      "ytId": "6VRd0l8R0ko",
+      "duration": 215
+    },
+    "ytTitle": "Sila - Zor Sevdigimden",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 87,
+    "song": {
+      "artist": "Bengü",
+      "title": "Saat 3",
+      "year": 2005,
+      "ytId": "YKwhDtqsZ0k",
+      "duration": 275
+    },
+    "ytTitle": "Bengü - Saat 03.00 (By Erhan Bayrak) [Official Audio]",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 75,
+    "song": {
+      "artist": "Cem Karaca",
+      "title": "Resimdeki Gözyaşları",
+      "year": 1983,
+      "ytId": "fOnohmbo3fg",
+      "duration": 250
+    },
+    "ytTitle": "Cem Karaca - Resimdeki Gözyaşı",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 81,
+    "song": {
+      "artist": "Sertab Erener",
+      "title": "Lâ'l",
+      "year": 2003,
+      "ytId": "2qLXM68Wng0",
+      "duration": 231
+    },
+    "ytTitle": "Sertab Erener - Sevdam Ağlıyor",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 80,
+    "song": {
+      "artist": "Sertab Erener",
+      "title": "Aşk",
+      "year": 1997,
+      "ytId": "CGNcI0Fsl9c",
+      "duration": 212
+    },
+    "ytTitle": "Aşk",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 82,
+    "song": {
+      "artist": "Sertab Erener",
+      "title": "Kumsaldaki İzler",
+      "year": 2004,
+      "ytId": "IUYIFFBnWGA",
+      "duration": 234
+    },
+    "ytTitle": "Rafet El Roman - Kumsaldaki İzler",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 100,
+    "song": {
+      "artist": "Gripin",
+      "title": "Beş",
+      "year": 2006,
+      "ytId": "DSGJ7zVpBp0",
+      "duration": 325
+    },
+    "error": "Could not fetch YouTube title (private/deleted/timeout)"
+  },
+  {
+    "index": 91,
+    "song": {
+      "artist": "Ebru Gündeş",
+      "title": "Aşık Oldum",
+      "year": 2003,
+      "ytId": "F1K7GJFqUQc",
+      "duration": 240
+    },
+    "ytTitle": "Ebru Gündeş - Âşık (Video Klip)",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 95,
+    "song": {
+      "artist": "Nazan Öncel",
+      "title": "Ayrılık Şarkısı",
+      "year": 1995,
+      "ytId": "FbBnWze-Fso",
+      "duration": 298
+    },
+    "ytTitle": "Gitme Kal Bu Şehirde",
+    "mismatch": {
+      "artist": true,
+      "title": true
+    }
+  },
+  {
+    "index": 94,
+    "song": {
+      "artist": "Nazan Öncel",
+      "title": "Gitme",
+      "year": 1998,
+      "ytId": "FbBnWze-Fso",
+      "duration": 298
+    },
+    "ytTitle": "Gitme Kal Bu Şehirde",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 102,
+    "song": {
+      "artist": "Feridun Düzağaç",
+      "title": "Alışamıyorum",
+      "year": 2005,
+      "ytId": "OoRFXtG1PZU",
+      "duration": 239
+    },
+    "ytTitle": "Feridun Düzağaç - Ağlamıyorum (Bir Devam Filmi)",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 113,
+    "song": {
+      "artist": "Sagopa Kajmer",
+      "title": "Romantik",
+      "year": 2004,
+      "ytId": "ha_4FhzXw04",
+      "duration": 326
+    },
+    "ytTitle": "Sagopa Kajmer Featuring M.O.A - Zorla Güzellik (pesimist ep 6)",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 118,
+    "song": {
+      "artist": "Ayna",
+      "title": "Tövbe Tövbe",
+      "year": 1998,
+      "ytId": "MekbE_KpsJc",
+      "duration": 308
+    },
+    "ytTitle": "Ayna - İstiklaldeyim (Official Audio)",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 107,
+    "song": {
+      "artist": "Ozan Doğulu",
+      "title": "Yağ Yağmur",
+      "year": 2003,
+      "ytId": "aBtFi_-hxaQ",
+      "duration": 191
+    },
+    "ytTitle": "Ozan Doğulu feat. Ziynet Sali - Yağmur",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 108,
+    "song": {
+      "artist": "Gökhan Özen",
+      "title": "Cahildim Dünyanın Rengine Kandım",
+      "year": 2003,
+      "ytId": "pri-Dalk31o",
+      "duration": 103
+    },
+    "ytTitle": "ÖZCAN DENİZ - CAHİLDİM DÜNYANIN RENGİNE KANDIM / NEREDESİN FİRUZE FİLMİNDEN",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 105,
+    "song": {
+      "artist": "Yalın",
+      "title": "Aşk Her Şeye Değer",
+      "year": 2003,
+      "ytId": "5H-MgJef8rk",
+      "duration": 224
+    },
+    "ytTitle": "Aslı Güngör - Aşk Herşeye Değer",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 116,
+    "song": {
+      "artist": "Dedublüman",
+      "title": "Paranoya",
+      "year": 2006,
+      "ytId": "t8l8HL9AkAg",
+      "duration": 219
+    },
+    "ytTitle": "Uzi - Paranoya (Official Music Video)",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 117,
+    "song": {
+      "artist": "Ayna",
+      "title": "Sözlerimi Geri Alamam",
+      "year": 1995,
+      "ytId": "x5dllqqQp1g",
+      "duration": 340
+    },
+    "ytTitle": "Bulutsuzluk Özlemi  & Hakan Aysev - Sözlerimi Geri Alamam",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 121,
+    "song": {
+      "artist": "Nilüfer",
+      "title": "Sevgiliye",
+      "year": 1984,
+      "ytId": "nehjLl6-A5k",
+      "duration": 145
+    },
+    "ytTitle": "Nilüfer - Göreceksin Kendini (Official Audio)",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 123,
+    "song": {
+      "artist": "Zeki Müren",
+      "title": "Hayat Bayram Olsa",
+      "year": 1972,
+      "ytId": "eVOrfTtDS5g",
+      "duration": 204
+    },
+    "ytTitle": "Şenay - Hayat Bayram Olsa (1972)",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 120,
+    "song": {
+      "artist": "Nilüfer",
+      "title": "Başucu Şarkısı",
+      "year": 1989,
+      "ytId": "Paf46-QCSOU",
+      "duration": 18
+    },
+    "ytTitle": "Nilüfer 70. yaşını yeni şarkısıyla kutladı… 🎶",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 122,
+    "song": {
+      "artist": "Emel Sayın",
+      "title": "Ben Seni Sevdim",
+      "year": 1980,
+      "ytId": "PwBJ7EKpAk8",
+      "duration": 222
+    },
+    "ytTitle": "Emel Sayın - Ben Seni Unutmak İçin Sevmedim (Official Audio)",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 145,
+    "song": {
+      "artist": "Rafet El Roman",
+      "title": "Seni Seviyorum",
+      "year": 2005,
+      "ytId": "ZcoQ6pnLpS4",
+      "duration": 250
+    },
+    "error": "Could not fetch YouTube title (private/deleted/timeout)"
+  },
+  {
+    "index": 139,
+    "song": {
+      "artist": "Kayahan",
+      "title": "Ayrılık Zor",
+      "year": 1990,
+      "ytId": "NA3u0nuzliE",
+      "duration": 246
+    },
+    "ytTitle": "TARKAN - Ayrılık Zor \"Orjinal Versiyon\" (Official Audio)",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 140,
+    "song": {
+      "artist": "Kayahan",
+      "title": "Gönlüme",
+      "year": 1997,
+      "ytId": "6ZK8Is46A6k",
+      "duration": 256
+    },
+    "ytTitle": "Kayahan - Gönül Sayfam (Video Klip)",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 148,
+    "song": {
+      "artist": "Mazhar Fuat Özkan",
+      "title": "Peki Peki Anladık",
+      "year": 1995,
+      "ytId": "-tcX71KGf8I",
+      "duration": 207
+    },
+    "ytTitle": "Peki Peki Anladık - MFÖ (Official Audio)",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 143,
+    "song": {
+      "artist": "Özcan Deniz",
+      "title": "Zorun Ne Sevgilim",
+      "year": 1998,
+      "ytId": "Wo4QdoBlFl0",
+      "duration": 221
+    },
+    "ytTitle": "Özcan Deniz - Zorun Ne Benle Aşk",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 160,
+    "song": {
+      "artist": "Göksel",
+      "title": "Vermem Seni Ellere",
+      "year": 2005,
+      "ytId": "r7k0wn2-bQY",
+      "duration": 200
+    },
+    "ytTitle": "Oğuzhan Koç - Vermem Seni Ellere (Yol Arkadaşım Film Müziği)",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 153,
+    "song": {
+      "artist": "Soner Arıca",
+      "title": "Sen Yarim İdun",
+      "year": 2005,
+      "ytId": "g6y7R3mWe08",
+      "duration": 167
+    },
+    "ytTitle": "Özcan Deniz Ft. Fahriye Evcen - Sen Yarim İdun (Official Video)",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 164,
+    "song": {
+      "artist": "Funda Arar",
+      "title": "Aşk Lazım",
+      "year": 2003,
+      "ytId": "_nIaKev4T_o",
+      "duration": 317
+    },
+    "ytTitle": "Aşk Lazım [Official Video] - Gökhan Türkmen #Ara",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 155,
+    "song": {
+      "artist": "Yaşar",
+      "title": "Dinle",
+      "year": 2003,
+      "ytId": "6q1YZaGzq5c",
+      "duration": 203
+    },
+    "ytTitle": "Birtanem (Night Club Mix)",
+    "mismatch": {
+      "artist": true,
+      "title": true
+    }
+  },
+  {
+    "index": 161,
+    "song": {
+      "artist": "Linet",
+      "title": "Soldurma Beni",
+      "year": 2008,
+      "ytId": "kmIxH7iCo6g",
+      "duration": 236
+    },
+    "ytTitle": "Rubato & Linet - Unut Beni",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 152,
+    "song": {
+      "artist": "Soner Arıca",
+      "title": "İddiaya Var Mısın",
+      "year": 2003,
+      "ytId": "rVC1DHbl9gM",
+      "duration": 266
+    },
+    "ytTitle": "SONER ARICA \"SEN GİDERKEN\"",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 156,
+    "song": {
+      "artist": "Yaşar",
+      "title": "Hastayım Sana",
+      "year": 2006,
+      "ytId": "b82czGNhOlk",
+      "duration": 184
+    },
+    "ytTitle": "Kolpa & Deniz Baysal - Hastayım Sana (Official Video)",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 166,
+    "song": {
+      "artist": "Kibariye",
+      "title": "Aman Aman",
+      "year": 1997,
+      "ytId": "DHqabbF3b30",
+      "duration": 406
+    },
+    "ytTitle": "Xumar Qedimova & Kibariye - Aman Ayriliq Yeni Mix 2023",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 170,
+    "song": {
+      "artist": "Bülent Ersoy",
+      "title": "Hani Bize Hep Aşk Lazım",
+      "year": 1997,
+      "ytId": "QyihBAeE1jI",
+      "duration": 324
+    },
+    "ytTitle": "Bülent Ersoy ft.Tarkan - Bir Ben Bir Allah Biliyor I Official Video",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 168,
+    "song": {
+      "artist": "TNK",
+      "title": "Yüreğime Ektim Seni",
+      "year": 2003,
+      "ytId": "_PZcqt3ZeHk",
+      "duration": 265
+    },
+    "ytTitle": "Soner Arıca - Yüreğime Ektim Seni (Official Video)",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 172,
+    "song": {
+      "artist": "Leman Sam",
+      "title": "Aşktan Ne Haber",
+      "year": 1999,
+      "ytId": "Ne3uIrZaWUY",
+      "duration": 253
+    },
+    "ytTitle": "Sezen Aksu - Aşktan Ne Haber (Official Audio)",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 171,
+    "song": {
+      "artist": "Ziynet Sali",
+      "title": "Bize de Bu Yakışır",
+      "year": 2006,
+      "ytId": "c2894j9S8uc",
+      "duration": 272
+    },
+    "ytTitle": "Ziynet Sali - Bize Yeter 2010 HD HQ Yeni Clip /2011 Video Clip",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 167,
+    "song": {
+      "artist": "Pinhani",
+      "title": "Yitirdiklerim",
+      "year": 2005,
+      "ytId": "cv6gfpDiYkQ",
+      "duration": 215
+    },
+    "ytTitle": "Pinhani - Yitirmeden",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 174,
+    "song": {
+      "artist": "Zerrin Özer",
+      "title": "Giden Günlerim Oldu",
+      "year": 1989,
+      "ytId": "gCIPrtRlCdE",
+      "duration": 268
+    },
+    "ytTitle": "Gülben Ergen ft. Oguzhan Koc - Giden Günlerim Oldu",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 165,
+    "song": {
+      "artist": "Fatih Kısaparmak",
+      "title": "Garibin Sazı",
+      "year": 1999,
+      "ytId": "eAAcBLO9fuM",
+      "duration": 191
+    },
+    "ytTitle": "Fatih Kısaparmak - Garibim Fukarayım - (Official Audio)",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 178,
+    "song": {
+      "artist": "Levent Yüksel",
+      "title": "İçimden Gelmiyor",
+      "year": 2004,
+      "ytId": "69VJnj9k3N4",
+      "duration": 274
+    },
+    "ytTitle": "Medcezir",
+    "mismatch": {
+      "artist": true,
+      "title": true
+    }
+  },
+  {
+    "index": 189,
+    "song": {
+      "artist": "Emrah",
+      "title": "Bu Gece Karakolluk Olabilirim",
+      "year": 1997,
+      "ytId": "kVPoKfY0ZSo",
+      "duration": 297
+    },
+    "ytTitle": "Azer Bülbül - Bu Gece Karakolluk Olabilirim [ Official Video ]",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 193,
+    "song": {
+      "artist": "Gece Yolcuları",
+      "title": "Gün Ağardı Hala İçeriz",
+      "year": 1998,
+      "ytId": "vrY0VAX4kIs",
+      "duration": 190
+    },
+    "ytTitle": "Gece Yolcuları - Lanet Olsun",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 192,
+    "song": {
+      "artist": "Öykü Gürman",
+      "title": "Bize Aşk Lazım",
+      "year": 2003,
+      "ytId": "2l8V1INyEig",
+      "duration": 247
+    },
+    "ytTitle": "Gökhan Özen - Bize Aşk Lazım",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 191,
+    "song": {
+      "artist": "Burhan Çaçan",
+      "title": "Aşkım Aşkım",
+      "year": 1985,
+      "ytId": "MzsIT0-nXzs",
+      "duration": 208
+    },
+    "ytTitle": "Burhan Çaçan  -  Aşkımız Olay Olacak",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 184,
+    "song": {
+      "artist": "Rashit",
+      "title": "İstasyon",
+      "year": 2008,
+      "ytId": "ZRBBEcy93r8",
+      "duration": 210
+    },
+    "ytTitle": "Rashit - Teker Teker",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 185,
+    "song": {
+      "artist": "Nev",
+      "title": "Senden İnsanlığa Abdest Aldım",
+      "year": 2006,
+      "ytId": "rBMQ5nCcpcs",
+      "duration": 26
+    },
+    "ytTitle": "Abdest Alırken Etrafınızda Bunlar Olmasın! #shorts",
+    "mismatch": {
+      "artist": true,
+      "title": true
+    }
+  },
+  {
+    "index": 188,
+    "song": {
+      "artist": "Grup Vitamin",
+      "title": "Pardon",
+      "year": 2005,
+      "ytId": "oUdi2S74V4E",
+      "duration": 306
+    },
+    "ytTitle": "Grup Vitamin - Seviyoraaa #CanlıPerformans",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 199,
+    "song": {
+      "artist": "Sezen Aksu",
+      "title": "Az Olanı Seç",
+      "year": 2007,
+      "ytId": "EsZTne6WEQE",
+      "duration": 288
+    },
+    "ytTitle": "Sezen Aksu - Beni Unutma (Official Video)",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 207,
+    "song": {
+      "artist": "Çelik",
+      "title": "Bebek",
+      "year": 1999,
+      "ytId": "vTNOjOxABWM",
+      "duration": 257
+    },
+    "ytTitle": "Bebek",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 203,
+    "song": {
+      "artist": "Baha",
+      "title": "Süper Baba",
+      "year": 2000,
+      "ytId": "DLde7wwlRrw",
+      "duration": 31
+    },
+    "ytTitle": "Dede-torun çapkınlık peşinde 😂 #süperbaba #nostalji #90lar #shorts",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 206,
+    "song": {
+      "artist": "Eyüp",
+      "title": "Tavla",
+      "year": 2005,
+      "ytId": "UvUOjuDa-N4",
+      "duration": 61
+    },
+    "ytTitle": "Tavla'da 3 Zarda, 6 Kapı Nasıl Alınır? | Dünya Şampiyonu Ali Cihangir ÇETİNEL Anlatıyor",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 209,
+    "song": {
+      "artist": "Hüsnü Şenlendirici",
+      "title": "Bergüzar",
+      "year": 2003,
+      "ytId": "5hbfC9LJjMM",
+      "duration": 25
+    },
+    "ytTitle": "HÜSNÜ ŞENLENDİRİCİ - ALİ BABANIN BİR ÇİFTLİĞİ VAR ( KIZIM SAHRA'ya ÖZEL ) Doğum Günü 💝 si 😉",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 205,
+    "song": {
+      "artist": "Oğuz Yılmaz",
+      "title": "Gözlerin",
+      "year": 2003,
+      "ytId": "ElnI9fsqN5E",
+      "duration": 251
+    },
+    "ytTitle": "Oğuz Yılmaz Gönlüm Yeşerdi 1999",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 204,
+    "song": {
+      "artist": "Berkay",
+      "title": "Ağla Kalbim",
+      "year": 2008,
+      "ytId": "sQo9Zat9y9M",
+      "duration": 15
+    },
+    "ytTitle": "AĞLA KALBİM AĞLA 🥀",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 208,
+    "song": {
+      "artist": "Ajda Pekkan",
+      "title": "Oyalama Beni",
+      "year": 1998,
+      "ytId": "7QVYwClFqFA",
+      "duration": 280
+    },
+    "ytTitle": "Oyalama Beni",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 218,
+    "song": {
+      "artist": "Mustafa Sandal",
+      "title": "Devil",
+      "year": 2001,
+      "ytId": "PYEpMUj4GdA",
+      "duration": 304
+    },
+    "ytTitle": "Mustafa Sandal & Yaman Sandal - Araba | Saygı1 - Mustafa Sandal",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 222,
+    "song": {
+      "artist": "Bengü",
+      "title": "Korkmuyorum",
+      "year": 2006,
+      "ytId": "ZhzL0FGWXew",
+      "duration": 336
+    },
+    "ytTitle": "Bengü - Korkma Kalbim",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 211,
+    "song": {
+      "artist": "Leman Sam",
+      "title": "Akdeniz",
+      "year": 1995,
+      "ytId": "wrmxAeUQ3RI",
+      "duration": 236
+    },
+    "ytTitle": "Leman Sam Kıyamam Sana",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 223,
+    "song": {
+      "artist": "Funda Arar",
+      "title": "Yak Beni Söndür Beni",
+      "year": 2004,
+      "ytId": "xl-eq7D2LEY",
+      "duration": 61
+    },
+    "ytTitle": "Funda Arar - yak gel (şarkı sözleri)",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 224,
+    "song": {
+      "artist": "Petek Dinçöz",
+      "title": "Sen Mağrur",
+      "year": 2002,
+      "ytId": "bTQKZHcYMtM",
+      "duration": 238
+    },
+    "error": "Could not fetch YouTube title (private/deleted/timeout)"
+  },
+  {
+    "index": 221,
+    "song": {
+      "artist": "Yonca Lodi",
+      "title": "Adı Aşk Olsun",
+      "year": 2002,
+      "ytId": "sFYGNynQEyI",
+      "duration": 280
+    },
+    "ytTitle": "Gokhan Tepe   Adi Ask Olsun   YouTube ŞARKI SÖZLÜ",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  },
+  {
+    "index": 227,
+    "song": {
+      "artist": "Hayko Cepkin",
+      "title": "Sırf Bana Bağırırsın",
+      "year": 2007,
+      "ytId": "YTjS_Fc9-Zo",
+      "duration": 286
+    },
+    "ytTitle": "10- An Epic Symphony & Hayko Cepkin - Paranoya",
+    "mismatch": {
+      "artist": false,
+      "title": true
+    }
+  },
+  {
+    "index": 228,
+    "song": {
+      "artist": "Athena",
+      "title": "Bir Dilek Tut",
+      "year": 2004,
+      "ytId": "iUH966VjDhM",
+      "duration": 128
+    },
+    "ytTitle": "Bir Dilek Tut | Fragman",
+    "mismatch": {
+      "artist": true,
+      "title": false
+    }
+  }
+]

@@ -188,3 +188,99 @@ body[data-theme="pera"] {
 /* Safe-area koruyucu sınıflar — sticky bottom bar'lara uygula */
 .safe-bottom { padding-bottom: max(var(--space-md), var(--safe-bottom)); }
 .safe-top    { padding-top: max(var(--space-md), var(--safe-top)); }
+
+/* ════ NOSTALJİK & MODERN ETKİLEŞİM İYİLEŞTİRMELERİ ════
+   Sitenin nostaljik ruhunu bozmadan, modern ve pürüzsüz bir
+   kullanıcı deneyimi (UX) sağlamak için eklenen mikro etkileşimler.
+*/
+
+/* 1. Sayfa Açılışında Yumuşak Geçiş (Fade-in) */
+@keyframes rsPageLoad {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+body {
+    animation: rsPageLoad 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* 2. Global Etkileşim Geçişleri */
+button, 
+.btn, 
+.ctrl-btn, 
+.btn-tool, 
+.btn-send, 
+.dj-req-btn, 
+input, 
+select, 
+textarea, 
+a {
+    transition: background-color var(--ease-fast), 
+                color var(--ease-fast), 
+                border-color var(--ease-fast), 
+                box-shadow var(--ease-fast), 
+                opacity var(--ease-fast);
+}
+
+/* 3. Tıklama (Basılma) Hissiyatı - 3D Fiziksel Çökme Efekti */
+button:active,
+.btn:active,
+.ctrl-btn:active,
+.btn-tool:active,
+.btn-send:active,
+.dj-req-btn:active,
+.emoji-item:active,
+input[type="button"]:active,
+input[type="submit"]:active,
+.win-btn:active {
+    transform: translateY(1.5px) translateX(0.5px) !important;
+    box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2) !important;
+    transition: none !important; /* Tıklama anında gecikmesiz tepki */
+}
+
+/* 4. Retro Odaklanma (Focus) Halkası */
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+select:focus,
+textarea:focus {
+    outline: none !important;
+    border-color: var(--rs-blue-light) !important;
+    box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.25) !important;
+}
+
+/* Temaya duyarlı focus halkası rengi (Şakir için kırmızı, Pera için gül kurusu, Gece için lacivert) */
+body[data-theme="sakir"] input[type="text"]:focus,
+body[data-theme="sakir"] input[type="password"]:focus,
+body[data-theme="sakir"] select:focus,
+body[data-theme="sakir"] textarea:focus {
+    box-shadow: 0 0 0 3px rgba(196, 48, 48, 0.25) !important;
+}
+body[data-theme="pera"] input[type="text"]:focus,
+body[data-theme="pera"] input[type="password"]:focus,
+body[data-theme="pera"] select:focus,
+body[data-theme="pera"] textarea:focus {
+    box-shadow: 0 0 0 3px rgba(184, 156, 176, 0.25) !important;
+}
+body[data-theme="gece"] input[type="text"]:focus,
+body[data-theme="gece"] input[type="password"]:focus,
+body[data-theme="gece"] select:focus,
+body[data-theme="gece"] textarea:focus {
+    box-shadow: 0 0 0 3px rgba(42, 58, 90, 0.35) !important;
+}
+
+/* 5. Kartların Hover Durumundaki Derinlik Artışı */
+.ra-card, 
+.panel, 
+.chat-window {
+    transition: box-shadow var(--ease-base), transform var(--ease-base);
+}
+.ra-card:hover, 
+.panel:hover {
+    box-shadow: 3px 5px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 #fff;
+}
