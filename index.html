@@ -5246,7 +5246,8 @@
                         </div>
                     </div>
                 </div>
-                <!-- ÜST HEADAR PANELLERİ — sidebar'dan taşındı, dropdown ile açılır -->
+                <!-- ÜST HEADAR PANELLERİ — kaldırıldı (sol taraftaki profil panelinde MSN stili DMs/gelen kutusu var) -->
+                <!--
                 <div class="topbar-pop-wrap" id="tp-msg-wrap" style="display:none">
                     <button class="topbar-pop-btn" type="button" title="Mesajlarım" onclick="toggleTopbarPop('msg')">
                         ✉<span class="tpb-badge tpb-badge-red" id="msg-unread-badge" style="display:none">0</span>
@@ -5256,6 +5257,7 @@
                         <div class="tpd-body" id="msg-widget"><div class="tpd-empty">Yükleniyor…</div></div>
                     </div>
                 </div>
+                -->
                 <!-- Bildirim Zili — sadece login'liyse görünür -->
                 <div class="topbar-notif" id="topbar-notif-wrap" style="display:none;position:relative">
                     <button id="topbar-notif-btn" class="topbar-notif-btn" title="Bildirimler" type="button">
@@ -5316,7 +5318,7 @@
                             <span>⚡ Hızlı Erişim</span>
                         </div>
                         <div style="display:flex; gap:4px; width:100%;">
-                            <button class="user-btn" style="display:flex; align-items:center; justify-content:center; gap:4px; font-size:10px; padding:6px; font-weight:bold;" onclick="openRoomCreateModal()">🏠 Yeni Oda Aç</button>
+                            <button class="user-btn" style="display:flex; align-items:center; justify-content:center; gap:4px; font-size:10px; padding:6px; font-weight:bold;" onclick="openFriends()">👥 Arkadaşlarım</button>
                             <button class="user-btn" style="display:flex; align-items:center; justify-content:center; gap:4px; font-size:10px; padding:6px; font-weight:bold;" onclick="openDM()">💬 Mesajlar</button>
                         </div>
                         
@@ -8402,6 +8404,13 @@
                     <div class="dli-last">${escapeHTML(prefix + lastBody)}</div>
                 </div>`;
             }).join('');
+        }
+
+        function openFriends() {
+            openDM();
+            setTimeout(() => {
+                switchDmTab('friends');
+            }, 50);
         }
 
         function openDM(peer) {
