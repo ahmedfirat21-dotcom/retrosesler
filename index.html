@@ -5182,11 +5182,12 @@
             font-size: 12px;
             color: #4A351B;
             line-height: 1.45;
-            min-height: 110px;
+            min-height: 200px;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             text-align: center;
+            box-sizing: border-box;
         }
         .vintage-ticker-item {
             transition: opacity 0.5s ease-in-out;
@@ -7176,35 +7177,52 @@
                 // 1. Manşet Haberleri
                 if (d.headlines && d.headlines.length > 0) {
                     d.headlines.forEach(hl => {
-                        items.push(`<b>📰 Manşet:</b> "${escapeHTML(hl.title)}" - ${escapeHTML(hl.desc)}`);
+                        let imgHtml = '';
+                        if (hl.image) {
+                            imgHtml = `<div class="vintage-photo-frame" style="width: 100%; max-height: 120px; overflow: hidden; border: 4px solid #fff; box-shadow: 1px 2px 5px rgba(0,0,0,0.3); background: #fdfdfd; display: flex; align-items: center; justify-content: center; transform: rotate(-1deg); margin-bottom: 8px;"><img src="${escapeHTML(hl.image)}" style="width: 100%; height: 110px; object-fit: cover; filter: sepia(0.3) contrast(1.1);" /></div>`;
+                        }
+                        items.push(`${imgHtml}<div style="text-align: center;"><b>📰 Manşet:</b> "${escapeHTML(hl.title)}"<br/><span style="font-size:11px; opacity:0.95; display:inline-block; margin-top:4px;">${escapeHTML(hl.desc)}</span></div>`);
                     });
                 }
 
                 // 2. Müzik Hitleri
                 if (d.top_hits && d.top_hits.length > 0) {
                     d.top_hits.forEach(h => {
-                        items.push(`<b>🎵 Günün Hiti:</b> ${escapeHTML(h.artist)} - "${escapeHTML(h.song)}" (20 yıl önce bugün zirvedeydi)`);
+                        let imgHtml = '';
+                        const musicImg = h.image || (h.youtubeId ? `https://img.youtube.com/vi/${h.youtubeId}/mqdefault.jpg` : '');
+                        if (musicImg) {
+                            imgHtml = `<div class="vintage-photo-frame" style="width: 100%; max-height: 120px; overflow: hidden; border: 4px solid #fff; box-shadow: 1px 2px 5px rgba(0,0,0,0.3); background: #fdfdfd; display: flex; align-items: center; justify-content: center; transform: rotate(1deg); margin-bottom: 8px;"><img src="${escapeHTML(musicImg)}" style="width: 100%; height: 110px; object-fit: cover; filter: sepia(0.2) contrast(1.1);" /></div>`;
+                        }
+                        items.push(`${imgHtml}<div style="text-align: center;"><b>🎵 Günün Hiti:</b> ${escapeHTML(h.artist)} - "${escapeHTML(h.song)}"<br/><span style="font-size:11px; opacity:0.95; display:inline-block; margin-top:4px;">20 yıl önce bugün listelerin zirvesindeydi!</span></div>`);
                     });
                 }
 
                 // 3. TV Rehberi
                 if (d.tv_guide && d.tv_guide.length > 0) {
                     d.tv_guide.forEach(t => {
-                        items.push(`<b>📺 Ekranlarda:</b> ${escapeHTML(t.channel)}'da "${escapeHTML(t.title)}" yayındaydı. <span style="font-size:10px;opacity:0.85;">(${escapeHTML(t.desc)})</span>`);
+                        let imgHtml = '';
+                        if (t.image) {
+                            imgHtml = `<div class="vintage-photo-frame" style="width: 100%; max-height: 120px; overflow: hidden; border: 4px solid #fff; box-shadow: 1px 2px 5px rgba(0,0,0,0.3); background: #fdfdfd; display: flex; align-items: center; justify-content: center; transform: rotate(-1.5deg); margin-bottom: 8px;"><img src="${escapeHTML(t.image)}" style="width: 100%; height: 110px; object-fit: cover; filter: sepia(0.3) contrast(1.1) brightness(0.95);" /></div>`;
+                        }
+                        items.push(`${imgHtml}<div style="text-align: center;"><b>📺 Ekranlarda:</b> ${escapeHTML(t.channel)}'da "${escapeHTML(t.title)}"<br/><span style="font-size:11px; opacity:0.95; display:inline-block; margin-top:4px;">${escapeHTML(t.desc)}</span></div>`);
                     });
                 }
 
                 // 4. Spor Haberleri
                 if (d.sports && d.sports.length > 0) {
                     d.sports.forEach(sp => {
-                        items.push(`<b>⚽ Spor:</b> "${escapeHTML(sp.title)}" - ${escapeHTML(sp.desc)}`);
+                        let imgHtml = '';
+                        if (sp.image) {
+                            imgHtml = `<div class="vintage-photo-frame" style="width: 100%; max-height: 120px; overflow: hidden; border: 4px solid #fff; box-shadow: 1px 2px 5px rgba(0,0,0,0.3); background: #fdfdfd; display: flex; align-items: center; justify-content: center; transform: rotate(1deg); margin-bottom: 8px;"><img src="${escapeHTML(sp.image)}" style="width: 100%; height: 110px; object-fit: cover; filter: sepia(0.2) contrast(1.15);" /></div>`;
+                        }
+                        items.push(`${imgHtml}<div style="text-align: center;"><b>⚽ Spor:</b> "${escapeHTML(sp.title)}"<br/><span style="font-size:11px; opacity:0.95; display:inline-block; margin-top:4px;">${escapeHTML(sp.desc)}</span></div>`);
                     });
                 }
 
                 // 5. Hava Durumu
                 if (d.weather && d.weather.length > 0) {
-                    const wList = d.weather.map(w => `${escapeHTML(w.city)} ${escapeHTML(w.temp)} (${escapeHTML(w.condition)})`).join(', ');
-                    items.push(`<b>🌦️ Hava Durumu (20 Yıl Önce):</b> ${wList}`);
+                    const wList = d.weather.map(w => `<div style="padding: 3px 0; border-bottom: 1px dashed rgba(139, 105, 20, 0.15); display: flex; justify-content: space-between; gap: 8px;"><span>🌤️ <b>${escapeHTML(w.city)}</b></span> <span>${escapeHTML(w.temp)} (${escapeHTML(w.condition)})</span></div>`).join('');
+                    items.push(`<div style="text-align: left; width: 100%; font-size: 11px;"><b>🌦️ Hava Durumu (20 Yıl Önce):</b><div style="margin-top: 6px; display:flex; flex-direction:column; gap:2px;">${wList}</div></div>`);
                 }
 
             } catch (e) {

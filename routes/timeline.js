@@ -834,33 +834,63 @@ function cleanWikiQuery(title) {
 async function resolveHistoryImage(data) {
     if (!data) return data;
     
-    // 1. Manşet Haber Görseli
-    if (!data.image) {
-        try {
-            const firstHeadline = data.headlines && data.headlines[0] ? data.headlines[0].title : '';
-            if (firstHeadline) {
-                const cleanQuery = cleanWikiQuery(firstHeadline);
-                const imageUrl = await searchImageWikipedia(cleanQuery);
-                data.image = imageUrl || '';
+    // 1. Manşet Haber Görselleri
+    if (data.headlines && Array.isArray(data.headlines)) {
+        for (const hl of data.headlines) {
+            if (!hl.image) {
+                try {
+                    const cleanQuery = cleanWikiQuery(hl.title);
+                    hl.image = await searchImageWikipedia(cleanQuery) || '';
+                } catch (e) {
+                    hl.image = '';
+                }
             }
-        } catch (imgErr) {
-            console.warn('[TIMELINE-HISTORY20] Failed to resolve newspaper image:', imgErr.message);
+        }
+        if (!data.image && data.headlines[0] && data.headlines[0].image) {
+            data.image = data.headlines[0].image;
         }
     }
 
-    // 2. Spor Görseli
-    if (!data.sports_image) {
-        try {
-            const firstSport = data.sports && data.sports[0] ? data.sports[0].title : '';
-            if (firstSport) {
-                const cleanQuery = cleanWikiQuery(firstSport);
-                const imageUrl = await searchImageWikipedia(cleanQuery);
-                data.sports_image = imageUrl || '';
+    // 2. Spor Görselleri
+    if (data.sports && Array.isArray(data.sports)) {
+        for (const sp of data.sports) {
+            if (!sp.image) {
+                try {
+                    const cleanQuery = cleanWikiQuery(sp.title);
+                    sp.image = await searchImageWikipedia(cleanQuery) || '';
+                } catch (e) {
+                    sp.image = '';
+                }
             }
-        } catch (imgErr) {
-            console.warn('[TIMELINE-HISTORY20] Failed to resolve sports image:', imgErr.message);
+        }
+        if (!data.sports_image && data.sports[0] && data.sports[0].image) {
+            data.sports_image = data.sports[0].image;
         }
     }
+
+    // 3. TV Rehberi Görselleri
+    if (data.tv_guide && Array.isArray(data.tv_guide)) {
+        for (const tv of data.tv_guide) {
+            if (!tv.image) {
+                try {
+                    const cleanQuery = cleanWikiQuery(tv.title);
+                    tv.image = await searchImageWikipedia(cleanQuery) || '';
+                } catch (e) {
+                    tv.image = '';
+                }
+            }
+        }
+    }
+
+    // 4. Müzik Hitleri Görselleri
+    if (data.top_hits && Array.isArray(data.top_hits)) {
+        for (const hit of data.top_hits) {
+            if (!hit.image && hit.youtubeId) {
+                hit.image = `https://img.youtube.com/vi/${hit.youtubeId}/mqdefault.jpg`;
+            }
+        }
+    }
+
     return data;
 }
 
@@ -893,25 +923,35 @@ router.get('/timeline/today-20-years-ago', async (req, res) => {
         const cached = await db.loadTimelineHistory20(dateKey);
         if (cached && cached.data) {
             let updated = false;
-            if (!cached.data.image) {
-                await resolveHistoryImage(cached.data);
-                if (cached.data.image) updated = true;
-            }
-            if (!cached.data.sports_image) {
-                try {
-                    const firstSport = cached.data.sports && cached.data.sports[0] ? cached.data.sports[0].title : '';
-                    if (firstSport) {
-                        const cleanQuery = cleanWikiQuery(firstSport);
-                        const imageUrl = await searchImageWikipedia(cleanQuery);
-                        if (imageUrl) {
-                            cached.data.sports_image = imageUrl;
-                            updated = true;
-                        }
-                    }
-                } catch (imgErr) {
-                    console.warn('[TIMELINE-HISTORY20] Cache sports image repair failed:', imgErr.message);
+            
+            // Alt öğelerde resim eksiği var mı kontrol et
+            let needsResolution = false;
+            if (cached.data.headlines && Array.isArray(cached.data.headlines)) {
+                for (const hl of cached.data.headlines) {
+                    if (!hl.image) { needsResolution = true; break; }
                 }
             }
+            if (cached.data.sports && Array.isArray(cached.data.sports)) {
+                for (const sp of cached.data.sports) {
+                    if (!sp.image) { needsResolution = true; break; }
+                }
+            }
+            if (cached.data.tv_guide && Array.isArray(cached.data.tv_guide)) {
+                for (const tv of cached.data.tv_guide) {
+                    if (!tv.image) { needsResolution = true; break; }
+                }
+            }
+            if (cached.data.top_hits && Array.isArray(cached.data.top_hits)) {
+                for (const hit of cached.data.top_hits) {
+                    if (!hit.image && hit.youtubeId) { needsResolution = true; break; }
+                }
+            }
+
+            if (needsResolution || !cached.data.image || !cached.data.sports_image) {
+                await resolveHistoryImage(cached.data);
+                updated = true;
+            }
+
             if (updated) {
                 await db.saveTimelineHistory20(dateKey, cached.data);
             }
