@@ -1957,6 +1957,22 @@
             }
         }
 
+        .profile-mini-msg-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 6px;
+            border-bottom: 1px dotted #E5DFCB;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .profile-mini-msg-item:hover {
+            background: #FFF2C2 !important;
+        }
+        .profile-mini-msg-item.unread {
+            background: #FFF9E6;
+        }
+
         /* ===== Lobby inline auth (profil panelinde) — daha ferah ===== */
         /* Parent .user-actions display:flex row olduğu için tek child .lobby-auth
            tam genişliği almak zorunda; width:100% + flex:1 ile içerik ortalanır. */
@@ -5294,6 +5310,25 @@
                         <!-- JS yönetiyor -->
                     </div>
                     
+                    <!-- Giriş sonrası hızlı menü ve gelen kutusu (boyu sabit tutmak için) -->
+                    <div id="profile-extra-menu" style="display:none; flex-direction:column; gap:8px; margin-top:12px; padding-top:10px; border-top:1px dashed #DCD8C9;">
+                        <div class="sidebar-section-title" style="font-size:11px; font-weight:bold; color:#7B6A58; text-transform:uppercase; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
+                            <span>⚡ Hızlı Erişim</span>
+                        </div>
+                        <div style="display:flex; gap:4px; width:100%;">
+                            <button class="user-btn" style="display:flex; align-items:center; justify-content:center; gap:4px; font-size:10px; padding:6px; font-weight:bold;" onclick="openRoomCreateModal()">🏠 Yeni Oda Aç</button>
+                            <button class="user-btn" style="display:flex; align-items:center; justify-content:center; gap:4px; font-size:10px; padding:6px; font-weight:bold;" onclick="openDM()">💬 Mesajlar</button>
+                        </div>
+                        
+                        <div class="sidebar-section-title" style="font-size:11px; font-weight:bold; color:#7B6A58; text-transform:uppercase; margin-top:6px; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
+                            <span>📬 Son Mesajlar</span>
+                            <span class="mti-badge" id="profile-msg-unread-badge" style="background:#C0392B; color:#fff; font-size:9px; font-weight:bold; padding:1px 5px; border-radius:10px; display:none;">0</span>
+                        </div>
+                        <div id="profile-mini-inbox" style="background:#FFFDF6; border:1px inset #D0C9B0; border-radius:3px; padding:4px; min-height:100px; max-height:140px; overflow-y:auto; font-size:11px;">
+                            <div style="color:#999; text-align:center; padding:20px 0; font-style:italic;">Yükleniyor...</div>
+                        </div>
+                    </div>
+                    
                     <div class="profile-stats" style="margin-top: 12px; padding-top: 8px; border-top: 1px dashed #DCD8C9; font-size: 11px; display: flex; flex-direction: column; gap: 4px;">
                         <div style="display:flex; justify-content:space-between; align-items: center;">
                             <span style="display:flex; align-items:center; gap:4px;">
@@ -6144,6 +6179,8 @@
                         localStorage.removeItem('retrosesler_nick');
                         localStorage.removeItem('retrosesler_role');
                         localStorage.removeItem('retrosesler_avatar');
+                        const extraMenu = document.getElementById('profile-extra-menu');
+                        if (extraMenu) extraMenu.style.display = 'none';
                         renderLobbyAuth();
                         return;
                     }
@@ -6205,6 +6242,8 @@
                         let actionsHtml = '';
                         if (isGuest) {
                             actionsHtml = `<button class="user-btn" onclick="logoutToRegister()" style="background:linear-gradient(180deg,#4A90D9,#2E6BBF);color:#fff;border-color:#1E5AA8">✨ Tam Üye Ol</button>`;
+                            const extraMenu = document.getElementById('profile-extra-menu');
+                            if (extraMenu) extraMenu.style.display = 'none';
                         } else {
                             actionsHtml = `<button class="user-btn" onclick="window.location.href='/u/${encodeURIComponent(data.nick)}'">👤 Profilim</button>`;
                             actionsHtml += `<button class="user-btn" onclick="openProfileEditor()">✏️ Düzenle</button>`;
@@ -6212,6 +6251,8 @@
                             if (data.role === 'admin' || data.role === 'mod') {
                                 actionsHtml += '<button class="user-btn" onclick="window.location.href=\'/yonetim-r3tro\'" style="background:linear-gradient(180deg,#C0392B,#922B21);color:#fff;border-color:#E74C3C">🛡️ Yönetim</button>';
                             }
+                            const extraMenu = document.getElementById('profile-extra-menu');
+                            if (extraMenu) extraMenu.style.display = 'flex';
                         }
                         document.getElementById('profile-actions').innerHTML = actionsHtml;
 
@@ -6285,6 +6326,8 @@
             document.getElementById('profile-badge').innerHTML = '';
             document.getElementById('profile-bio').textContent = '';
             document.getElementById('profile-status').innerHTML = '● Misafir';
+            const extraMenu = document.getElementById('profile-extra-menu');
+            if (extraMenu) extraMenu.style.display = 'none';
             renderLobbyAuth();
         }
 
@@ -6335,6 +6378,8 @@
         function renderLobbyAuth() {
             const c = document.getElementById('profile-actions');
             if (!c) return;
+            const extraMenu = document.getElementById('profile-extra-menu');
+            if (extraMenu) extraMenu.style.display = 'none';
             c.style.display = 'block';
             c.style.marginTop = '0';
             // URL'de ?register=1 varsa kayıt sekmesi açık başlasın
@@ -8152,6 +8197,38 @@
             if (mtBadge) {
                 if (data.totalUnread > 0) { mtBadge.textContent = data.totalUnread > 99 ? '99+' : data.totalUnread; mtBadge.style.display = ''; }
                 else { mtBadge.style.display = 'none'; }
+            }
+            // Profil paneli içindeki unread badge'ini de güncelle
+            const pBadge = document.getElementById('profile-msg-unread-badge');
+            if (pBadge) {
+                if (data.totalUnread > 0) {
+                    pBadge.textContent = data.totalUnread;
+                    pBadge.style.display = 'inline-block';
+                } else {
+                    pBadge.style.display = 'none';
+                }
+            }
+            // Profil paneli içindeki mini-inbox'ı güncelle
+            const pMiniInbox = document.getElementById('profile-mini-inbox');
+            if (pMiniInbox) {
+                if (!data.threads || data.threads.length === 0) {
+                    pMiniInbox.innerHTML = '<div style="color:#888; text-align:center; padding:30px 0; font-style:italic;">Henüz mesaj yok.</div>';
+                } else {
+                    pMiniInbox.innerHTML = data.threads.slice(0, 5).map(t => {
+                        const lastBody = (t.lastMsg.body || '').slice(0, 24);
+                        const me = _myNick();
+                        const prefix = t.lastMsg.from.toLowerCase() === me.toLowerCase() ? 'Sen: ' : '';
+                        const unreadMarker = t.unread ? `<span style="background:#C0392B; color:#fff; font-size:9px; padding:0 4px; border-radius:10px; font-weight:bold; margin-left:auto;">yeni</span>` : '';
+                        return `<div class="profile-mini-msg-item ${t.unread ? 'unread' : ''}" onclick="openDM('${escapeHTML(t.peer)}')" style="display:flex; align-items:center; gap:6px; padding:4px 6px; border-bottom:1px dotted #E5DFCB; cursor:pointer; transition:background 0.2s;">
+                            <span style="font-size:12px;">💬</span>
+                            <div style="display:flex; flex-direction:column; overflow:hidden; flex:1;">
+                                <span style="font-weight:bold; color:#1E4070; font-size:10px; line-height:1.2;">${escapeHTML(t.peer)}</span>
+                                <span style="color:#666; font-size:9.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px; line-height:1.2;">${escapeHTML(prefix + lastBody)}</span>
+                            </div>
+                            ${unreadMarker}
+                        </div>`;
+                    }).join('');
+                }
             }
             if (!widget) return;
             if (!data.threads || data.threads.length === 0) {
