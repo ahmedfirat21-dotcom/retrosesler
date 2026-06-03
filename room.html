@@ -2163,6 +2163,46 @@
             flex-shrink: 0;
         }
 
+        /* Chat Tab Button Styling */
+        .chat-tab-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-bottom: none;
+            border-radius: 3px 3px 0 0;
+            color: #fff;
+            font-family: Tahoma, Geneva, sans-serif;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 2px 8px;
+            margin: 0;
+            cursor: pointer;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-sizing: border-box;
+            height: 20px;
+            line-height: 1;
+            vertical-align: middle;
+            transition: background 0.1s;
+        }
+
+        .chat-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .chat-tab-btn.active {
+            background: #fff;
+            border: 1px solid #fff;
+            color: #1E5AA8;
+            text-shadow: none;
+        }
+
+        #chat-room-title {
+            margin-left: 12px;
+            opacity: 0.95;
+        }
+
         .chat-titlebar-btns {
             display: flex;
             gap: 3px;
