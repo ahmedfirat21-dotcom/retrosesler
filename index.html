@@ -9977,6 +9977,17 @@
             const sports = data.data.sports || [];
             const topHits = data.data.top_hits || [];
             
+            const mainImageHtml = data.data.image ? `
+                <div style="margin: 10px 0 15px 0; text-align: center;">
+                    <div style="display: inline-block; background: #fff; padding: 6px; border: 1px solid #c8c3b5; box-shadow: 0 4px 8px rgba(0,0,0,0.12); max-width: 100%; border-radius: 2px;">
+                        <img src="${escapeHTML(data.data.image)}" style="max-width: 100%; max-height: 180px; filter: sepia(0.2) contrast(1.05); display: block; margin: 0 auto; object-fit: contain; border: 1px solid #ddd;" alt="Manşet Görseli">
+                        <div style="font-family:'Times New Roman',Georgia,serif; font-size:9.5px; color:#555; margin-top:5px; font-style:italic; line-height:1.2; max-width:240px; margin-left:auto; margin-right:auto; text-align:center;">
+                            O dönemin gazete arşivlerinden tarihi bir kare.
+                        </div>
+                    </div>
+                </div>
+            ` : '';
+            
             const weatherHtml = weather.map(w => `
                 <div style="padding:6px; border-bottom:1px dotted #ccc; font-size:11px; display:flex; justify-content:space-between; align-items:center;">
                     <span><b>${escapeHTML(w.city)}:</b> ${escapeHTML(w.condition)}</span>
@@ -10043,6 +10054,7 @@
                     <div class="newspaper-col" style="flex:1.5; min-width:240px; border-left:1px dashed #c8c3b5; border-right:1px dashed #c8c3b5; padding:0 14px;">
                         <h4 class="newspaper-col-title" style="margin-top:0; color:#b91c1c;">🔥 GÜNÜN MANŞET HABERLERİ</h4>
                         <div class="newspaper-col-body">
+                            ${mainImageHtml}
                             ${headlinesHtml}
                         </div>
                     </div>

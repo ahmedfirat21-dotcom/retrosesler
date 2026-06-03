@@ -818,6 +818,24 @@ const TURKISH_MONTHS = [
     'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
 ];
 
+// Gazete görselini Wikipedia'dan manşet başlığına göre çözen yardımcı fonksiyon
+async function resolveHistoryImage(data) {
+    if (data && !data.image) {
+        try {
+            const firstHeadline = data.headlines && data.headlines[0] ? data.headlines[0].title : '';
+            if (firstHeadline) {
+                // Emojileri temizle
+                const cleanQuery = firstHeadline.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g, "").trim();
+                const imageUrl = await searchImageWikipedia(cleanQuery);
+                data.image = imageUrl || '';
+            }
+        } catch (imgErr) {
+            console.warn('[TIMELINE-HISTORY20] Failed to resolve newspaper image:', imgErr.message);
+        }
+    }
+    return data;
+}
+
 // GET /api/timeline/today-20-years-ago — 20 yıl önce veya belirli bir tarihteki gazete verisini getirir
 router.get('/timeline/today-20-years-ago', async (req, res) => {
     try {
@@ -846,6 +864,13 @@ router.get('/timeline/today-20-years-ago', async (req, res) => {
         // 1. Önbelleği kontrol et
         const cached = await db.loadTimelineHistory20(dateKey);
         if (cached && cached.data) {
+            // Önbellekte görsel yoksa hemen çözüp veritabanını güncelleyelim
+            if (!cached.data.image) {
+                await resolveHistoryImage(cached.data);
+                if (cached.data.image) {
+                    await db.saveTimelineHistory20(dateKey, cached.data);
+                }
+            }
             return res.json({ success: true, dateKey, readableDate, data: cached.data });
         }
 
@@ -859,6 +884,7 @@ router.get('/timeline/today-20-years-ago', async (req, res) => {
         if (!hasTimelineAi) {
             console.warn(`[TIMELINE] AI servisi yapılandırılmamış, 20 yıl öncesi için yedek veri kullanılıyor.`);
             const fallback = getFallbackHistory20(targetYear, readableDate);
+            await resolveHistoryImage(fallback);
             return res.json({ success: true, dateKey, readableDate, data: fallback });
         }
 
@@ -911,11 +937,13 @@ Lütfen yanıtı mutlaka ve sadece aşağıdaki JSON formatında dön, başka hi
                 }));
             }
 
+            await resolveHistoryImage(data);
             await db.saveTimelineHistory20(dateKey, data);
             res.json({ success: true, dateKey, readableDate, data });
         } catch (aiErr) {
             console.error('[TIMELINE-HISTORY20] AI generation failed, using fallback:', aiErr.message);
             const fallback = getFallbackHistory20(targetYear, readableDate);
+            await resolveHistoryImage(fallback);
             res.json({ success: true, dateKey, readableDate, data: fallback });
         }
     } catch (err) {
