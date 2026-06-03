@@ -5324,9 +5324,15 @@
                             <button class="user-btn" style="display:flex; align-items:center; justify-content:center; gap:4px; font-size:10px; padding:6px; font-weight:bold;" onclick="openDM()">💬 Mesajlar</button>
                         </div>
                         
-                        <div class="sidebar-section-title" style="font-size:11px; font-weight:bold; color:#7B6A58; text-transform:uppercase; margin-top:6px; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
-                            <span>📬 Son Mesajlar</span>
-                            <span class="mti-badge" id="profile-msg-unread-badge" style="background:#C0392B; color:#fff; font-size:9px; font-weight:bold; padding:1px 5px; border-radius:10px; display:none;">0</span>
+                        <div class="sidebar-section-title" style="font-size:11px; font-weight:bold; color:#7B6A58; text-transform:uppercase; margin-top:6px; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #DCD8C9; padding-bottom:3px;">
+                            <div style="display:flex; gap:10px;">
+                                <span id="profile-tab-msg-title" style="cursor:pointer; color:#1E4070; font-weight:bold; border-bottom:2px solid #1E4070; padding-bottom:1px;" onclick="switchProfileMiniTab('msg')">💬 Mesajlar</span>
+                                <span id="profile-tab-notif-title" style="cursor:pointer; color:#8B7D6B;" onclick="switchProfileMiniTab('notif')">🔔 Bildirimler</span>
+                            </div>
+                            <div style="display:flex; gap:4px;">
+                                <span class="mti-badge" id="profile-msg-unread-badge" style="background:#C0392B; color:#fff; font-size:9px; font-weight:bold; padding:1px 5px; border-radius:10px; display:none;">0</span>
+                                <span class="mti-badge" id="profile-notif-unread-badge" style="background:#E67E22; color:#fff; font-size:9px; font-weight:bold; padding:1px 5px; border-radius:10px; display:none;">0</span>
+                            </div>
                         </div>
                         <div id="profile-mini-inbox" style="background:#FFFDF6; border:1px inset #D0C9B0; border-radius:3px; padding:4px; min-height:100px; max-height:140px; overflow-y:auto; font-size:11px;">
                             <div style="color:#999; text-align:center; padding:20px 0; font-style:italic;">Yükleniyor...</div>
@@ -5953,6 +5959,7 @@
                     <div class="dm-left-tabs">
                         <button type="button" class="dm-left-tab active" data-tab="chats" onclick="switchDmTab('chats')">Sohbetler</button>
                         <button type="button" class="dm-left-tab" data-tab="friends" onclick="switchDmTab('friends')">Arkadaşlar (<span id="dm-online-friends-count">0</span>)</button>
+                        <button type="button" class="dm-left-tab" data-tab="notif" onclick="switchDmTab('notif')">Bildirimler (<span id="dm-notif-unread-count">0</span>)</button>
                     </div>
                     <div class="dm-search-bar">
                         <input type="text" id="dm-search-input" placeholder="Nick ile ara veya başlat..." oninput="handleDmSearchInput()" onkeydown="if(event.key === 'Enter') startNewChatFromSearch()">
@@ -7394,29 +7401,162 @@
         let _notifTimer = null;
         async function notifTok() { return localStorage.getItem('retrosesler_token'); }
 
+        let _activeProfileMiniTab = 'msg';
+        let _profileNotifCache = [];
+
         async function refreshNotifCount() {
             const tok = await notifTok();
             const role = localStorage.getItem('retrosesler_role');
-            const wrap = document.getElementById('topbar-notif-wrap');
-            if (!wrap) return;
             if (!tok || role === 'guest') {
-                wrap.style.display = 'none';
                 return;
             }
-            wrap.style.display = '';
             try {
                 const res = await fetch('/api/notifications?count=1', { headers: { 'Authorization': 'Bearer ' + tok } });
                 const data = await res.json();
-                const badge = document.getElementById('topbar-notif-badge');
-                if (!badge) return;
-                if (data.unreadCount > 0) {
-                    badge.textContent = data.unreadCount > 99 ? '99+' : data.unreadCount;
-                    badge.style.display = '';
-                } else {
-                    badge.style.display = 'none';
+                
+                // Update profile panel notification badge
+                const pBadge = document.getElementById('profile-notif-unread-badge');
+                if (pBadge) {
+                    if (data.unreadCount > 0) {
+                        pBadge.textContent = data.unreadCount;
+                        pBadge.style.display = 'inline-block';
+                    } else {
+                        pBadge.style.display = 'none';
+                    }
                 }
+                
+                // Update DM tab notification badge
+                const dmBadge = document.getElementById('dm-notif-unread-count');
+                if (dmBadge) {
+                    dmBadge.innerText = data.unreadCount || 0;
+                }
+
+                // Refresh notifications data cache (silent poll)
+                await refreshNotifsMini(true);
             } catch {}
         }
+
+        async function refreshNotifsMini(onlyCache = false) {
+            const tok = await notifTok();
+            if (!tok) return;
+            try {
+                const res = await fetch('/api/notifications', {
+                    headers: { 'Authorization': 'Bearer ' + tok }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    _profileNotifCache = data.notifications || [];
+                    
+                    // Update badges
+                    const pBadge = document.getElementById('profile-notif-unread-badge');
+                    if (pBadge) {
+                        if (data.unreadCount > 0) {
+                            pBadge.textContent = data.unreadCount;
+                            pBadge.style.display = 'inline-block';
+                        } else {
+                            pBadge.style.display = 'none';
+                        }
+                    }
+
+                    const dmBadge = document.getElementById('dm-notif-unread-count');
+                    if (dmBadge) {
+                        dmBadge.innerText = data.unreadCount || 0;
+                    }
+
+                    if (!onlyCache && _activeProfileMiniTab === 'notif') {
+                        renderMiniNotifs();
+                    }
+
+                    if (!onlyCache && document.getElementById('dm-overlay').classList.contains('open') && _dmCurrentTab === 'notif') {
+                        renderDmNotifications(_profileNotifCache);
+                    }
+                }
+            } catch (err) {
+                console.error('[Mini Notifs] Hata:', err);
+            }
+        }
+        window.refreshNotifsMini = refreshNotifsMini;
+
+        function renderMiniNotifs() {
+            const pMiniInbox = document.getElementById('profile-mini-inbox');
+            if (!pMiniInbox) return;
+            const notifs = _profileNotifCache || [];
+            if (notifs.length === 0) {
+                pMiniInbox.innerHTML = '<div style="color:#888; text-align:center; padding:30px 0; font-style:italic;">Bildiriminiz yok.</div>';
+                return;
+            }
+            pMiniInbox.innerHTML = notifs.slice(0, 5).map(n => {
+                const icon = NOTIF_ICONS[n.type] || 'ℹ️';
+                const unreadMarker = !n.read ? `<span style="background:#E67E22; color:#fff; font-size:9px; padding:0 4px; border-radius:10px; font-weight:bold; margin-left:auto;">yeni</span>` : '';
+                return `<div class="profile-mini-msg-item ${n.read ? '' : 'unread'}" onclick="handleMiniNotifClick('${escapeHTML(n.id)}', '${escapeHTML(n.link || '')}')" style="display:flex; align-items:center; gap:6px; padding:4px 6px; border-bottom:1px dotted #E5DFCB; cursor:pointer; transition:background 0.2s;">
+                    <span style="font-size:12px;">${icon}</span>
+                    <div style="display:flex; flex-direction:column; overflow:hidden; flex:1;">
+                        <span style="font-weight:bold; color:#1E4070; font-size:10px; line-height:1.2;">${escapeHTML(n.title)}</span>
+                        ${n.body ? `<span style="color:#666; font-size:9px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px; line-height:1.2;">${escapeHTML(n.body)}</span>` : ''}
+                    </div>
+                    ${unreadMarker}
+                </div>`;
+            }).join('');
+        }
+        window.renderMiniNotifs = renderMiniNotifs;
+
+        async function handleMiniNotifClick(id, link) {
+            await markNotifRead(id);
+            await refreshNotifsMini();
+            if (link) {
+                if (link.includes('friends') || link.includes('dm')) {
+                    openFriends();
+                } else {
+                    window.location.href = link;
+                }
+            }
+        }
+        window.handleMiniNotifClick = handleMiniNotifClick;
+
+        function switchProfileMiniTab(tab) {
+            _activeProfileMiniTab = tab;
+            const msgTitle = document.getElementById('profile-tab-msg-title');
+            const notifTitle = document.getElementById('profile-tab-notif-title');
+            if (msgTitle && notifTitle) {
+                if (tab === 'msg') {
+                    msgTitle.style.color = '#1E4070';
+                    msgTitle.style.fontWeight = 'bold';
+                    msgTitle.style.borderBottom = '2px solid #1E4070';
+                    msgTitle.style.paddingBottom = '1px';
+                    
+                    notifTitle.style.color = '#8B7D6B';
+                    notifTitle.style.fontWeight = 'normal';
+                    notifTitle.style.borderBottom = 'none';
+                    notifTitle.style.paddingBottom = '0';
+                } else {
+                    notifTitle.style.color = '#1E4070';
+                    notifTitle.style.fontWeight = 'bold';
+                    notifTitle.style.borderBottom = '2px solid #1E4070';
+                    notifTitle.style.paddingBottom = '1px';
+                    
+                    msgTitle.style.color = '#8B7D6B';
+                    msgTitle.style.fontWeight = 'normal';
+                    msgTitle.style.borderBottom = 'none';
+                    msgTitle.style.paddingBottom = '0';
+                }
+            }
+            
+            const pMiniInbox = document.getElementById('profile-mini-inbox');
+            if (pMiniInbox) {
+                if (tab === 'msg') {
+                    if (window._lastInboxData) {
+                        renderInboxWidget(window._lastInboxData);
+                    } else {
+                        pMiniInbox.innerHTML = '<div style="color:#888; text-align:center; padding:30px 0; font-style:italic;">Yükleniyor...</div>';
+                        fetchInbox();
+                    }
+                } else {
+                    pMiniInbox.innerHTML = '<div style="color:#888; text-align:center; padding:30px 0; font-style:italic;">Yükleniyor...</div>';
+                    refreshNotifsMini();
+                }
+            }
+        }
+        window.switchProfileMiniTab = switchProfileMiniTab;
 
         async function openNotifDropdown() {
             const dd = document.getElementById('topbar-notif-dropdown');
@@ -7490,6 +7630,11 @@
         window.markAllNotifRead = markAllNotifRead;
 
         function setupNotifBell() {
+            // İlk yükleme + 30sn poll (bell olmasa bile arka planda badge'leri beslemek için)
+            refreshNotifCount();
+            if (_notifTimer) clearInterval(_notifTimer);
+            _notifTimer = setInterval(refreshNotifCount, 30_000);
+
             const btn = document.getElementById('topbar-notif-btn');
             const dd = document.getElementById('topbar-notif-dropdown');
             if (!btn || !dd) return;
@@ -7507,10 +7652,6 @@
                     dd.classList.remove('open');
                 }
             });
-            // İlk yükleme + 30sn poll
-            refreshNotifCount();
-            if (_notifTimer) clearInterval(_notifTimer);
-            _notifTimer = setInterval(refreshNotifCount, 30_000);
         }
         setupNotifBell();
 
@@ -8190,6 +8331,7 @@
         }
 
         function renderInboxWidget(data) {
+            window._lastInboxData = data;
             const widget = document.getElementById('msg-widget');
             const badge = document.getElementById('msg-unread-badge');
             if (badge) {
@@ -8214,7 +8356,7 @@
             }
             // Profil paneli içindeki mini-inbox'ı güncelle
             const pMiniInbox = document.getElementById('profile-mini-inbox');
-            if (pMiniInbox) {
+            if (pMiniInbox && _activeProfileMiniTab === 'msg') {
                 if (!data.threads || data.threads.length === 0) {
                     pMiniInbox.innerHTML = '<div style="color:#888; text-align:center; padding:30px 0; font-style:italic;">Henüz mesaj yok.</div>';
                 } else {
@@ -8274,12 +8416,16 @@
             renderDmLeftContainer();
             if (tab === 'friends') {
                 fetchDmFriends();
+            } else if (tab === 'notif') {
+                fetchDmNotifications();
             }
         }
 
         function renderDmLeftContainer() {
             if (_dmCurrentTab === 'friends') {
                 renderDmFriends(_dmFriendsList);
+            } else if (_dmCurrentTab === 'notif') {
+                renderDmNotifications(_dmNotificationsList || []);
             } else {
                 renderDmLeft(_dmInboxCache || []);
             }
@@ -8355,6 +8501,77 @@
             loadDmThread(nick);
             switchDmTab('chats');
         }
+
+        let _dmNotificationsList = [];
+        async function fetchDmNotifications() {
+            const tok = _authToken();
+            if (!tok) return;
+            try {
+                const res = await fetch('/api/notifications', {
+                    headers: { 'Authorization': 'Bearer ' + tok }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    _dmNotificationsList = data.notifications || [];
+                    
+                    const badge = document.getElementById('dm-notif-unread-count');
+                    if (badge) badge.innerText = data.unreadCount || 0;
+
+                    const pBadge = document.getElementById('profile-notif-unread-badge');
+                    if (pBadge) {
+                        if (data.unreadCount > 0) {
+                            pBadge.textContent = data.unreadCount;
+                            pBadge.style.display = 'inline-block';
+                        } else {
+                            pBadge.style.display = 'none';
+                        }
+                    }
+
+                    if (_dmCurrentTab === 'notif') {
+                        renderDmNotifications(_dmNotificationsList);
+                    }
+                }
+            } catch (err) {
+                console.error('[DM Notifs] Hata:', err);
+            }
+        }
+        window.fetchDmNotifications = fetchDmNotifications;
+
+        function renderDmNotifications(notifs) {
+            const c = document.getElementById('dm-left-list');
+            if (!c) return;
+            if (!notifs || notifs.length === 0) {
+                c.innerHTML = '<div class="msg-empty" style="padding:18px 10px">Bildiriminiz yok</div>';
+                return;
+            }
+            c.innerHTML = notifs.map(n => {
+                const icon = NOTIF_ICONS[n.type] || 'ℹ️';
+                const dot = !n.read ? '<span style="background:#E67E22; color:#fff; font-size:9px; padding:1px 4px; border-radius:10px; font-weight:bold; margin-left:auto;">yeni</span>' : '';
+                return `<div class="dm-friend-item ${n.read ? '' : 'unread'}" onclick="handleNotifTabClick('${escapeHTML(n.id)}', '${escapeHTML(n.link || '')}')" style="display:flex; align-items:center; gap:8px; padding:6px 10px; border-bottom:1px solid #ECE9D8; cursor:pointer; min-height: 48px; box-sizing: border-box;">
+                    <div style="font-size:16px; flex-shrink:0;">${icon}</div>
+                    <div style="display:flex; flex-direction:column; flex:1; overflow:hidden;">
+                        <span style="font-weight:bold; font-size:11px; color:#1E4070; line-height:1.2;">${escapeHTML(n.title)}</span>
+                        ${n.body ? `<span style="font-size:10px; color:#666; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2; margin-top:1px;">${escapeHTML(n.body)}</span>` : ''}
+                        <span style="font-size:9px; color:#999; margin-top:2px;">${timeAgo(n.ts)}</span>
+                    </div>
+                    ${dot}
+                </div>`;
+            }).join('');
+        }
+        window.renderDmNotifications = renderDmNotifications;
+
+        async function handleNotifTabClick(id, link) {
+            await markNotifRead(id);
+            fetchDmNotifications();
+            if (link) {
+                if (link.includes('friends') || link.includes('dm')) {
+                    switchDmTab('friends');
+                } else {
+                    window.location.href = link;
+                }
+            }
+        }
+        window.handleNotifTabClick = handleNotifTabClick;
 
         function handleDmSearchInput() {
             const val = (document.getElementById('dm-search-input').value || '').trim().toLowerCase();
