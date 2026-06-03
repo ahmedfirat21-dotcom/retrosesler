@@ -6112,20 +6112,29 @@
                     const res = await fetch('/api/me', {
                         headers: { 'Authorization': 'Bearer ' + token }
                     });
-                    const data = await res.json();
-                    // Tekli oturum — başka cihazdan giriş yapıldıysa çıkış yap
-                    if (data.code === 'session_replaced') {
+                    if (!res.ok && res.status === 401) {
+                        // Token geçersiz — sessizce misafir moduna geç
+                        const errData = await res.json().catch(() => ({}));
+                        if (errData.code === 'session_replaced') {
+                            localStorage.removeItem('retrosesler_token');
+                            localStorage.removeItem('retrosesler_nick');
+                            localStorage.removeItem('retrosesler_role');
+                            localStorage.removeItem('retrosesler_avatar');
+                            if (typeof retroToast === 'function') {
+                                retroToast(errData.error || 'Başka bir cihazdan giriş yapıldı.', 'error', { title: '🔒 Oturum Sonlandırıldı', timeout: 4000 });
+                            }
+                            setTimeout(() => location.reload(), 2500);
+                            return;
+                        }
+                        // Token süresi dolmuş veya geçersiz — temizle, misafir moda geç
                         localStorage.removeItem('retrosesler_token');
                         localStorage.removeItem('retrosesler_nick');
                         localStorage.removeItem('retrosesler_role');
                         localStorage.removeItem('retrosesler_avatar');
-                        // Şık bildirim göster, sonra yenile
-                        if (typeof retroToast === 'function') {
-                            retroToast(data.error || 'Başka bir cihazdan giriş yapıldı.', 'error', { title: '🔒 Oturum Sonlandırıldı', timeout: 4000 });
-                        }
-                        setTimeout(() => location.reload(), 2500);
+                        renderLobbyAuth();
                         return;
                     }
+                    const data = await res.json();
                     if (data.success) {
                         // Avatar emoji haritası
                         const avatarEmojis = {
@@ -8621,10 +8630,12 @@
             }
         }
 
-        // İlk yükleme + 6sn polling
+        // İlk yükleme + 6sn polling (sadece giriş yapmış kullanıcılar için)
         setTimeout(() => {
-            fetchInbox();
-            setInterval(fetchInbox, 6000);
+            if (_authToken()) {
+                fetchInbox();
+                setInterval(() => { if (_authToken()) fetchInbox(); }, 6000);
+            }
             // URL'de ?dm=:nick varsa otomatik aç (profilden gelmek için)
             const urlDm = new URLSearchParams(location.search).get('dm');
             if (urlDm && _authToken()) {
