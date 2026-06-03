@@ -618,7 +618,7 @@ router.get('/timeline/year/:year', async (req, res) => {
     }
 
     try {
-        // 1. Özet (Cache veya AI)
+        // 1. Özet (Cache veya AI veya Seed)
         let cached = await db.loadTimelineSummary(year);
         let summary;
         
@@ -633,31 +633,52 @@ router.get('/timeline/year/:year', async (req, res) => {
         if (cached && cached.summary && !isSparse && req.query.force !== 'true') {
             summary = cached.summary;
         } else {
-            // 1.1) Try loading from static seed file first
-            const fs = require('fs');
-            const path = require('path');
-            const seedPath = path.join(__dirname, '..', 'data', 'timeline_seed.json');
-            let seededData = null;
-            if (fs.existsSync(seedPath)) {
+            // Yapay zeka kullanılabilir mi kontrol et
+            const provider = process.env.TIMELINE_AI_PROVIDER || 'gemini';
+            const apiKey = process.env.TIMELINE_AI_KEY;
+            const hasTimelineAi = apiKey || aiService.hasAiService;
+
+            let aiSuccess = false;
+
+            if (hasTimelineAi && req.query.force_seed !== 'true') {
+                console.log(`[TIMELINE] ${year} yılı verisi eksik veya eski formatta. Yapay zeka ile üretiliyor...`);
                 try {
-                    const rawSeeds = JSON.parse(fs.readFileSync(seedPath, 'utf8'));
-                    if (rawSeeds && rawSeeds[year]) {
-                        seededData = rawSeeds[year];
-                        console.log(`[TIMELINE] ${year} yılı verisi statik seed dosyasından yüklendi.`);
+                    summary = await generateYearSummary(year);
+                    // Yapay zekanın boş/yedek veri döndürmediğini kontrol et
+                    if (summary && Array.isArray(summary.music) && summary.music.length > 0) {
+                        await db.saveTimelineSummary(year, summary);
+                        aiSuccess = true;
+                        console.log(`[TIMELINE] ${year} yılı verisi yapay zeka ile başarıyla üretildi ve SQLite'a kaydedildi.`);
                     }
-                } catch (e) {
-                    console.warn('[TIMELINE] Seed file parse failed:', e.message);
+                } catch (aiErr) {
+                    console.error(`[TIMELINE] Yapay zeka üretimi başarısız (${year}):`, aiErr.message);
                 }
             }
 
-            if (seededData && req.query.force !== 'true') {
-                summary = seededData;
-                cacheSaved = false; // Will trigger async background resolution and save
-            } else {
-                console.log(`[TIMELINE] ${year} yılı verisi eksik veya eski formatta. Yapay zeka ile yeniden zenginleştiriliyor...`);
-                summary = await generateYearSummary(year);
-                if (summary && Array.isArray(summary.music) && summary.music.length > 0) {
-                    await db.saveTimelineSummary(year, summary);
+            // AI başarısız olduysa veya yoksa statik seed dosyasına geri dön
+            if (!aiSuccess) {
+                const fs = require('fs');
+                const path = require('path');
+                const seedPath = path.join(__dirname, '..', 'data', 'timeline_seed.json');
+                let seededData = null;
+                if (fs.existsSync(seedPath)) {
+                    try {
+                        const rawSeeds = JSON.parse(fs.readFileSync(seedPath, 'utf8'));
+                        if (rawSeeds && rawSeeds[year]) {
+                            seededData = rawSeeds[year];
+                            console.log(`[TIMELINE] ${year} yılı verisi statik seed dosyasından yüklendi.`);
+                        }
+                    } catch (e) {
+                        console.warn('[TIMELINE] Seed file parse failed:', e.message);
+                    }
+                }
+
+                if (seededData) {
+                    summary = seededData;
+                    cacheSaved = false; // Background YouTube ID resolution and save will trigger
+                } else {
+                    summary = getFallbackSummary(year);
+                    cacheSaved = false;
                 }
             }
         }
@@ -818,8 +839,9 @@ router.get('/timeline/today-20-years-ago', async (req, res) => {
             targetDate = new Date(Date.UTC(year20, monthNum, turkeyDate.getDate()));
         }
 
+        const targetYear = targetDate.getUTCFullYear();
         const monthNum = targetDate.getUTCMonth();
-        const readableDate = `${targetDate.getUTCDate()} ${TURKISH_MONTHS[monthNum]} ${targetDate.getUTCFullYear()}`;
+        const readableDate = `${targetDate.getUTCDate()} ${TURKISH_MONTHS[monthNum]} ${targetYear}`;
 
         // 1. Önbelleği kontrol et
         const cached = await db.loadTimelineHistory20(dateKey);
@@ -836,8 +858,7 @@ router.get('/timeline/today-20-years-ago', async (req, res) => {
         const hasTimelineAi = apiKey || aiService.hasAiService;
         if (!hasTimelineAi) {
             console.warn(`[TIMELINE] AI servisi yapılandırılmamış, 20 yıl öncesi için yedek veri kullanılıyor.`);
-            const fallback = getFallbackHistory20(readableDate);
-            await db.saveTimelineHistory20(dateKey, fallback);
+            const fallback = getFallbackHistory20(targetYear, readableDate);
             return res.json({ success: true, dateKey, readableDate, data: fallback });
         }
 
@@ -894,8 +915,7 @@ Lütfen yanıtı mutlaka ve sadece aşağıdaki JSON formatında dön, başka hi
             res.json({ success: true, dateKey, readableDate, data });
         } catch (aiErr) {
             console.error('[TIMELINE-HISTORY20] AI generation failed, using fallback:', aiErr.message);
-            const fallback = getFallbackHistory20(readableDate);
-            await db.saveTimelineHistory20(dateKey, fallback);
+            const fallback = getFallbackHistory20(targetYear, readableDate);
             res.json({ success: true, dateKey, readableDate, data: fallback });
         }
     } catch (err) {
@@ -904,33 +924,134 @@ Lütfen yanıtı mutlaka ve sadece aşağıdaki JSON formatında dön, başka hi
     }
 });
 
-function getFallbackHistory20(readableDate) {
-    return {
-        weather: [
-            { city: "İstanbul", temp: "22°C", condition: "Parçalı Bulutlu", desc: "Mevsim normallerinde tatlı bir retro esintisi..." },
-            { city: "Ankara", temp: "19°C", condition: "Açık", desc: "Kuru ve serin Ankara akşamları..." },
-            { city: "İzmir", temp: "26°C", condition: "Güneşli", desc: "Ege havası içimizi ısıtmaya devam ediyor..." }
-        ],
-        headlines: [
-            { title: "Nostalji Rüzgarı Esiyor", desc: "RetroSesler zaman tüneli 20 yıl öncesine kapılarını sonuna kadar açtı." },
-            { title: "Teknoloji Dünyasında Hareketlilik", desc: "Eski SMS ve internet paketleri üzerinden arkadaşlıklar kurulmaya devam ediliyor." },
-            { title: "Kaset ve Vinil Satışlarında Artış", desc: "Retro severlerin plak ve kaset koleksiyonlarına olan ilgisi hızla artış gösteriyor." }
-        ],
-        sports: [
-            { title: "Retro Lig Maçları Başladı", desc: "Eski şampiyonlar nostaljik turnuvalarda karşı karşıya geliyor." },
-            { title: "Milli Takım Hazırlıkları", desc: "Nostaljik kadrolar yeşil sahada antrenmanlarına hız kesmeden devam ediyor." }
-        ],
-        top_hits: [
-            { song: "Kuzu Kuzu", artist: "Tarkan", youtube_query: "Tarkan - Kuzu Kuzu klip", youtubeId: "3m0Vv5J0R0I" },
-            { song: "Aşkısı", artist: "Serdar Ortaç", youtube_query: "Serdar Ortac - Askisi klip", youtubeId: "9g26eZ8p22I" },
-            { song: "Kırmızı", artist: "Hande Yener", youtube_query: "Hande Yener - Kirmizi klip", youtubeId: "Gq3j2gU-45M" }
-        ],
-        tv_guide: [
-            { channel: "Kanal D", time: "20:00", title: "Yabancı Damat", desc: "Gaziantep ve İstanbul arasında geçen eğlenceli aşk ve aile dizisi." },
-            { channel: "Show TV", time: "21:00", title: "Kurtlar Vadisi", desc: "Nefes kesen mafya ve aksiyon dizisinde bu hafta heyecan dorukta." },
-            { channel: "ATV", time: "20:00", title: "Avrupa Yakası", desc: "Nişantaşı'ndaki eğlenceli ofis ve ev yaşantısı, Aslı ve Volkan'ın maceraları." }
-        ]
-    };
+function getFallbackHistory20(year, readableDate) {
+    const defaultWeather = [
+        { city: "İstanbul", temp: "22°C", condition: "Parçalı Bulutlu", desc: "Mevsim normallerinde tatlı bir retro esintisi..." },
+        { city: "Ankara", temp: "19°C", condition: "Açık", desc: "Kuru ve serin Ankara akşamları..." },
+        { city: "İzmir", temp: "26°C", condition: "Güneşli", desc: "Ege havası içimizi ısıtmaya devam ediyor..." }
+    ];
+
+    if (year < 1970) {
+        // 1960'lar
+        return {
+            weather: defaultWeather,
+            headlines: [
+                { title: "Kıbrıs Meselesi Gündemde", desc: "Ada genelinde gerginlik tırmanırken diplomatik temaslar sıkılaştırıldı." },
+                { title: "İTÜ Televizyonu Deneysel Yayında", desc: "İstanbul Teknik Üniversitesi'nin televizyon yayın denemeleri büyük ilgi topluyor." },
+                { title: "Yerli Sanayi Hamlesi", desc: "Türkiye genelinde yerli üretimi teşvik eden yeni sanayi adımları atılıyor." }
+            ],
+            sports: [
+                { title: "Metin Oktay Rüzgarı Esiyor", desc: "Galatasaray'ın efsane golcüsü şık golleriyle ligde zirveyi zorluyor." },
+                { title: "Fenerbahçe-Beşiktaş Rekabeti", desc: "Zorlu derbi mücadelesinde tribünler tarihi katılım sağladı." }
+            ],
+            top_hits: [
+                { song: "Samanyolu", artist: "Berkant", youtube_query: "Berkant - Samanyolu klip", youtubeId: "bO10d0Qh2s8" },
+                { song: "Her Yerde Kar Var", artist: "Salvatore Adamo", youtube_query: "Salvatore Adamo - Her Yerde Kar Var", youtubeId: "V5iU_rW-48Y" },
+                { song: "Deniz Üstü Köpürür", artist: "Cem Karaca", youtube_query: "Cem Karaca - Deniz Ustü Kopurur", youtubeId: "ZleB9fJk3XQ" }
+            ],
+            tv_guide: [
+                { channel: "Ankara Radyosu", time: "20:00", title: "Radyo Tiyatrosu", desc: "Tiyatro eserleri ses efektleriyle evlerimize konuk oluyor." },
+                { channel: "İstanbul Radyosu", time: "21:00", title: "Arkası Yarın", desc: "Heyecan verici radyo dizisinin yeni bölümü dinleyicileri kilitledi." },
+                { channel: "TRT Radyoları", time: "19:00", title: "Radyo Haber Saati", desc: "Türkiye ve dünyadan önemli gelişmeler tarafsız yayıncılıkla radyoda." }
+            ]
+        };
+    } else if (year < 1980) {
+        // 1970'ler
+        return {
+            weather: defaultWeather,
+            headlines: [
+                { title: "Boğaziçi Köprüsü Hizmete Açıldı", desc: "Avrupa ile Asya kıtaları ilk kez birbirine kara yolu ile bağlandı." },
+                { title: "Kıbrıs Barış Harekatı Gerçekleşti", desc: "Türk Silahlı Kuvvetleri garantörlük hakkını kullanarak adaya çıkarma yaptı." },
+                { title: "Siyasi Liderler Sahada", desc: "Ecevit ve Demirel liderliğindeki partiler meydanlarda yoğun miting döneminde." }
+            ],
+            sports: [
+                { title: "Trabzonspor Anadolu İhtilali", desc: "Trabzonspor, üç büyüklerin hegemonyasını yıkarak şampiyonluk yolunda emin adımlarla ilerliyor." },
+                { title: "Milli Takım Hazırlıkları", desc: "A Milli Futbol Takımımız uluslararası arenalarda ter dökmeye devam ediyor." }
+            ],
+            top_hits: [
+                { song: "Dağlar Dağlar", artist: "Barış Manço", youtube_query: "Baris Manco - Daglar Daglar klip", youtubeId: "w_M-YfWz5pM" },
+                { song: "Anlamazdın", artist: "Semiramis Pekkan", youtube_query: "Semiramis Pekkan - Anlamazdin klip", youtubeId: "W7oR-XvNf-4" },
+                { song: "Delisin", artist: "Cici Kızlar", youtube_query: "Cici Kizlar - Delisin klip", youtubeId: "mN22m1JgBik" }
+            ],
+            tv_guide: [
+                { channel: "TRT 1", time: "20:00", title: "Kaçak (The Fugitive)", desc: "Dr. Richard Kimble'ın adalet arayışı ekran başındaki izleyicileri büyülüyor." },
+                { channel: "TRT 1", time: "21:00", title: "Oyun Havaları", desc: "Halk dansları ve müzik ekipleri canlı yayında seyircilere keyifli anlar yaşatıyor." },
+                { channel: "TRT 1", time: "22:00", title: "Belgesel Saati", desc: "Dünya tarihi ve coğrafya üzerine hazırlanan eğitici kuşak yayında." }
+            ]
+        };
+    } else if (year < 1990) {
+        // 1980'ler
+        return {
+            weather: defaultWeather,
+            headlines: [
+                { title: "Ekonomik Reformlar Hız Kazanıyor", desc: "Turgut Özal liderliğindeki hükümet serbest piyasa ve döviz reformlarını başlattı." },
+                { title: "Renkli Televizyona Geçiş Tamamlanıyor", desc: "TRT ekranları kademeli olarak tamamen renkli yayın hayatına adım atıyor." },
+                { title: "Kaset ve Walkman Çılgınlığı", desc: "Sokaklarda ve toplu taşımada walkman kullanan gençlerin sayısı her geçen gün artıyor." }
+            ],
+            sports: [
+                { title: "Cep Herkülü Naim Süleymanoğlu", desc: "Naim Süleymanoğlu halter podyumunda üst üste dünya rekorları kırıyor." },
+                { title: "Galatasaray Avrupa Sahnelerinde", desc: "Cevad Prekazi ve arkadaşları Şampiyon Kulüpler Kupası'nda çeyrek finale yürüyor." }
+            ],
+            top_hits: [
+                { song: "Sen Ağlama", artist: "Sezen Aksu", youtube_query: "Sezen Aksu - Sen Aglama klip", youtubeId: "7qJ3vE-rI1Q" },
+                { song: "Ele Güne Karşı", artist: "MFÖ", youtube_query: "MFO - Ele Gune Karsi klip", youtubeId: "T7yGqK2t90I" },
+                { song: "Arkadaşım Eşek", artist: "Barış Manço", youtube_query: "Baris Manco - Arkadasim Esek klip", youtubeId: "kLh-9X5rS40" }
+            ],
+            tv_guide: [
+                { channel: "TRT 1", time: "20:00", title: "Dallas", desc: "Ewing ailesinin entrikaları ve petrol savaşları ekranlarda izleyicileri kilitliyor." },
+                { channel: "TRT 1", time: "21:00", title: "Bizimkiler", desc: "Apartman sakinlerinin eğlenceli ve tanıdık yaşantısı her hafta ekranlara geliyor." },
+                { channel: "TRT 1", time: "22:00", title: "Uzay Yolu", desc: "Kaptan Kirk ve ekibi yeni uzay dünyaları ve medeniyetleri keşfediyor." }
+            ]
+        };
+    } else if (year < 2000) {
+        // 1990'lar
+        return {
+            weather: defaultWeather,
+            headlines: [
+                { title: "Özel Kanalların Yükselişi", desc: "Türkiye'nin ilk özel televizyon kanalları birbiri ardına yayına başlayarak renkli içerikler sunuyor." },
+                { title: "Türkçe Pop Müzik Patlaması", desc: "90'lar Türkçe Pop müziği albüm satış rekorları kırıyor ve yeni starlar doğuyor." },
+                { title: "İnternet Çağı Türkiye'de", desc: "Türkiye üniversiteler öncülüğünde ilk kez internet bağlantısı ile tanıştı." }
+            ],
+            sports: [
+                { title: "A Milli Takım Euro 96'da", desc: "Tarihimizde ilk kez Avrupa Şampiyonası finallerine katılarak büyük başarı yakaladık." },
+                { title: "Süper Lig'de Dört Büyükler Çekişmesi", desc: "Beşiktaş, Galatasaray, Fenerbahçe ve Trabzonspor kıyasıya zirve mücadelesi veriyor." }
+            ],
+            top_hits: [
+                { song: "Abone", artist: "Yonca Evcimik", youtube_query: "Yonca Evcimik - Abone klip", youtubeId: "j6f2w5H0L9I" },
+                { song: "Ateşteyim", artist: "Çelik", youtube_query: "Celik - Atesteyim klip", youtubeId: "6K3_4Fm0Y-o" },
+                { song: "Araba", artist: "Mustafa Sandal", youtube_query: "Mustafa Sandal - Araba klip", youtubeId: "E0M1Jd7_7_g" }
+            ],
+            tv_guide: [
+                { channel: "Show TV", time: "20:00", title: "Süper Baba", desc: "Fiko ve çocuklarının sıcacık mahalle hikayesi izleyicilere duygusal anlar yaşatıyor." },
+                { channel: "ATV", time: "21:00", title: "Mahallenin Muhtarları", desc: "Temel, Fadime ve sevimli mahalle sakinlerinin eğlenceli hikayesi." },
+                { channel: "Kanal D", time: "22:30", title: "Yalan Rüzgarı", desc: "Klasik pembe dizinin yeni bölümü heyecan yaratıyor." }
+            ]
+        };
+    } else {
+        // 2000'ler ve sonrası
+        return {
+            weather: defaultWeather,
+            headlines: [
+                { title: "Nostalji Rüzgarı Esiyor", desc: "RetroSesler zaman tüneli 20 yıl öncesine kapılarını sonuna kadar açtı." },
+                { title: "Teknoloji Dünyasında Hareketlilik", desc: "Eski SMS ve internet paketleri üzerinden arkadaşlıklar kurulmaya devam ediliyor." },
+                { title: "Kaset ve Vinil Satışlarında Artış", desc: "Retro severlerin plak ve kaset koleksiyonlarına olan ilgisi hızla artış gösteriyor." }
+            ],
+            sports: [
+                { title: "Retro Lig Maçları Başladı", desc: "Eski şampiyonlar nostaljik turnuvalarda karşı karşıya geliyor." },
+                { title: "Milli Takım Hazırlıkları", desc: "Nostaljik kadrolar yeşil sahada antrenmanlarına hız kesmeden devam ediyor." }
+            ],
+            top_hits: [
+                { song: "Kuzu Kuzu", artist: "Tarkan", youtube_query: "Tarkan - Kuzu Kuzu klip", youtubeId: "3m0Vv5J0R0I" },
+                { song: "Aşkısı", artist: "Serdar Ortaç", youtube_query: "Serdar Ortac - Askisi klip", youtubeId: "9g26eZ8p22I" },
+                { song: "Kırmızı", artist: "Hande Yener", youtube_query: "Hande Yener - Kirmizi klip", youtubeId: "Gq3j2gU-45M" }
+            ],
+            tv_guide: [
+                { channel: "Kanal D", time: "20:00", title: "Yabancı Damat", desc: "Gaziantep ve İstanbul arasında geçen eğlenceli aşk ve aile dizisi." },
+                { channel: "Show TV", time: "21:00", title: "Kurtlar Vadisi", desc: "Nefes kesen mafya ve aksiyon dizisinde bu hafta heyecan dorukta." },
+                { channel: "ATV", time: "20:00", title: "Avrupa Yakası", desc: "Nişantaşı'ndaki eğlenceli ofis ve ev yaşantısı, Aslı ve Volkan'ın maceraları." }
+            ]
+        };
+    }
 }
 
 // POST /api/timeline/chat — Zaman Makinesi Yapay Zeka Chatbotu
