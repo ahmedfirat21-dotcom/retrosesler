@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="retro_blue">#16213e</color>
+    <color name="retro_dark">#1a1a2e</color>
+    <color name="retro_red">#e94560</color>
+    <color name="white">#ffffff</color>
+    <string name="app_name">RetroSesler</string>
+    <style name="Theme.RetroSesler" parent="@android:style/Theme.DeviceDefault.NoActionBar">
+        <item name="android:windowBackground">@color/retro_dark</item>
+        <item name="android:statusBarColor">@color/retro_dark</item>
+        <item name="android:navigationBarColor">@color/retro_dark</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>

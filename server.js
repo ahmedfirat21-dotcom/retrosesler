@@ -126,6 +126,17 @@ app.get('/api/proxy-gif', (req, res) => {
     }
 });
 
+// DJ current → redirect to existing radio now-playing endpoint
+app.get('/api/dj/current', (req, res) => res.redirect(307, '/api/radio/now-playing'));
+
+// Notifications stub — currently no notification system, return empty to prevent 404s
+app.get('/api/notifications', (req, res) => {
+    res.json({ success: true, notifications: [], unreadCount: 0 });
+});
+app.post('/api/notifications/read', express.json(), (req, res) => {
+    res.json({ success: true });
+});
+
 // Health check endpoint (for docker-compose monitoring)
 app.get('/health', (req, res) => {
     res.status(200).json({

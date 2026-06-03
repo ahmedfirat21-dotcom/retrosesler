@@ -1,0 +1,228 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.retrosesler.app"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="36" />
+10
+11    <!-- Network -->
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:5:5-67
+12-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:5:22-64
+13    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+13-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:6:5-79
+13-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:6:22-76
+14
+15    <!-- WebRTC: Camera & Microphone -->
+16    <uses-permission android:name="android.permission.CAMERA" />
+16-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:9:5-65
+16-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:9:22-62
+17    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+17-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:10:5-71
+17-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:10:22-68
+18    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+18-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:11:5-80
+18-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:11:22-77
+19
+20    <!-- File uploads -->
+21    <uses-permission
+21-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:14:5-15:38
+22        android:name="android.permission.READ_EXTERNAL_STORAGE"
+22-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:14:22-77
+23        android:maxSdkVersion="32" />
+23-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:15:9-35
+24    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+24-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:16:5-76
+24-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:16:22-73
+25    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+25-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:17:5-75
+25-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:17:22-72
+26
+27    <!-- Notifications (optional, future) -->
+28    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+28-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:20:5-77
+28-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:20:22-74
+29
+30    <!-- Wake lock for voice chat -->
+31    <uses-permission android:name="android.permission.WAKE_LOCK" />
+31-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:23:5-68
+31-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:23:22-65
+32
+33    <uses-feature
+33-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:25:5-85
+34        android:name="android.hardware.camera"
+34-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:25:19-57
+35        android:required="false" />
+35-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:25:58-82
+36    <uses-feature
+36-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:26:5-95
+37        android:name="android.hardware.camera.autofocus"
+37-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:26:19-67
+38        android:required="false" />
+38-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:26:68-92
+39    <uses-feature
+39-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:27:5-89
+40        android:name="android.hardware.microphone"
+40-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:27:19-61
+41        android:required="false" />
+41-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:27:62-86
+42
+43    <permission
+43-->[androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:22:5-24:47
+44        android:name="com.retrosesler.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+44-->[androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:23:9-81
+45        android:protectionLevel="signature" />
+45-->[androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:24:9-44
+46
+47    <uses-permission android:name="com.retrosesler.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+47-->[androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:26:5-97
+47-->[androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:26:22-94
+48
+49    <application
+49-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:29:5-61:19
+50        android:allowBackup="true"
+50-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:30:9-35
+51        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+51-->[androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:28:18-86
+52        android:debuggable="true"
+53        android:extractNativeLibs="false"
+54        android:hardwareAccelerated="true"
+54-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:37:9-43
+55        android:icon="@mipmap/ic_launcher"
+55-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:31:9-43
+56        android:label="@string/app_name"
+56-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:32:9-41
+57        android:networkSecurityConfig="@xml/network_security_config"
+57-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:38:9-69
+58        android:roundIcon="@mipmap/ic_launcher_round"
+58-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:33:9-54
+59        android:supportsRtl="true"
+59-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:34:9-35
+60        android:theme="@style/Theme.RetroSesler"
+60-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:35:9-49
+61        android:usesCleartextTraffic="false" >
+61-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:36:9-45
+62        <activity
+62-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:40:9-60:20
+63            android:name="com.retrosesler.app.MainActivity"
+63-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:41:13-41
+64            android:configChanges="orientation|screenSize|keyboardHidden|keyboard|screenLayout|smallestScreenSize"
+64-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:43:13-115
+65            android:exported="true"
+65-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:42:13-36
+66            android:launchMode="singleTask"
+66-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:44:13-44
+67            android:windowSoftInputMode="adjustResize" >
+67-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:45:13-55
+68            <intent-filter>
+68-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:47:13-50:29
+69                <action android:name="android.intent.action.MAIN" />
+69-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:48:17-69
+69-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:48:25-66
+70
+71                <category android:name="android.intent.category.LAUNCHER" />
+71-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:49:17-77
+71-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:49:27-74
+72            </intent-filter>
+73
+74            <!-- Deep link support -->
+75            <intent-filter android:autoVerify="true" >
+75-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:53:13-59:29
+75-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:53:28-53
+76                <action android:name="android.intent.action.VIEW" />
+76-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:54:17-69
+76-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:54:25-66
+77
+78                <category android:name="android.intent.category.DEFAULT" />
+78-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:55:17-76
+78-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:55:27-73
+79                <category android:name="android.intent.category.BROWSABLE" />
+79-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:56:17-78
+79-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:56:27-75
+80
+81                <data
+81-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:57:17-79
+82                    android:host="retrosesler.com"
+82-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:57:46-76
+83                    android:scheme="https" />
+83-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:57:23-45
+84                <data
+84-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:57:17-79
+85                    android:host="www.retrosesler.com"
+85-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:57:46-76
+86                    android:scheme="https" />
+86-->C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:57:23-45
+87            </intent-filter>
+88        </activity>
+89
+90        <provider
+90-->[androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+91            android:name="androidx.startup.InitializationProvider"
+91-->[androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
+92            android:authorities="com.retrosesler.app.androidx-startup"
+92-->[androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
+93            android:exported="false" >
+93-->[androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
+94            <meta-data
+94-->[androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+95                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+95-->[androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+96                android:value="androidx.startup" />
+96-->[androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+97            <meta-data
+97-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\36cfad8b21f48d3aa7ecdbb696ba11f6\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:29:13-31:52
+98                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+98-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\36cfad8b21f48d3aa7ecdbb696ba11f6\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:30:17-78
+99                android:value="androidx.startup" />
+99-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\36cfad8b21f48d3aa7ecdbb696ba11f6\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:31:17-49
+100            <meta-data
+100-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
+101                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+101-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
+102                android:value="androidx.startup" />
+102-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
+103        </provider>
+104
+105        <receiver
+105-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
+106            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+106-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
+107            android:directBootAware="false"
+107-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
+108            android:enabled="true"
+108-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
+109            android:exported="true"
+109-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
+110            android:permission="android.permission.DUMP" >
+110-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
+111            <intent-filter>
+111-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
+112                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+112-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
+112-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
+113            </intent-filter>
+114            <intent-filter>
+114-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
+115                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+115-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
+115-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
+116            </intent-filter>
+117            <intent-filter>
+117-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
+118                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+118-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
+118-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
+119            </intent-filter>
+120            <intent-filter>
+120-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
+121                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+121-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
+121-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
+122            </intent-filter>
+123        </receiver>
+124    </application>
+125
+126</manifest>

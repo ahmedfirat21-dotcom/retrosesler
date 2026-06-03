@@ -1,0 +1,343 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:2:1-62:12
+INJECTED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:2:1-62:12
+INJECTED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:2:1-62:12
+INJECTED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:2:1-62:12
+MERGED from [androidx.appcompat:appcompat-resources:1.7.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\be2cb809a6163a5ca33fc58a59ab23a8\transformed\appcompat-resources-1.7.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.appcompat:appcompat:1.7.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\b64a66301da3cf5cf1598a9ac93987c2\transformed\appcompat-1.7.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.webkit:webkit:1.12.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\2da77c6c6dc26257ade70adf58ce5824\transformed\webkit-1.12.1\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.fragment:fragment:1.5.4] C:\Users\yogun\.gradle\caches\8.11.1\transforms\a1b479db93fe83f41769f1dc3a951b86\transformed\fragment-1.5.4\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.activity:activity:1.9.3] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb9b937a53ead09ae0a4aa1b48c27456\transformed\activity-1.9.3\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\5bad01c25594f1fda37c054a6b6ef17e\transformed\drawerlayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3c9914b1287ea35f53dad2cb29678996\transformed\emoji2-views-helper-1.3.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.savedstate:savedstate:1.2.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\daec2beb8c70587b644df2ffef4c955e\transformed\savedstate-1.2.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\40a00f8fc422dcd7c0f164046796cee3\transformed\loader-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\ac69fcfd9151a97d58abae29ecb9087a\transformed\lifecycle-livedata-2.6.2\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\69727bf4bcf5fbaa16e1507c592005aa\transformed\lifecycle-viewmodel-2.6.2\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\36cfad8b21f48d3aa7ecdbb696ba11f6\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\0f2c124819de2313fb3ddc0843336aaa\transformed\lifecycle-livedata-core-2.6.2\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\0a6ea0f9bdf186cd25666558b8a215dd\transformed\lifecycle-runtime-2.6.2\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\f4f6e14b594e62a45c3538e140d8467d\transformed\lifecycle-viewmodel-savedstate-2.6.2\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core-ktx:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\19ef855c0ed95e841336e24a931ce40b\transformed\core-ktx-1.15.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\9916d4624c08c64d7ea01bb3d0b2e4fd\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\003e1d76a5a578363f9a51e8c5efce3b\transformed\vectordrawable-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\e4f012f98c9c2a6e9431a732d7e7af00\transformed\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\142e6f0de63acaded554efed606e439c\transformed\customview-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:17:1-30:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\5fc0dcdb33499174e78c064b42bc0908\transformed\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:17:1-55:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fc1050d53d03fddada8a613f56ef027c\transformed\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\9dd321806c82266a5b79d1e3da419d0d\transformed\startup-runtime-1.1.1\AndroidManifest.xml:17:1-33:12
+MERGED from [androidx.tracing:tracing:1.2.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\20a26ef0ffb9c2d7df7ba607935017e3\transformed\tracing-1.2.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\bedb785f0557c61c8f2d3be8e1e97ea4\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\c77bae124412f1d92c0d90cc875d2b41\transformed\core-runtime-2.2.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.annotation:annotation-experimental:1.4.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\2bab1e25f8e45a779f55032998419842\transformed\annotation-experimental-1.4.1\AndroidManifest.xml:2:1-7:12
+	package
+		INJECTED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml
+	android:versionCode
+		INJECTED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.INTERNET
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:5:5-67
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:5:22-64
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:6:5-79
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:6:22-76
+uses-permission#android.permission.CAMERA
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:9:5-65
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:9:22-62
+uses-permission#android.permission.RECORD_AUDIO
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:10:5-71
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:10:22-68
+uses-permission#android.permission.MODIFY_AUDIO_SETTINGS
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:11:5-80
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:11:22-77
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:14:5-15:38
+	android:maxSdkVersion
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:15:9-35
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:14:22-77
+uses-permission#android.permission.READ_MEDIA_IMAGES
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:16:5-76
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:16:22-73
+uses-permission#android.permission.READ_MEDIA_VIDEO
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:17:5-75
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:17:22-72
+uses-permission#android.permission.POST_NOTIFICATIONS
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:20:5-77
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:20:22-74
+uses-permission#android.permission.WAKE_LOCK
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:23:5-68
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:23:22-65
+uses-feature#android.hardware.camera
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:25:5-85
+	android:required
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:25:58-82
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:25:19-57
+uses-feature#android.hardware.camera.autofocus
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:26:5-95
+	android:required
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:26:68-92
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:26:19-67
+uses-feature#android.hardware.microphone
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:27:5-89
+	android:required
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:27:62-86
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:27:19-61
+application
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:29:5-61:19
+INJECTED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:29:5-61:19
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\36cfad8b21f48d3aa7ecdbb696ba11f6\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\36cfad8b21f48d3aa7ecdbb696ba11f6\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:28:5-89
+MERGED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:28:5-89
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\9dd321806c82266a5b79d1e3da419d0d\transformed\startup-runtime-1.1.1\AndroidManifest.xml:25:5-31:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\9dd321806c82266a5b79d1e3da419d0d\transformed\startup-runtime-1.1.1\AndroidManifest.xml:25:5-31:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\bedb785f0557c61c8f2d3be8e1e97ea4\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\bedb785f0557c61c8f2d3be8e1e97ea4\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
+	android:extractNativeLibs
+		INJECTED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:28:18-86
+	android:supportsRtl
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:34:9-35
+	android:label
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:32:9-41
+	android:hardwareAccelerated
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:37:9-43
+	android:roundIcon
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:33:9-54
+	android:icon
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:31:9-43
+	android:allowBackup
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:30:9-35
+	android:theme
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:35:9-49
+	android:networkSecurityConfig
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:38:9-69
+	android:usesCleartextTraffic
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:36:9-45
+activity#com.retrosesler.app.MainActivity
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:40:9-60:20
+	android:launchMode
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:44:13-44
+	android:windowSoftInputMode
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:45:13-55
+	android:exported
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:42:13-36
+	android:configChanges
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:43:13-115
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:41:13-41
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:47:13-50:29
+action#android.intent.action.MAIN
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:48:17-69
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:48:25-66
+category#android.intent.category.LAUNCHER
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:49:17-77
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:49:27-74
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:host:retrosesler.com+data:host:www.retrosesler.com+data:scheme:https+data:scheme:https
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:53:13-59:29
+	android:autoVerify
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:53:28-53
+action#android.intent.action.VIEW
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:54:17-69
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:54:25-66
+category#android.intent.category.DEFAULT
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:55:17-76
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:55:27-73
+category#android.intent.category.BROWSABLE
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:56:17-78
+	android:name
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:56:27-75
+data
+ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:57:17-79
+	android:host
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:57:46-76
+	android:scheme
+		ADDED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml:57:23-45
+uses-sdk
+INJECTED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml
+MERGED from [androidx.appcompat:appcompat-resources:1.7.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\be2cb809a6163a5ca33fc58a59ab23a8\transformed\appcompat-resources-1.7.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.appcompat:appcompat-resources:1.7.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\be2cb809a6163a5ca33fc58a59ab23a8\transformed\appcompat-resources-1.7.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.appcompat:appcompat:1.7.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\b64a66301da3cf5cf1598a9ac93987c2\transformed\appcompat-1.7.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.appcompat:appcompat:1.7.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\b64a66301da3cf5cf1598a9ac93987c2\transformed\appcompat-1.7.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.webkit:webkit:1.12.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\2da77c6c6dc26257ade70adf58ce5824\transformed\webkit-1.12.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.webkit:webkit:1.12.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\2da77c6c6dc26257ade70adf58ce5824\transformed\webkit-1.12.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.fragment:fragment:1.5.4] C:\Users\yogun\.gradle\caches\8.11.1\transforms\a1b479db93fe83f41769f1dc3a951b86\transformed\fragment-1.5.4\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.5.4] C:\Users\yogun\.gradle\caches\8.11.1\transforms\a1b479db93fe83f41769f1dc3a951b86\transformed\fragment-1.5.4\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.activity:activity:1.9.3] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb9b937a53ead09ae0a4aa1b48c27456\transformed\activity-1.9.3\AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.9.3] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb9b937a53ead09ae0a4aa1b48c27456\transformed\activity-1.9.3\AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\5bad01c25594f1fda37c054a6b6ef17e\transformed\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\5bad01c25594f1fda37c054a6b6ef17e\transformed\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3c9914b1287ea35f53dad2cb29678996\transformed\emoji2-views-helper-1.3.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3c9914b1287ea35f53dad2cb29678996\transformed\emoji2-views-helper-1.3.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\daec2beb8c70587b644df2ffef4c955e\transformed\savedstate-1.2.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\daec2beb8c70587b644df2ffef4c955e\transformed\savedstate-1.2.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\40a00f8fc422dcd7c0f164046796cee3\transformed\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\40a00f8fc422dcd7c0f164046796cee3\transformed\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\ac69fcfd9151a97d58abae29ecb9087a\transformed\lifecycle-livedata-2.6.2\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\ac69fcfd9151a97d58abae29ecb9087a\transformed\lifecycle-livedata-2.6.2\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\69727bf4bcf5fbaa16e1507c592005aa\transformed\lifecycle-viewmodel-2.6.2\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\69727bf4bcf5fbaa16e1507c592005aa\transformed\lifecycle-viewmodel-2.6.2\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\36cfad8b21f48d3aa7ecdbb696ba11f6\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\36cfad8b21f48d3aa7ecdbb696ba11f6\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\0f2c124819de2313fb3ddc0843336aaa\transformed\lifecycle-livedata-core-2.6.2\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\0f2c124819de2313fb3ddc0843336aaa\transformed\lifecycle-livedata-core-2.6.2\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\0a6ea0f9bdf186cd25666558b8a215dd\transformed\lifecycle-runtime-2.6.2\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\0a6ea0f9bdf186cd25666558b8a215dd\transformed\lifecycle-runtime-2.6.2\AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\f4f6e14b594e62a45c3538e140d8467d\transformed\lifecycle-viewmodel-savedstate-2.6.2\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\f4f6e14b594e62a45c3538e140d8467d\transformed\lifecycle-viewmodel-savedstate-2.6.2\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core-ktx:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\19ef855c0ed95e841336e24a931ce40b\transformed\core-ktx-1.15.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core-ktx:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\19ef855c0ed95e841336e24a931ce40b\transformed\core-ktx-1.15.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\9916d4624c08c64d7ea01bb3d0b2e4fd\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\9916d4624c08c64d7ea01bb3d0b2e4fd\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\003e1d76a5a578363f9a51e8c5efce3b\transformed\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\003e1d76a5a578363f9a51e8c5efce3b\transformed\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\e4f012f98c9c2a6e9431a732d7e7af00\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\e4f012f98c9c2a6e9431a732d7e7af00\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\142e6f0de63acaded554efed606e439c\transformed\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\142e6f0de63acaded554efed606e439c\transformed\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\5fc0dcdb33499174e78c064b42bc0908\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\5fc0dcdb33499174e78c064b42bc0908\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:21:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:21:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fc1050d53d03fddada8a613f56ef027c\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fc1050d53d03fddada8a613f56ef027c\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\9dd321806c82266a5b79d1e3da419d0d\transformed\startup-runtime-1.1.1\AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\9dd321806c82266a5b79d1e3da419d0d\transformed\startup-runtime-1.1.1\AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.tracing:tracing:1.2.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\20a26ef0ffb9c2d7df7ba607935017e3\transformed\tracing-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.tracing:tracing:1.2.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\20a26ef0ffb9c2d7df7ba607935017e3\transformed\tracing-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\bedb785f0557c61c8f2d3be8e1e97ea4\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\bedb785f0557c61c8f2d3be8e1e97ea4\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\c77bae124412f1d92c0d90cc875d2b41\transformed\core-runtime-2.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\c77bae124412f1d92c0d90cc875d2b41\transformed\core-runtime-2.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.4.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\2bab1e25f8e45a779f55032998419842\transformed\annotation-experimental-1.4.1\AndroidManifest.xml:5:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.4.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\2bab1e25f8e45a779f55032998419842\transformed\annotation-experimental-1.4.1\AndroidManifest.xml:5:5-44
+	android:targetSdkVersion
+		INJECTED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Users\yogun\retrosesler-v2\android-app\app\src\main\AndroidManifest.xml
+provider#androidx.startup.InitializationProvider
+ADDED from [androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\36cfad8b21f48d3aa7ecdbb696ba11f6\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\36cfad8b21f48d3aa7ecdbb696ba11f6\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\9dd321806c82266a5b79d1e3da419d0d\transformed\startup-runtime-1.1.1\AndroidManifest.xml:26:9-30:34
+MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\9dd321806c82266a5b79d1e3da419d0d\transformed\startup-runtime-1.1.1\AndroidManifest.xml:26:9-30:34
+	tools:node
+		ADDED from [androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:28:13-31
+	android:authorities
+		ADDED from [androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
+	android:exported
+		ADDED from [androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
+meta-data#androidx.emoji2.text.EmojiCompatInitializer
+ADDED from [androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.3.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\3b1e4404ad6a40601f8011975b01a6e2\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+meta-data#androidx.lifecycle.ProcessLifecycleInitializer
+ADDED from [androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\36cfad8b21f48d3aa7ecdbb696ba11f6\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\36cfad8b21f48d3aa7ecdbb696ba11f6\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\yogun\.gradle\caches\8.11.1\transforms\36cfad8b21f48d3aa7ecdbb696ba11f6\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:30:17-78
+permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:23:9-81
+permission#com.retrosesler.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:23:9-81
+uses-permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:26:22-94
+uses-permission#com.retrosesler.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.15.0] C:\Users\yogun\.gradle\caches\8.11.1\transforms\4b84f760e0703b68ac66018d277d45cf\transformed\core-1.15.0\AndroidManifest.xml:26:22-94
+meta-data#androidx.profileinstaller.ProfileInstallerInitializer
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
+receiver#androidx.profileinstaller.ProfileInstallReceiver
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
+	android:enabled
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
+	android:exported
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
+	android:permission
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
+	android:directBootAware
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
+intent-filter#action:name:androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
+action#androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
+intent-filter#action:name:androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
+action#androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
+intent-filter#action:name:androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
+action#androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
+intent-filter#action:name:androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
+action#androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\yogun\.gradle\caches\8.11.1\transforms\fb8ec85a8d59e61a03f366f12011f109\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:25-92

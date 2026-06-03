@@ -776,6 +776,15 @@
             flex: 1;
             min-width: 0;
         }
+        @media (max-width: 768px) {
+            .room-title-text {
+                white-space: normal;
+                word-break: break-word;
+                -webkit-line-clamp: 2;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+            }
+        }
         .room-badges {
             display: flex;
             gap: 4px;
@@ -1917,7 +1926,7 @@
 
             .footer {
                 font-size: 10px;
-                padding: 12px 8px;
+                padding: 12px 8px 80px;
             }
 
             .category-tabs {
@@ -2287,11 +2296,13 @@
         }
         /* ============ RETRO TURNTABLE (PLAK ÇALAR) ============ */
         #radio-panel {
-            background: transparent;
-            border: 0;
-            box-shadow: none;
+            background: linear-gradient(180deg, #FAFAF5 0%, #F0EDE4 100%);
+            border: 2px solid #A09880;
+            border-radius: 6px;
+            box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.18), inset 0 1px 0 #fff;
             padding: 0;
             margin-bottom: 8px;
+            overflow: hidden;
         }
         
         .mobile-cassette-deck {
@@ -5100,7 +5111,6 @@
             border-radius: 6px;
             box-shadow: 2px 3px 8px rgba(139, 105, 20, 0.2), inset 0 1px 0 #fff;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            margin-bottom: 12px;
         }
         .vintage-memory-panel:hover {
             transform: translateY(-2px);
@@ -6340,8 +6350,10 @@
             return `
                 <input type="text" name="fake-user-lobby" autocomplete="username" style="position:absolute;left:-9999px;height:0;width:0;opacity:0" tabindex="-1" aria-hidden="true">
                 <input type="password" name="fake-pwd-lobby" autocomplete="current-password" style="position:absolute;left:-9999px;height:0;width:0;opacity:0" tabindex="-1" aria-hidden="true">
-                <input class="lobby-auth-input" id="la-nick" placeholder="Rumuz" maxlength="20" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')">
-                <input class="lobby-auth-input" id="la-pass" type="password" placeholder="Şifre" minlength="4" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')"
+                <label for="la-nick" class="sr-only" style="position:absolute;left:-9999px">Rumuz</label>
+                <input class="lobby-auth-input" id="la-nick" placeholder="Rumuz" maxlength="20" autocomplete="off" aria-label="Rumuz" readonly onfocus="this.removeAttribute('readonly')">
+                <label for="la-pass" class="sr-only" style="position:absolute;left:-9999px">Şifre</label>
+                <input class="lobby-auth-input" id="la-pass" type="password" placeholder="Şifre" minlength="4" autocomplete="new-password" aria-label="Şifre" readonly onfocus="this.removeAttribute('readonly')"
                     onkeydown="if(event.key==='Enter')lobbyDo('login')">
                 <a class="lobby-forgot" onclick="lobbyForgotPwd();return false">Şifremi unuttum?</a>
                 <button class="lobby-auth-btn" onclick="lobbyDo('login')">🔑 Giriş Yap</button>
