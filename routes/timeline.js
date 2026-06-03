@@ -818,19 +818,47 @@ const TURKISH_MONTHS = [
     'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
 ];
 
+function cleanWikiQuery(title) {
+    if (!title) return '';
+    // Emojileri temizle
+    let clean = title.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g, "").trim();
+    // Colon, dash, period, exclamation mark, question mark ile bölüp ilk kısmı al
+    clean = clean.split(/[:\-\.!?]/)[0].trim();
+    if (clean.length < 10 && title.includes(':')) {
+        clean = title.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g, "").trim();
+    }
+    return clean.slice(0, 80).trim();
+}
+
 // Gazete görselini Wikipedia'dan manşet başlığına göre çözen yardımcı fonksiyon
 async function resolveHistoryImage(data) {
-    if (data && !data.image) {
+    if (!data) return data;
+    
+    // 1. Manşet Haber Görseli
+    if (!data.image) {
         try {
             const firstHeadline = data.headlines && data.headlines[0] ? data.headlines[0].title : '';
             if (firstHeadline) {
-                // Emojileri temizle
-                const cleanQuery = firstHeadline.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g, "").trim();
+                const cleanQuery = cleanWikiQuery(firstHeadline);
                 const imageUrl = await searchImageWikipedia(cleanQuery);
                 data.image = imageUrl || '';
             }
         } catch (imgErr) {
             console.warn('[TIMELINE-HISTORY20] Failed to resolve newspaper image:', imgErr.message);
+        }
+    }
+
+    // 2. Spor Görseli
+    if (!data.sports_image) {
+        try {
+            const firstSport = data.sports && data.sports[0] ? data.sports[0].title : '';
+            if (firstSport) {
+                const cleanQuery = cleanWikiQuery(firstSport);
+                const imageUrl = await searchImageWikipedia(cleanQuery);
+                data.sports_image = imageUrl || '';
+            }
+        } catch (imgErr) {
+            console.warn('[TIMELINE-HISTORY20] Failed to resolve sports image:', imgErr.message);
         }
     }
     return data;
@@ -864,12 +892,28 @@ router.get('/timeline/today-20-years-ago', async (req, res) => {
         // 1. Önbelleği kontrol et
         const cached = await db.loadTimelineHistory20(dateKey);
         if (cached && cached.data) {
-            // Önbellekte görsel yoksa hemen çözüp veritabanını güncelleyelim
+            let updated = false;
             if (!cached.data.image) {
                 await resolveHistoryImage(cached.data);
-                if (cached.data.image) {
-                    await db.saveTimelineHistory20(dateKey, cached.data);
+                if (cached.data.image) updated = true;
+            }
+            if (!cached.data.sports_image) {
+                try {
+                    const firstSport = cached.data.sports && cached.data.sports[0] ? cached.data.sports[0].title : '';
+                    if (firstSport) {
+                        const cleanQuery = cleanWikiQuery(firstSport);
+                        const imageUrl = await searchImageWikipedia(cleanQuery);
+                        if (imageUrl) {
+                            cached.data.sports_image = imageUrl;
+                            updated = true;
+                        }
+                    }
+                } catch (imgErr) {
+                    console.warn('[TIMELINE-HISTORY20] Cache sports image repair failed:', imgErr.message);
                 }
+            }
+            if (updated) {
+                await db.saveTimelineHistory20(dateKey, cached.data);
             }
             return res.json({ success: true, dateKey, readableDate, data: cached.data });
         }

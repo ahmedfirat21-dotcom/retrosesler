@@ -9900,6 +9900,13 @@
 
         // ============ BUGÜN BUNDAN 20 YIL ÖNCE ENDPOINTS & RENDERERS ============
         let _history20Cache = {};
+        function formatLocalDate(d) {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
         async function loadHistory20(force = false) {
             const view = document.getElementById('history20-newspaper-view');
             if (!view) return;
@@ -9908,7 +9915,7 @@
             if (picker && !picker.value) {
                 const now = new Date();
                 const defaultDate = new Date(now.getFullYear() - 20, now.getMonth(), now.getDate());
-                picker.value = defaultDate.toISOString().split('T')[0];
+                picker.value = formatLocalDate(defaultDate);
             }
             
             const targetDateStr = picker ? picker.value : '';
@@ -9953,9 +9960,10 @@
             if (!picker) return;
             const currentVal = picker.value;
             if (!currentVal) return;
-            const date = new Date(currentVal);
+            const parts = currentVal.split('-');
+            const date = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
             date.setDate(date.getDate() + days);
-            picker.value = date.toISOString().split('T')[0];
+            picker.value = formatLocalDate(date);
             loadHistory20(false);
         }
 
@@ -9964,7 +9972,7 @@
             if (!picker) return;
             const now = new Date();
             const defaultDate = new Date(now.getFullYear() - 20, now.getMonth(), now.getDate());
-            picker.value = defaultDate.toISOString().split('T')[0];
+            picker.value = formatLocalDate(defaultDate);
             loadHistory20(false);
         }
 
@@ -9983,6 +9991,17 @@
                         <img src="${escapeHTML(data.data.image)}" style="max-width: 100%; max-height: 180px; filter: sepia(0.2) contrast(1.05); display: block; margin: 0 auto; object-fit: contain; border: 1px solid #ddd;" alt="Manşet Görseli">
                         <div style="font-family:'Times New Roman',Georgia,serif; font-size:9.5px; color:#555; margin-top:5px; font-style:italic; line-height:1.2; max-width:240px; margin-left:auto; margin-right:auto; text-align:center;">
                             O dönemin gazete arşivlerinden tarihi bir kare.
+                        </div>
+                    </div>
+                </div>
+            ` : '';
+            
+            const sportsImageHtml = data.data.sports_image ? `
+                <div style="margin: 10px 0 15px 0; text-align: center;">
+                    <div style="display: inline-block; background: #fff; padding: 6px; border: 1px solid #c8c3b5; box-shadow: 0 4px 8px rgba(0,0,0,0.12); max-width: 100%; border-radius: 2px;">
+                        <img src="${escapeHTML(data.data.sports_image)}" style="max-width: 100%; max-height: 150px; filter: sepia(0.2) contrast(1.05); display: block; margin: 0 auto; object-fit: contain; border: 1px solid #ddd;" alt="Spor Görseli">
+                        <div style="font-family:'Times New Roman',Georgia,serif; font-size:9.5px; color:#555; margin-top:5px; font-style:italic; line-height:1.2; max-width:200px; margin-left:auto; margin-right:auto; text-align:center;">
+                            Spor dünyasından nostaljik bir an.
                         </div>
                     </div>
                 </div>
@@ -10063,6 +10082,7 @@
                     <div class="newspaper-col" style="flex:1; min-width:200px;">
                         <h4 class="newspaper-col-title" style="margin-top:0; color:#1e5aa8;">🏆 SPOR DÜNYASI</h4>
                         <div class="newspaper-col-body">
+                            ${sportsImageHtml}
                             ${sportsHtml}
                         </div>
                     </div>
