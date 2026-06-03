@@ -27,18 +27,7 @@
     <link rel="apple-touch-icon" href="assets/mikrofon.png">
     <title>RetroSesler.com — Sesli & Görüntülü Sohbet Odaları</title>
     <script>
-    // Mobilden ilk açılışta — token yoksa direkt /giris'e yönlendir (kullanıcı kararı)
-    // ?lobby=1 ile bypass (login sayfasından "misafir devam" sonrası geri dönerken)
-    (function () {
-        try {
-            if (location.search.indexOf('lobby=1') !== -1) return;
-            var isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
-            var hasToken = !!localStorage.getItem('retrosesler_token');
-            if (isMobile && !hasToken) {
-                location.replace('/giris');
-            }
-        } catch (e) {}
-    })();
+    // Lobi ilk sayfa olarak açılır, mobilde otomatik yönlendirme iptal edildi.
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -88,7 +77,7 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 16px;
             box-sizing: border-box;
@@ -499,20 +488,39 @@
 
         /* ============ MAIN LAYOUT ============ */
         .main {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 20px auto;
             padding: 0 16px;
             display: flex;
-            gap: 16px
+            gap: 16px;
+            align-items: start;
         }
 
-        /* ============ SIDEBAR — User panel ============ */
-        .sidebar {
+        /* ============ SIDEBARS ============ */
+        .sidebar, .sidebar-right {
             width: 240px;
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
-            gap: 12px
+            gap: 12px;
+            padding-bottom: 24px;
+        }
+
+        .rooms-panel, #discover-panel, #timeline-panel, #history20-panel {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Sekme Bazlı Gösterim Kuralları (Desktop & Mobile) */
+        body[data-mtab="myrooms"] .sidebar,
+        body[data-mtab="myrooms"] .sidebar-right,
+        body[data-mtab="discover"] .sidebar,
+        body[data-mtab="discover"] .sidebar-right,
+        body[data-mtab="timeline"] .sidebar,
+        body[data-mtab="timeline"] .sidebar-right,
+        body[data-mtab="history20"] .sidebar,
+        body[data-mtab="history20"] .sidebar-right {
+            display: none !important;
         }
 
         .win-panel {
@@ -786,12 +794,18 @@
             color: #777;
             white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis;
             margin-top: 2px;
         }
 
         .room-desc-marquee {
             display: inline-block;
-            animation: scroll-left 15s linear infinite
+        }
+        /* Kayan yazı sadece desktop'ta — mobilde animasyon kapalı (text kesme sorunu) */
+        @media (min-width: 769px) {
+            .room-desc-marquee {
+                animation: scroll-left 15s linear infinite;
+            }
         }
 
         /* Badges */
@@ -1455,6 +1469,8 @@
             border-radius: 6px;
             box-shadow: 4px 6px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 #fff;
             animation: modal-in .3s ease;
+            box-sizing: border-box;
+            margin: 0 auto;
         }
 
         @keyframes modal-in {
@@ -1493,6 +1509,10 @@
             height: 36px;
             object-fit: contain;
             image-rendering: -webkit-optimize-contrast;
+        }
+        .modal-spinner {
+            display: inline-block;
+            animation: spin-record 2s linear infinite;
         }
 
         .modal-title {
@@ -1654,7 +1674,7 @@
             font-size: 11px;
             color: rgba(255, 255, 255, 0.65);
             margin: 20px auto 30px;
-            max-width: 1100px;
+            max-width: 1200px;
             width: 100%;
             display: block;
             clear: both;
@@ -1675,23 +1695,42 @@
         /* ============ TABLET RESPONSIVE ============ */
         @media(max-width:768px) {
             .main {
+                display: flex;
                 flex-direction: column;
                 padding: 0 8px;
                 margin: 10px auto;
             }
 
-            .sidebar {
+            .rooms-panel {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 12px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .sidebar, .sidebar-right {
+                display: flex;
                 width: 100%;
                 flex-direction: row;
                 flex-wrap: wrap;
-                order: 2;          /* Sidebar (Nostalji FM + Profil + Çevrimiçi + Aktivite) oda listesinin ALTINA */
+                gap: 12px;
+                padding-bottom: 24px;
             }
 
-            .rooms-panel {
-                order: 1;          /* Oda listesi sidebar'dan ÖNCE — kullanıcı odalara hemen ulaşsın */
+            .sidebar {
+                order: 2;          /* Sol panel (Profil + Pikap) */
             }
 
-            .sidebar .win-panel {
+            .sidebar-right {
+                order: 3;          /* Sağ panel (Çevrimiçi + Aktivite) */
+            }
+
+            .rooms-panel, #discover-panel, #timeline-panel, #history20-panel {
+                order: 1;          /* Oda listesi en üstte */
+            }
+
+            .sidebar .win-panel, .sidebar-right .win-panel {
                 flex: 1;
                 min-width: 200px;
             }
@@ -1713,6 +1752,18 @@
             /* Mobil için: subtitle ve marquee gizli — topbar'da yer kaplamasın, bell + saat görünür kalsın */
             .topbar-subtitle { display: none; }
             .welcome-marquee { display: none; }
+
+            /* Oda açıklaması kayan yazı animasyonunu mobilde kapat — ilk harfler kaybolma sorunu */
+            .room-desc-marquee {
+                animation: none !important;
+                display: contents !important;
+                transform: none !important;
+            }
+            .room-desc {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
         }
 
         /* ============ MOBILE RESPONSIVE ============ */
@@ -1735,14 +1786,15 @@
                 font-size: 14px;
             }
 
-            .topbar-subtitle {
-                font-size: 9px;
-            }
-
             .topbar-stats {
                 font-size: 9px;
-                gap: 6px;
+                gap: 4px;
                 align-self: center;
+            }
+
+            /* 480px ve altında istatistik chip'lerini gizle — profil panelinde zaten var */
+            .topbar-stat {
+                display: none !important;
             }
 
             .main {
@@ -1821,12 +1873,45 @@
                 height: 15px !important;
                 box-sizing: border-box !important;
             }
-            .room-desc { font-size: 10px; max-height: 2.4em; overflow: hidden; }
+            .room-desc {
+                font-size: 10px;
+                max-height: 2.4em;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+            /* Kayan yazı animasyonunu mobilde kapat — text kayıp harfler sorunu */
+            .room-desc-marquee {
+                animation: none !important;
+                display: contents !important;
+                transform: none !important;
+            }
             .room-rules { gap: 3px; margin-top: 3px; }
             .room-rule-chip { font-size: 9px; padding: 1px 4px; }
             .room-occupants { font-size: 9px; }
             .room-users { font-size: 10px; gap: 2px; }
             .room-enter { padding: 5px 10px; font-size: 11px; flex-shrink: 0; }
+
+            /* "20 yıl önce" banner'ını mobilde kompakt yap */
+            .history20-lobby-banner {
+                padding: 6px 8px !important;
+                gap: 8px !important;
+                margin: 6px 6px 0 6px !important;
+            }
+            .history20-lobby-banner-icon {
+                font-size: 16px !important;
+                padding: 4px !important;
+            }
+            .history20-lobby-banner-title {
+                font-size: 10px !important;
+            }
+            .history20-lobby-banner-desc {
+                font-size: 9px !important;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
 
             /* .welcome-marquee zaten 768px breakpoint'inde display:none — burada override etme */
 
@@ -2052,33 +2137,47 @@
             .topbar-inner {
                 display: flex !important;
                 flex-direction: row !important;
+                flex-wrap: wrap !important;
                 align-items: center !important;
                 justify-content: space-between !important;
                 padding: 4px 12px !important;
-                gap: 8px !important;
+                gap: 6px 8px !important;
+                overflow: hidden !important;
             }
             .topbar-brand {
-                grid-area: brand;
                 display: flex !important;
                 align-items: center !important;
                 gap: 8px;
                 min-width: 0;
+                flex-shrink: 0;
             }
+            /* Mobilde desktop arama kutusunu, sep ayracını ve subtitle'ı gizle */
+            .topbar-inner > .topbar-search-wrap,
+            .topbar-sep,
+            .topbar-subtitle {
+                display: none !important;
+            }
+
             .topbar-stats {
-                grid-area: stats;
                 display: flex !important;
                 justify-content: flex-end !important;
                 align-items: center !important;
-                gap: 6px !important;
+                gap: 4px !important;
                 min-width: 0;
+                flex-wrap: nowrap;
             }
             /* Stats label'ları gizle — sadece sayı + ikon kalır (yer kazan) */
             .topbar-stats .t-lbl { display: none !important; }
 
+            /* Küçük topbar kontrolleri — tokens.css'den gelen min-height'ı ezme */
             .topbar-stat {
                 font-size: 11px !important;
                 padding: 2px 4px !important;
                 gap: 3px;
+                min-height: auto !important;
+            }
+            .topbar-stat b {
+                font-size: 11px !important;
             }
             /* Logo: room.html ile birebir aynı override */
             .topbar-logo {
@@ -2104,6 +2203,9 @@
             .rooms-titlebar span {
                 font-size: 11px !important;
                 max-width: 180px !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             .rooms-desktop-search,
             .rooms-desktop-create-btn {
@@ -2114,7 +2216,7 @@
                 display: inline-flex !important;
             }
 
-            /* Zil oda içi ile aynı dil — border'sız, şeffaf, küçük */
+            /* Zil — border'sız, şeffaf, küçük + min-height override */
             .topbar-notif-btn {
                 background: transparent !important;
                 border: none !important;
@@ -2134,12 +2236,12 @@
                 height: 14px !important;
             }
 
-            /* Çevrimiçi ve Mesajlar butonlarını mobilde gizle (Çevrimiçi istatistiği ve alt tabbar var) */
+            /* Çevrimiçi ve Mesajlar butonlarını mobilde gizle (alt tabbar var) */
             #tp-online-wrap, #tp-msg-wrap {
                 display: none !important;
             }
 
-            /* Kalan topbar butonlarını (Aktivite vb.) zil ile uyumlu yap */
+            /* Topbar pop butonları — şeffaf, küçük + min-height override */
             .topbar-pop-btn {
                 background: transparent !important;
                 border: none !important;
@@ -2154,8 +2256,19 @@
             }
             .topbar-pop-btn:hover { background: rgba(0,0,0,0.06) !important; }
 
-            /* Codex A/3: dokunma hedefleri 44px */
+            /* Win panel küçült/kapat butonları — tokens.css ezmesi */
+            .win-btn {
+                min-height: auto !important;
+            }
+
+            /* Alt tab bar butonları — tokens.css ezmesi */
+            .mobile-tabbar .mt-btn {
+                min-height: auto !important;
+            }
+
+            /* Codex A/3: dokunma hedefleri 44px — sadece ana aksiyon butonları */
             .open-room-btn,
+            .lobby-auth-btn,
             .lobby-auth-msg button,
             .small-modal-overlay button {
                 min-height: 44px;
@@ -3284,10 +3397,17 @@
             background: linear-gradient(180deg, #FFF9E6, #FFE9A8);
             border-bottom: 1px solid #D4B852;
             color: #8B6914;
-            font-size: 11px; text-align: center;
+            font-size: 11px;
+            text-align: center;
             padding: 5px 16px;
         }
-        .guest-banner.show { display: block; }
+        .guest-banner.show {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+        }
         .guest-banner a {
             color: #C0392B; font-weight: bold; text-decoration: none;
             border-bottom: 1px dotted #C0392B; margin-left: 4px;
@@ -3770,28 +3890,37 @@
             /* Tab bar yüksekliği kadar alt padding */
             body { padding-bottom: calc(62px + env(safe-area-inset-bottom)); }
 
-            /* Anasayfa & Odalarım = radyo + oda listesi (default) */
-            body[data-mtab="home"] #profile-panel,
-            body[data-mtab="home"] #online-panel,
-            body[data-mtab="home"] #msg-panel,
-            body[data-mtab="home"] #activity-panel,
-            body[data-mtab="myrooms"] #profile-panel,
-            body[data-mtab="myrooms"] #online-panel,
-            body[data-mtab="myrooms"] #msg-panel,
-            body[data-mtab="myrooms"] #activity-panel { display: none !important; }
+            /* Sidebars ve panellerin mobil sekme bazlı gösterim kuralları */
+            .sidebar, .sidebar-right { display: none !important; }
 
-            /* Odalarım sekmesinde sidebar (radyo vb) ve shoutbox'ı gizle, sadece kendi odalarım görünsün */
-            body[data-mtab="myrooms"] .sidebar { display: none !important; }
+            /* Lobi sekmesi: Sadece odalar paneli ve radyo (plak çalar) görünür */
+            body[data-mtab="home"] .rooms-panel { display: flex !important; }
+            body[data-mtab="home"] .sidebar { display: flex !important; }
+            body[data-mtab="home"] #profile-panel { display: none !important; }
+            body[data-mtab="home"] #radio-panel { display: block !important; }
+
+            /* Odalarım sekmesi: Sadece odalar paneli (kendi odalarım filtresiyle) görünür, shoutbox ve yan paneller gizlenir */
+            body[data-mtab="myrooms"] .rooms-panel { display: flex !important; }
             body[data-mtab="myrooms"] #shoutbox-panel { display: none !important; }
 
-            /* Keşfet = sadece discover-panel (trend odalar + yeni üyeler + aktif hostlar) */
+            /* Keşfet sekmesi: Sadece discover-panel görünür */
             body[data-mtab="discover"] .rooms-panel { display: none !important; }
-            body[data-mtab="discover"] #profile-panel,
-            body[data-mtab="discover"] #msg-panel,
-            body[data-mtab="discover"] #radio-panel,
-            body[data-mtab="discover"] #online-panel,
-            body[data-mtab="discover"] #activity-panel { display: none !important; }
             body[data-mtab="discover"] #discover-panel { display: block !important; }
+
+            /* Zaman Tüneli & Nostalji Postası sekmeleri */
+            body[data-mtab="timeline"] .rooms-panel { display: none !important; }
+            body[data-mtab="timeline"] #timeline-panel { display: block !important; }
+            body[data-mtab="history20"] .rooms-panel { display: none !important; }
+            body[data-mtab="history20"] #history20-panel { display: block !important; }
+
+            /* Profil sekmesi: Kullanıcı kartı, Çevrimiçi üyeler ve Son aktiviteler görünür */
+            body[data-mtab="profile"] .rooms-panel { display: none !important; }
+            body[data-mtab="profile"] .sidebar { display: flex !important; }
+            body[data-mtab="profile"] #profile-panel { display: block !important; }
+            body[data-mtab="profile"] #radio-panel { display: none !important; }
+            body[data-mtab="profile"] .sidebar-right { display: flex !important; }
+            body[data-mtab="profile"] #online-panel { display: block !important; }
+            body[data-mtab="profile"] #activity-panel { display: block !important; }
         }
         /* Discover panel kart stilleri (desktop+mobile) */
         #discover-panel .dx-section {
@@ -4054,7 +4183,7 @@
 
         /* -- Şu An Çalıyor bar -- */
         .nowplaying-bar {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 10px auto 0;
             padding: 0 16px;
         }
@@ -4539,17 +4668,13 @@
                 flex-direction: column;
                 gap: 12px;
                 box-sizing: border-box;
-                grid-column: 2;
-                grid-row: 1;
             }
             .rooms-panel > .win-panel:first-child {
                 display: flex;
                 flex-direction: column;
-                flex: 1;
-                min-height: 0;
             }
-            .rooms-panel > .win-panel:first-child .rooms-grid {
-                flex: 1;
+            #rooms-grid {
+                max-height: 300px;
                 overflow-y: auto;
             }
             #shoutbox-panel {
@@ -4564,47 +4689,35 @@
 
             #timeline-panel {
                 box-sizing: border-box;
-                grid-column: 2;
-                grid-row: 1;
             }
             body[data-mtab="timeline"] #timeline-panel {
                 display: flex !important;
                 flex-direction: column;
             }
             #timeline-panel .win-body {
-                flex: 1;
                 overflow-y: auto;
-                min-height: 0;
             }
 
             #discover-panel {
                 box-sizing: border-box;
-                grid-column: 2;
-                grid-row: 1;
             }
             body[data-mtab="discover"] #discover-panel {
                 display: flex !important;
                 flex-direction: column;
             }
             #discover-panel .win-body {
-                flex: 1;
                 overflow-y: auto;
-                min-height: 0;
             }
 
             #history20-panel {
                 box-sizing: border-box;
-                grid-column: 2;
-                grid-row: 1;
             }
             body[data-mtab="history20"] #history20-panel {
                 display: flex !important;
                 flex-direction: column;
             }
             #history20-panel .win-body {
-                flex: 1;
                 overflow-y: auto;
-                min-height: 0;
             }
         }
 
@@ -4979,6 +5092,68 @@
                 padding-bottom: 12px;
             }
         }
+
+        /* Vintage 20 Years Ago Sidebar Card */
+        .vintage-memory-panel {
+            background: linear-gradient(135deg, #FBF8F0 0%, #E8D3A7 100%) !important;
+            border: 2px solid #8C6A3C !important;
+            border-radius: 6px;
+            box-shadow: 2px 3px 8px rgba(139, 105, 20, 0.2), inset 0 1px 0 #fff;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-bottom: 12px;
+        }
+        .vintage-memory-panel:hover {
+            transform: translateY(-2px);
+            box-shadow: 3px 6px 15px rgba(139, 105, 20, 0.35), inset 0 1px 0 #fff;
+        }
+        .vintage-titlebar {
+            background: linear-gradient(180deg, #9C7A43 0%, #7A5B2B 50%, #5C4018 100%) !important;
+            color: #FFF9E6 !important;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            text-shadow: 1px 1px 0px #000;
+            border-bottom: 2px solid #5C4018;
+        }
+        .vintage-indicator {
+            font-size: 8px;
+            background: rgba(0, 0, 0, 0.45);
+            padding: 2px 6px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #FFC107;
+            border: 1px solid rgba(255, 193, 7, 0.4);
+            font-family: Tahoma, sans-serif;
+            font-weight: bold;
+        }
+        .vintage-indicator-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #FF9800;
+            box-shadow: 0 0 6px #FF9800;
+            animation: vintagePulse 1.5s infinite alternate;
+        }
+        @keyframes vintagePulse {
+            0% { opacity: 0.3; transform: scale(0.85); box-shadow: 0 0 2px #FF5722; }
+            100% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 8px #FFC107; }
+        }
+        .vintage-body {
+            padding: 14px 12px;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 12px;
+            color: #4A351B;
+            line-height: 1.45;
+            min-height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .vintage-ticker-item {
+            transition: opacity 0.5s ease-in-out;
+            width: 100%;
+        }
     </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="/assets/retro-ui.js"></script>
@@ -5118,31 +5293,6 @@
                             <b id="total-rooms" style="color:#1A468B;">—</b>
                         </div>
                     </div>
-                </div>
-            </div>
-            <!-- Çevrimiçi Kullanıcılar Paneli -->
-            <div class="win-panel" id="online-panel">
-                <div class="win-titlebar">
-                    <span>👥 Çevrimiçi (<span id="sidebar-online-count">0</span>)</span>
-                    <div class="win-titlebar-btns">
-                        <div class="win-btn" title="Küçült">—</div>
-                    </div>
-                </div>
-                <div class="win-body" id="sidebar-online-body" style="padding: 8px; max-height: 160px; overflow-y: auto;">
-                    <div class="tpd-empty">Yükleniyor…</div>
-                </div>
-            </div>
-
-            <!-- Son Aktivite Paneli -->
-            <div class="win-panel" id="activity-panel">
-                <div class="win-titlebar">
-                    <span>⚡ Son Aktivite</span>
-                    <div class="win-titlebar-btns">
-                        <div class="win-btn" title="Küçült">—</div>
-                    </div>
-                </div>
-                <div class="win-body" id="activity-feed" style="padding: 8px; max-height: 140px; overflow-y: auto;">
-                    <div class="tpd-empty">Yükleniyor…</div>
                 </div>
             </div>
 
@@ -5458,12 +5608,80 @@
                 <div class="shoutbox-body" id="shoutbox-body">
                     <div class="shoutbox-empty">Henüz mesaj yok — ilk yazan sen ol!</div>
                 </div>
-                <div class="shoutbox-input-wrap">
-                    <input type="text" id="shoutbox-input" placeholder="Lobiye mesaj yaz…" maxlength="200" autocomplete="off">
-                    <button type="button" onclick="sendShoutbox()">Gönder</button>
+                <div class="shoutbox-input-wrap" style="position: relative; display: flex; flex-direction: column;">
+                    <!-- Popover Panelleri -->
+                    <!-- Emoji Paneli -->
+                    <div id="shoutbox-emoji-panel" style="display: none; position: absolute; bottom: 100%; left: 0; right: 0; background: #FFF9E6; border: 2px solid #D4B852; border-radius: 4px; z-index: 100; box-shadow: 0 -3px 8px rgba(0,0,0,0.18);">
+                        <div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; padding: 8px; max-height: 120px; overflow-y: auto;" id="shoutbox-emoji-list">
+                            <!-- Emojiler JS ile basılacak -->
+                        </div>
+                    </div>
+
+                    <!-- GIF Paneli -->
+                    <div id="shoutbox-gif-panel" style="display: none; position: absolute; bottom: 100%; left: 0; right: 0; background: #FFF9E6; border: 2px solid #D4B852; border-radius: 4px; z-index: 100; box-shadow: 0 -3px 8px rgba(0,0,0,0.18);">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 8px; max-height: 150px; overflow-y: auto;" id="shoutbox-gif-list">
+                            <!-- GIF'ler JS ile basılacak -->
+                        </div>
+                    </div>
+
+                    <!-- Kontrol Toolbarı -->
+                    <div class="shoutbox-toolbar" style="display: flex; gap: 4px; padding: 4px 8px; background: #ECE9D8; border-bottom: 1px solid #C8C3B5; align-items: center;">
+                        <button type="button" onclick="toggleShoutboxEmojiPanel()" style="padding: 2px 6px; font-size: 10px; font-family: Tahoma, sans-serif; cursor: pointer; background: linear-gradient(180deg, #FAFAF5, #ECE9D8); border: 1.5px outset #fff; border-radius: 3px; font-weight: bold; color: #333; letter-spacing: 0; width: auto; height: auto; text-shadow: none;">😊 İfade</button>
+                        <button type="button" onclick="toggleShoutboxGifPanel()" style="padding: 2px 6px; font-size: 10px; font-family: Tahoma, sans-serif; cursor: pointer; background: linear-gradient(180deg, #FAFAF5, #ECE9D8); border: 1.5px outset #fff; border-radius: 3px; font-weight: bold; color: #333; letter-spacing: 0; width: auto; height: auto; text-shadow: none;">🎬 GIF</button>
+                    </div>
+
+                    <!-- Input ve Gönder Butonu -->
+                    <div style="display: flex; width: 100%;">
+                        <input type="text" id="shoutbox-input" placeholder="Lobiye mesaj yaz…" maxlength="200" autocomplete="off" style="flex: 1; border: none; padding: 7px 10px; font-family: Tahoma, sans-serif; font-size: 11px; background: transparent; outline: none;">
+                        <button type="button" onclick="sendShoutbox()" style="background: linear-gradient(180deg, #4A90D9, #2E6BBF); border: none; color: #fff; padding: 0 14px; font-size: 11px; font-weight: bold; cursor: pointer; font-family: Tahoma, sans-serif; letter-spacing: .5px; width: auto; height: auto; border-radius: 0;">Gönder</button>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- SIDEBAR RIGHT -->
+        <aside class="sidebar-right">
+            <!-- Çevrimiçi Kullanıcılar Paneli -->
+            <div class="win-panel" id="online-panel">
+                <div class="win-titlebar">
+                    <span>👥 Çevrimiçi (<span id="sidebar-online-count">0</span>)</span>
+                    <div class="win-titlebar-btns">
+                        <div class="win-btn" title="Küçült">—</div>
+                    </div>
+                </div>
+                <div class="win-body" id="sidebar-online-body" style="padding: 8px; max-height: 160px; overflow-y: auto;">
+                    <div class="tpd-empty">Yükleniyor…</div>
+                </div>
+            </div>
+
+            <!-- Bugün 20 Yıl Önce Mazi Hatırlatıcı Kartı -->
+            <div class="win-panel vintage-memory-panel" id="history20-sidebar-panel" onclick="setMobileTab('history20')" style="cursor: pointer;">
+                <div class="win-titlebar vintage-titlebar">
+                    <span>⏳ Bugün 20 Yıl Önce Ne Oluyordu?</span>
+                    <div class="win-titlebar-btns">
+                        <span class="vintage-indicator"><span class="vintage-indicator-dot"></span> MAZİ AKTİF</span>
+                    </div>
+                </div>
+                <div class="win-body vintage-body" id="history20-sidebar-body">
+                    <div class="vintage-ticker-item" id="history20-ticker-content" style="opacity: 1;">
+                        Solucan deliği açılıyor, tozlu sayfalar taranıyor...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Son Aktivite Paneli -->
+            <div class="win-panel" id="activity-panel">
+                <div class="win-titlebar">
+                    <span>⚡ Son Aktivite</span>
+                    <div class="win-titlebar-btns">
+                        <div class="win-btn" title="Küçült">—</div>
+                    </div>
+                </div>
+                <div class="win-body" id="activity-feed" style="padding: 8px; max-height: 140px; overflow-y: auto;">
+                    <div class="tpd-empty">Yükleniyor…</div>
+                </div>
+            </div>
+        </aside>
     </div>
 
     <!-- ŞU AN ÇALIYOR -->
@@ -6818,33 +7036,16 @@
             return div.innerHTML;
         }
 
-        // ============ LOBİ VE SAĞ PANELLERİN YÜKSEKLİĞİNİ SIDEBAR'A EŞİTLEME ============
+        // ============ LOBİ PANELLERİNİN YÜKSEKLİĞİNİ DOĞAL AKIŞA BIRAKMA ============
         function adjustRightPanelsHeight() {
-            if (window.innerWidth > 768) {
-                const sidebar = document.querySelector('.sidebar');
-                if (!sidebar) return;
-                
-                // Sidebar'ın gerçek yüksekliğini al
-                const sidebarHeight = sidebar.offsetHeight;
-                
-                // Sağ taraftaki tüm panel sınıflarını/id'lerini bu yüksekliğe eşitle
-                const panels = ['.rooms-panel', '#timeline-panel', '#discover-panel'];
-                panels.forEach(selector => {
-                    const el = document.querySelector(selector);
-                    if (el) {
-                        el.style.height = (sidebarHeight - 60) + 'px';
-                    }
-                });
-            } else {
-                // Mobil ekranda yükseklik sınırını kaldır
-                const panels = ['.rooms-panel', '#timeline-panel', '#discover-panel'];
-                panels.forEach(selector => {
-                    const el = document.querySelector(selector);
-                    if (el) {
-                        el.style.height = '';
-                    }
-                });
-            }
+            // Flexbox tabanlı 3 sütunlu düzende panel yükseklikleri otomatik/doğal akışında olmalıdır.
+            const panels = ['.rooms-panel', '#timeline-panel', '#discover-panel'];
+            panels.forEach(selector => {
+                const el = document.querySelector(selector);
+                if (el) {
+                    el.style.height = '';
+                }
+            });
         }
 
         // Resize ve load esnasında çalıştır
@@ -6856,8 +7057,93 @@
         fetchRoomData();
         setInterval(fetchRoomData, 5000);
         
-        // Sağ sütun kart yüksekliğini sol sidebar'a sürekli eşitle (kaymaları, gecikmeli yüklemeleri önler)
-        setInterval(adjustRightPanelsHeight, 250);
+        // Başlangıçta yükseklik temizliğini bir kere çalıştıralım
+        adjustRightPanelsHeight();
+
+        // 20 Yıl Önce Sidebar Kartı
+        async function loadHistory20Sidebar() {
+            const bodyEl = document.getElementById('history20-ticker-content');
+            if (!bodyEl) return;
+
+            let items = [];
+            let currentIndex = 0;
+            let tickerInterval = null;
+
+            try {
+                const res = await fetch('/api/timeline/today-20-years-ago');
+                const data = await res.json();
+                if (!data.success || !data.data) {
+                    throw new Error("API error");
+                }
+
+                const d = data.data;
+
+                // 1. Manşet Haberleri
+                if (d.headlines && d.headlines.length > 0) {
+                    d.headlines.forEach(hl => {
+                        items.push(`<b>📰 Manşet:</b> "${escapeHTML(hl.title)}" - ${escapeHTML(hl.desc)}`);
+                    });
+                }
+
+                // 2. Müzik Hitleri
+                if (d.top_hits && d.top_hits.length > 0) {
+                    d.top_hits.forEach(h => {
+                        items.push(`<b>🎵 Günün Hiti:</b> ${escapeHTML(h.artist)} - "${escapeHTML(h.song)}" (20 yıl önce bugün zirvedeydi)`);
+                    });
+                }
+
+                // 3. TV Rehberi
+                if (d.tv_guide && d.tv_guide.length > 0) {
+                    d.tv_guide.forEach(t => {
+                        items.push(`<b>📺 Ekranlarda:</b> ${escapeHTML(t.channel)}'da "${escapeHTML(t.title)}" yayındaydı. <span style="font-size:10px;opacity:0.85;">(${escapeHTML(t.desc)})</span>`);
+                    });
+                }
+
+                // 4. Spor Haberleri
+                if (d.sports && d.sports.length > 0) {
+                    d.sports.forEach(sp => {
+                        items.push(`<b>⚽ Spor:</b> "${escapeHTML(sp.title)}" - ${escapeHTML(sp.desc)}`);
+                    });
+                }
+
+                // 5. Hava Durumu
+                if (d.weather && d.weather.length > 0) {
+                    const wList = d.weather.map(w => `${escapeHTML(w.city)} ${escapeHTML(w.temp)} (${escapeHTML(w.condition)})`).join(', ');
+                    items.push(`<b>🌦️ Hava Durumu (20 Yıl Önce):</b> ${wList}`);
+                }
+
+            } catch (e) {
+                console.warn("[History20 Sidebar] Veri yüklenemedi:", e);
+                // Fallback / Yedek Veriler
+                items = [
+                    `<b>⏳ Nostalji Rüzgarı:</b> RetroSesler ile 20 yıl öncesinin anıları burada canlanıyor. Detaylar için tıklayın!`,
+                    `<b>📻 Geçmişin Sesleri:</b> 20 yıl önceki popüler şarkıları dinlemek için tıklayıp arşivi açın.`,
+                    `<b>📰 Günün Manşetleri:</b> Eski gazete haberlerine göz atmak ister misiniz?`
+                ];
+            }
+
+            if (items.length === 0) return;
+
+            // Ticker rotasyonu başlat
+            const updateTicker = () => {
+                bodyEl.style.opacity = '0';
+                setTimeout(() => {
+                    bodyEl.innerHTML = items[currentIndex];
+                    bodyEl.style.opacity = '1';
+                    currentIndex = (currentIndex + 1) % items.length;
+                }, 500);
+            };
+
+            // İlk içeriği göster
+            updateTicker();
+
+            // Her 8 saniyede bir değiştir
+            if (tickerInterval) clearInterval(tickerInterval);
+            tickerInterval = setInterval(updateTicker, 8000);
+        }
+
+        // 20 Yıl Önce Sidebar Kartı Yükleyicisi
+        loadHistory20Sidebar();
 
         /* ============ TOPBAR USER SEARCH ============ */
         // Avatar emoji haritası (search results için)
@@ -7446,6 +7732,119 @@
         }
 
         /* ============ LOBBY SHOUTBOX ============ */
+        const RETRO_EMOJIS = [
+            "😎", "📺", "📼", "🎮", "💾", "🎧", "🕶️", "🚀", "⭐", "👑", "💎", "🔥", "🤖", "👽", "🐱", "🐶",
+            "😀", "😂", "😃", "😄", "😉", "😊", "😍", "😘", "😜", "😝", "🤔", "🙄", "😭", "😡", "👍", "👎",
+            "❤️", "💔", "🎉", "✨", "💯", "👏", "🙌", "🎈", "🎁", "🍻", "☕", "🎵", "💬", "🏠", "🔔"
+        ];
+
+        const RETRO_GIFS = [
+            { name: "Bebek 👶", url: "https://i.giphy.com/1400TDe9t4u2lO.gif" },
+            { name: "Muz 🍌", url: "https://i.giphy.com/mdfP5lfHd0VeGBC5RS.gif" },
+            { name: "Nyan 🌈", url: "https://i.giphy.com/sIIhZmxJG57aoOy1ON.gif" },
+            { name: "Hamster 🐹", url: "https://i.giphy.com/10BHeATu5h97O0.gif" },
+            { name: "Matrix 💻", url: "https://i.giphy.com/fV0oKh71vpDM2hzZsD.gif" },
+            { name: "XP Hata 💾", url: "https://i.giphy.com/9J7tdYltxtXI1Y4TyO.gif" },
+            { name: "Kuru Kafa 💀", url: "https://i.giphy.com/3o7TKSjRrfIPjei1nG.gif" },
+            { name: "Uzaylı 👽", url: "https://i.giphy.com/132pLwJqv1A9MY.gif" },
+            { name: "İnşaat 🚧", url: "https://i.giphy.com/3o7TKpx2Q40wR9eP0A.gif" },
+            { name: "Homer 🌳", url: "https://i.giphy.com/COYGe9rVvfjlS.gif" },
+            { name: "Gülümse 🙂", url: "https://i.giphy.com/26gR1vv9s3H0L3Kdq.gif" },
+            { name: "Dünya 🌍", url: "https://i.giphy.com/3o7TKUM3c45uN3e5HY.gif" }
+        ];
+
+        function toggleShoutboxEmojiPanel() {
+            const ep = document.getElementById('shoutbox-emoji-panel');
+            const gp = document.getElementById('shoutbox-gif-panel');
+            if (gp) gp.style.display = 'none';
+            if (ep) {
+                const isHidden = ep.style.display === 'none';
+                ep.style.display = isHidden ? 'block' : 'none';
+                if (isHidden) {
+                    renderShoutboxEmojis();
+                }
+            }
+        }
+
+        function toggleShoutboxGifPanel() {
+            const ep = document.getElementById('shoutbox-emoji-panel');
+            const gp = document.getElementById('shoutbox-gif-panel');
+            if (ep) ep.style.display = 'none';
+            if (gp) {
+                const isHidden = gp.style.display === 'none';
+                gp.style.display = isHidden ? 'block' : 'none';
+                if (isHidden) {
+                    renderShoutboxGifs();
+                }
+            }
+        }
+
+        function renderShoutboxEmojis() {
+            const container = document.getElementById('shoutbox-emoji-list');
+            if (!container || container.dataset.loaded === '1') return;
+            container.innerHTML = RETRO_EMOJIS.map(emoji => {
+                return '<span onclick="insertShoutboxEmoji(\'' + emoji + '\')" style="font-size: 16px; cursor: pointer; text-align: center; padding: 4px; border-radius: 3px; transition: background 0.15s;" onmouseover="this.style.background=\'#E8F0FF\'" onmouseout="this.style.background=\'transparent\'">' + emoji + '</span>';
+            }).join('');
+            container.dataset.loaded = '1';
+        }
+
+        function insertShoutboxEmoji(emoji) {
+            const input = document.getElementById('shoutbox-input');
+            if (input) {
+                input.value += emoji;
+                input.focus();
+            }
+        }
+
+        function renderShoutboxGifs() {
+            const container = document.getElementById('shoutbox-gif-list');
+            if (!container || container.dataset.loaded === '1') return;
+            container.innerHTML = RETRO_GIFS.map(gif => {
+                const proxyUrl = '/api/proxy-gif?url=' + encodeURIComponent(gif.url);
+                return '<div onclick="sendShoutboxGif(\'' + gif.url + '\')" style="cursor: pointer; border: 1px solid #A09880; border-radius: 3px; background: #fff; padding: 2px; text-align: center; transition: transform 0.15s;" onmouseover="this.style.transform=\'scale(1.05)\'" onmouseout="this.style.transform=\'scale(1)\'">' +
+                    '<img src="' + proxyUrl + '" style="width: 100%; height: 40px; object-fit: cover; border-radius: 2px;" alt="' + gif.name + '">' +
+                    '<div style="font-size: 8px; color: #666; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">' + gif.name + '</div>' +
+                '</div>';
+            }).join('');
+            container.dataset.loaded = '1';
+        }
+
+        async function sendShoutboxGif(gifUrl) {
+            const tok = localStorage.getItem('retrosesler_token');
+            if (!tok) { retroToast('GIF göndermek için giriş yap.', 'warn'); return; }
+            
+            // Paneli kapat
+            const gp = document.getElementById('shoutbox-gif-panel');
+            if (gp) gp.style.display = 'none';
+            
+            try {
+                const res = await fetch('/api/lobby-chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok },
+                    body: JSON.stringify({ message: gifUrl })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    _shoutboxLastId = null; // force refresh
+                    fetchShoutbox();
+                } else {
+                    retroToast(data.error || 'Gönderilemedi', 'error');
+                }
+            } catch (e) { retroToast('Bağlantı hatası', 'error'); }
+        }
+
+        // Dışarı tıklayınca panelleri kapat
+        window.addEventListener('click', e => {
+            const ep = document.getElementById('shoutbox-emoji-panel');
+            const gp = document.getElementById('shoutbox-gif-panel');
+            if (ep && ep.style.display !== 'none' && !ep.contains(e.target) && !e.target.closest('.shoutbox-toolbar')) {
+                ep.style.display = 'none';
+            }
+            if (gp && gp.style.display !== 'none' && !gp.contains(e.target) && !e.target.closest('.shoutbox-toolbar')) {
+                gp.style.display = 'none';
+            }
+        });
+
         let _shoutboxLastId = null;
         async function fetchShoutbox() {
             try {
@@ -7470,11 +7869,23 @@
                         ? '<img src="' + escapeHTML(m.avatarPhoto) + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'
                         : '😎';
                     const ago = relTime(m.ts);
+                    
+                    let textHtml = escapeHTML(m.text);
+                    const isGif = (m.text.startsWith('http://') || m.text.startsWith('https://')) && 
+                                  (m.text.match(/\.(gif|jpg|jpeg|png)$/i) || m.text.includes('media.giphy.com') || m.text.includes('giphy.gif'));
+                    if (isGif) {
+                        let displayUrl = m.text;
+                        if (displayUrl.includes('giphy.com')) {
+                            displayUrl = '/api/proxy-gif?url=' + encodeURIComponent(displayUrl);
+                        }
+                        textHtml = '<img src="' + escapeHTML(displayUrl) + '" style="max-width: 120px; max-height: 100px; display: block; border: 1.5px outset #fff; border-radius: 3px; margin-top: 4px;" alt="GIF">';
+                    }
+
                     return '<div class="shoutbox-msg">' +
                         '<div class="sb-avatar">' + avatarHtml + '</div>' +
                         '<div style="flex:1;min-width:0">' +
                         '<span class="sb-nick' + roleClass + '" onclick="window.location.href=\'/u/' + encodeURIComponent(m.nick) + '\'">' + escapeHTML(m.nick) + '</span> ' +
-                        '<span class="sb-text">' + escapeHTML(m.text) + '</span>' +
+                        '<span class="sb-text">' + textHtml + '</span>' +
                         '</div>' +
                         '<span class="sb-time">' + ago + '</span>' +
                     '</div>';
@@ -8359,7 +8770,7 @@
             document.getElementById('modal-title').textContent = '"' + roomName + '" odasına bağlanılıyor...';
             document.getElementById('modal-win-title').textContent = '🔌 ' + roomName + ' — Bağlantı';
             document.getElementById('modal-status').textContent = 'Lütfen bekleyin';
-            document.getElementById('modal-icon').innerHTML = '<img src="/assets/ldng_giris.gif" alt="Bağlanıyor">';
+            document.getElementById('modal-icon').innerHTML = '<span class="modal-spinner">🔌</span>';
             document.getElementById('modal-btns').style.display = 'none';
             document.getElementById('progress-text').textContent = '0%';
 
@@ -8703,15 +9114,7 @@
             const rp = document.querySelector('.rooms-panel');
             if (rp) rp.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-        // İlk yüklemede tab restore
-        (function initMobileTab() {
-            let saved = 'history20';
-            try { saved = sessionStorage.getItem('rs_mtab') || 'history20'; } catch {}
-            if (window.innerWidth > 768 && (saved === 'myrooms' || saved === 'msg' || saved === 'profile')) {
-                saved = 'home';
-            }
-            setMobileTab(saved);
-        })();
+        // initMobileTab moved to the bottom of the script to prevent TDZ error
 
         // ============ TOPBAR POP DROPDOWNS (msg / aktivite / online) ============
         function toggleTopbarPop(name) {
@@ -10819,6 +11222,16 @@
             ctx.fillText('TEKRAR BAŞLAMAK İÇİN', 160, 180);
             ctx.fillText('BAŞLAT / SPACE\'E BAS', 160, 200);
         }
+
+        // İlk yüklemede tab restore
+        (function initMobileTab() {
+            let saved = 'home';
+            try { saved = sessionStorage.getItem('rs_mtab') || 'home'; } catch {}
+            if (window.innerWidth > 768 && (saved === 'myrooms' || saved === 'msg' || saved === 'profile')) {
+                saved = 'home';
+            }
+            setMobileTab(saved);
+        })();
     </script>
 </body>
 

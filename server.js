@@ -88,6 +88,44 @@ app.use('/api', friendsRouter);
 app.use('/api', radioRouter);
 app.use('/api', timelineRouter);
 
+// Giphy and Image Proxy to bypass hotlink block and AdBlockers
+const https = require('https');
+app.get('/api/proxy-gif', (req, res) => {
+    const gifUrl = req.query.url;
+    if (!gifUrl) {
+        return res.status(400).send('Missing url parameter');
+    }
+    try {
+        const parsed = new URL(gifUrl);
+        if (!parsed.hostname.endsWith('giphy.com')) {
+            return res.status(400).send('Invalid domain');
+        }
+        const options = {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+        };
+        console.log('[Proxy-GIF] Requesting:', gifUrl);
+        https.get(gifUrl, options, (giphyRes) => {
+            console.log('[Proxy-GIF] Response status:', giphyRes.statusCode);
+            if (giphyRes.statusCode !== 200) {
+                return res.status(giphyRes.statusCode).send('Giphy returned error');
+            }
+            res.setHeader('Content-Type', giphyRes.headers['content-type'] || 'image/gif');
+            if (giphyRes.headers['content-length']) {
+                res.setHeader('Content-Length', giphyRes.headers['content-length']);
+            }
+            res.setHeader('Cache-Control', 'public, max-age=86400');
+            giphyRes.pipe(res);
+        }).on('error', (err) => {
+            console.error('[Proxy-GIF] Request error:', err.message);
+            res.status(500).send('Proxy error: ' + err.message);
+        });
+    } catch (e) {
+        res.status(400).send('Invalid url');
+    }
+});
+
 // Health check endpoint (for docker-compose monitoring)
 app.get('/health', (req, res) => {
     res.status(200).json({
