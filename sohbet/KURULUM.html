@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SpeakyChat Hazır Web Paneli — Kurulum</title>
+<style>
+body{margin:0;padding:24px 16px;background:linear-gradient(#7777cc,#efeff8 520px) fixed,#efeff8;color:#1f2238;font:15px/1.6 Tahoma,Verdana,Arial,sans-serif}
+main{max-width:720px;margin:0 auto;padding:20px 24px;border:1px solid #9b9eaa;border-radius:12px;background:#ebeef3}
+h1{margin:0 0 8px;font-size:21px;color:#3b3c40}h2{margin:18px 0 6px;font-size:17px;color:#354b88}p{margin:6px 0}
+pre{margin:6px 0;padding:8px 12px;border:1px dashed #9b9eaa;background:#fff;font:14px Consolas,monospace}ul{margin:6px 0;padding-left:22px}
+</style>
+</head>
+<body>
+<main>
+<section><h1>SpeakyChat Hazır Web Paneli — Kurulum (Sürüm 3.6.0)</h1>
+<p>Bu klasör, SpeakyChat sohbet odanızı kendi sitenizde açan hazır bir sayfadır. Veritabanı, PHP ya da MySQL gerekmez.</p></section>
+<section><h2>1) Müşteri numaranızı yazın</h2>
+<p>config.js dosyasını Not Defteri gibi basit bir yazı programıyla açın.</p>
+<p>customerCode satırında tırnakların arasına müşteri numaranızı yazın, örneğin:</p>
+<pre>customerCode: 'KB123456789',</pre>
+<p>Müşteri numarası KB ile başlayan 9 haneli numaradır; siparişte size verilir.</p>
+<p>Daha kolay yol: speakychat.cam/indirmeler sayfasındaki Panel Tasarımcısı'nda numaranızı, başlığınızı ve odalarınızı girin, hazır config.js dosyasını indirip bu klasördeki config.js'in üzerine kopyalayın.</p></section>
+<section><h2>2) Dosyaları sitenize yükleyin</h2>
+<p>Bu klasördeki bütün dosyaları (images klasörü dahil) sitenizde "sohbet" adlı bir klasöre yükleyin:</p>
+<ul><li>cPanel: Dosya Yöneticisi › public_html › Yeni Klasör: sohbet › Yükle</li>
+<li>FTP: dosyaları public_html/sohbet klasörüne sürükleyin</li></ul></section>
+<section><h2>3) WordPress kullanıyorsanız</h2>
+<p>WordPress yönetim ekranından klasör yüklenemez. İki yol var:</p>
+<ul><li>Barındırma firmanızın Dosya Yöneticisi'ni (cPanel) ya da FTP'yi kullanıp 2. adımdaki gibi "sohbet" klasörünü yükleyin, menünüze https://siteniz.com/sohbet/ bağlantısını ekleyin.</li>
+<li>Ya da bu paketi kullanmadan, speakychat.cam/indirmeler sayfasındaki "Gömme kodu"nu bir sayfaya "Özel HTML" bloğu olarak yapıştırın.</li></ul></section>
+<section><h2>4) Açıp deneyin</h2>
+<p>https://siteniz.com/sohbet/ adresini açın; sohbet penceresi görünmelidir.</p>
+<p>Ekranda "Müşteri numarası hatalı" yazıyorsa config.js'teki numarayı kontrol edin.</p></section>
+<section><h2>Önemli</h2>
+<ul><li>Siteniz https:// ile açılmalıdır; http:// ile açılan sayfada sohbet açılmaz.</li>
+<li>Sohbet yalnız hesabınıza kayıtlı alan adında (ve www karşılığında) açılır.</li>
+<li>Görünümü sonradan değiştirmek için sohbete yönetici (admin) hesabınızla girin; menüde "Panel Ayarları" çıkar.</li>
+<li>Yeni sürüm çıktığında config.js dışındaki dosyaları değiştirmeniz yeterlidir.</li></ul></section>
+<section><h2>Sorun olursa</h2>
+<p>E-posta: destek@speakychat.cam</p>
+<p>Kurulum sayfası: https://speakychat.cam/indirmeler</p>
+<p>Bu paket yalnız SpeakyChat müşterilerinin kendi sitelerinde kullanımı içindir.</p></section>
+</main>
+</body>
+</html>

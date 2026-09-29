@@ -1,0 +1,34 @@
+SpeakyChat Hazır Web Paneli — Kurulum (Sürüm 3.6.0)
+Bu klasör, SpeakyChat sohbet odanızı kendi sitenizde açan hazır bir sayfadır. Veritabanı, PHP ya da MySQL gerekmez.
+
+1) Müşteri numaranızı yazın
+config.js dosyasını Not Defteri gibi basit bir yazı programıyla açın.
+customerCode satırında tırnakların arasına müşteri numaranızı yazın, örneğin:
+    customerCode: 'KB123456789',
+Müşteri numarası KB ile başlayan 9 haneli numaradır; siparişte size verilir.
+Daha kolay yol: speakychat.cam/indirmeler sayfasındaki Panel Tasarımcısı'nda numaranızı, başlığınızı ve odalarınızı girin, hazır config.js dosyasını indirip bu klasördeki config.js'in üzerine kopyalayın.
+
+2) Dosyaları sitenize yükleyin
+Bu klasördeki bütün dosyaları (images klasörü dahil) sitenizde "sohbet" adlı bir klasöre yükleyin:
+- cPanel: Dosya Yöneticisi › public_html › Yeni Klasör: sohbet › Yükle
+- FTP: dosyaları public_html/sohbet klasörüne sürükleyin
+
+3) WordPress kullanıyorsanız
+WordPress yönetim ekranından klasör yüklenemez. İki yol var:
+- Barındırma firmanızın Dosya Yöneticisi'ni (cPanel) ya da FTP'yi kullanıp 2. adımdaki gibi "sohbet" klasörünü yükleyin, menünüze https://siteniz.com/sohbet/ bağlantısını ekleyin.
+- Ya da bu paketi kullanmadan, speakychat.cam/indirmeler sayfasındaki "Gömme kodu"nu bir sayfaya "Özel HTML" bloğu olarak yapıştırın.
+
+4) Açıp deneyin
+https://siteniz.com/sohbet/ adresini açın; sohbet penceresi görünmelidir.
+Ekranda "Müşteri numarası hatalı" yazıyorsa config.js'teki numarayı kontrol edin.
+
+Önemli
+- Siteniz https:// ile açılmalıdır; http:// ile açılan sayfada sohbet açılmaz.
+- Sohbet yalnız hesabınıza kayıtlı alan adında (ve www karşılığında) açılır.
+- Görünümü sonradan değiştirmek için sohbete yönetici (admin) hesabınızla girin; menüde "Panel Ayarları" çıkar.
+- Yeni sürüm çıktığında config.js dışındaki dosyaları değiştirmeniz yeterlidir.
+
+Sorun olursa
+E-posta: destek@speakychat.cam
+Kurulum sayfası: https://speakychat.cam/indirmeler
+Bu paket yalnız SpeakyChat müşterilerinin kendi sitelerinde kullanımı içindir.
