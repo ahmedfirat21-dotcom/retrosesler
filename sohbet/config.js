@@ -16,7 +16,7 @@
 // LOGO: göreli yol (sohbet/ klasörünün bir üstündeki logo.svg). Site kökte de alt klasörde de
 // yayınlansa doğru dosyayı bulur.
 window.SpeakyPanelConfig = {
-    customerCode: '',
+    customerCode: 'KB344237085',
     siteName: 'Retro Sesler',
     welcome: 'Eski usul sohbet odası: sesli, görüntülü, yazılı. Misafir girişi serbest.',
     logo: '../logo.svg',
