@@ -6,10 +6,12 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Retro Sesler - Sohbet Odaları</title>
     <script>
-        // Sohbet yalnız https:// ile açılır. retrosesler.com http:// ile açıldıysa (WhatsApp gibi
-        // uygulamalar çıplak adı çoğu zaman http:// yapar) aynı adrese https ile geç.
-        if (location.protocol === 'http:' && /(^|\.)retrosesler\.com$/i.test(location.hostname)) {
-            location.replace('https://' + location.host + location.pathname + location.search + location.hash);
+        // Sohbet yalnız https:// ile açılır. Sitenin asıl adresi https://www.retrosesler.com
+        // (30 Eylül 2026: GitHub Pages çıplak ad için sertifika çıkaramadı, www'ninki geçerli).
+        // http:// ile ya da www'siz açıldıysa (WhatsApp gibi uygulamalar çıplak adı çoğu zaman
+        // http:// yapar) aynı sayfaya www ve https ile geç. GitHub da www'siz adı www'ye yönlendiriyor.
+        if (/(^|\.)retrosesler\.com$/i.test(location.hostname) && (location.protocol === 'http:' || location.hostname.toLowerCase() === 'retrosesler.com')) {
+            location.replace('https://www.retrosesler.com' + location.pathname + location.search + location.hash);
         }
     </script>
     <meta name="description" content="Eski usul sohbet odası: sesli, görüntülü ve yazılı sohbet. Misafir girişi serbest, program kurmak gerekmez.">
@@ -17,9 +19,9 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Retro Sesler - Sohbet Odaları">
     <meta property="og:description" content="Eski usul sohbet odası: sesli, görüntülü ve yazılı. Misafir girişi serbest.">
-    <meta property="og:url" content="https://retrosesler.com/">
-    <meta property="og:image" content="https://retrosesler.com/logo.png">
-    <link rel="canonical" href="https://retrosesler.com/">
+    <meta property="og:url" content="https://www.retrosesler.com/">
+    <meta property="og:image" content="https://www.retrosesler.com/logo.png">
+    <link rel="canonical" href="https://www.retrosesler.com/">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="panel.css?v=3.6.0">
     <link rel="stylesheet" href="site-i18n.css?v=3.6.0">

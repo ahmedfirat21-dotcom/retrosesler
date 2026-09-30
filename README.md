@@ -2,7 +2,10 @@
 
 retrosesler.com'un dosyaları: SpeakyChat **Hazır Web Paneli** (sürüm 3.6.0) ile kurulmuş bir
 sohbet sitesi. Statik site: veritabanı, PHP, MySQL gerekmez. GitHub Pages'te yayında
-(depo kökü, `main` dalı; `CNAME` = retrosesler.com).
+(depo kökü, `main` dalı). **Asıl adres https://www.retrosesler.com** (`CNAME` = www.retrosesler.com):
+30 Eylül 2026'da GitHub çıplak ad (retrosesler.com) için iki saat boyunca sertifika çıkaramadı, www'nin
+sertifikası geçerliydi. retrosesler.com yazan ziyaretçiyi GitHub www'ye yönlendiriyor; sayfanın
+kendisi de http'yi ve www'siz adı https://www.retrosesler.com'a çeviriyor.
 
 **30 Eylül 2026'dan beri ANA SAYFA DOĞRUDAN SOHBET PANELİ** (Fırat: "ana sayfa direk sesli
 odaların olduğu olsun"). Eskiden kökte ayrı bir giriş sayfası (`retro.css`) vardı, panel
