@@ -13,13 +13,13 @@
 // oda listesi de düğmelerle aynı görünsün. Aşağıdaki dört düğme için paket en az 4 SOHBET odası
 // içermeli: toplantı odasız pakette oda sayısı 4, toplantılı pakette 5. Paket daha küçükse fazla satırı silin.
 //
-// LOGO: göreli yol (sohbet/ klasörünün bir üstündeki logo.svg). Site kökte de alt klasörde de
-// yayınlansa doğru dosyayı bulur.
+// LOGO: göreli yol. Panel 30 Eylül 2026'dan beri sitenin ANA SAYFASINDA (kökte); logo.svg de
+// kökte, yani yanındaki dosya. Eski /sohbet/ adresi ana sayfaya yönleniyor.
 window.SpeakyPanelConfig = {
     customerCode: 'KB344237085',
     siteName: 'Retro Sesler',
     welcome: 'Eski usul sohbet odası: sesli, görüntülü, yazılı. Misafir girişi serbest.',
-    logo: '../logo.svg',
+    logo: 'logo.svg',
     roomTitle: 'Odalar',
     roomLayout: 'grid',
     roomColumns: 4,

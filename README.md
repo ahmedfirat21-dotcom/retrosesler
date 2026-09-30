@@ -1,19 +1,25 @@
 # Retro Sesler - retrosesler.com
 
 retrosesler.com'un dosyaları: SpeakyChat **Hazır Web Paneli** (sürüm 3.6.0) ile kurulmuş bir
-sohbet sitesi. Statik site: veritabanı, PHP, MySQL gerekmez.
+sohbet sitesi. Statik site: veritabanı, PHP, MySQL gerekmez. GitHub Pages'te yayında
+(depo kökü, `main` dalı; `CNAME` = retrosesler.com).
+
+**30 Eylül 2026'dan beri ANA SAYFA DOĞRUDAN SOHBET PANELİ** (Fırat: "ana sayfa direk sesli
+odaların olduğu olsun"). Eskiden kökte ayrı bir giriş sayfası (`retro.css`) vardı, panel
+`/sohbet/` altındaydı; panel köke taşındı, `/sohbet/` ana sayfaya yönleniyor (paylaşılmış
+eski bağlantılar bozulmasın).
 
 ## Klasör
 
 | Dosya | Ne |
 |---|---|
-| `index.html`, `retro.css` | Giriş sayfası ("Retro Sesler" penceresi). Dış kütüphane ve yazı tipi dosyası yok. |
-| `logo.svg` | Logo: elle çizilmiş piksel kaset (32 x 22 piksellik ızgara, 2 kat büyütülmüş, şeffaf zemin). Panel de bunu kullanıyor. |
-| `logo.png` | Aynı logonun 128 x 88 PNG'si (paylaşım önizlemesi `og:image`, PNG isteyen yerler). |
-| `favicon.svg` | 16 x 16 küçük kaset (giriş sayfasının sekme simgesi). |
-| `favicon.ico` | Aynı kasetin 16 ve 32 piksellik ICO'su. Paket sayfası (`/sohbet/`) simge bağlantısı içermiyor; tarayıcı kökteki `/favicon.ico`'yu kullanır. |
-| `sohbet/` | Hazır Web Paneli paketi, speakychat.cam/indirmeler'deki 3.6.0 ZIP'inden değiştirilmeden alındı. |
-| `sohbet/config.js` | Paketteki TEK düzenlenen dosya: site adı, karşılama yazısı, logo, odalar, müşteri numarası. |
+| `index.html` | Sohbet paneli (paketin `index.html`'i) + sitenin başlığı, paylaşım bilgileri (og:) ve http→https geçişi. |
+| `config.js` | Paketteki TEK düzenlenen dosya: site adı, karşılama yazısı, logo, odalar, müşteri numarası. |
+| `panel.css`, `panel.js`, `speakychat.js`, `site-i18n.*`, `site-translations.js`, `speakychat-logo.png`, `images/` | Hazır Web Paneli paketi, speakychat.cam/indirmeler'deki 3.6.0 ZIP'inden değiştirilmeden. |
+| `logo.svg` | Logo: elle çizilmiş piksel kaset (32 x 22 piksellik ızgara, 2 kat büyütülmüş, şeffaf zemin). Panel bunu kullanıyor. |
+| `logo.png` | Aynı logonun 128 x 88 PNG'si (paylaşım önizlemesi `og:image`). |
+| `favicon.svg`, `favicon.ico` | Sekme simgesi (16 x 16 kaset). |
+| `sohbet/index.html` | Eski adres: ana sayfaya yönlendirme. `sohbet/KURULUM.*` paketin kurulum notu (bilgi). |
 
 ## Müşteri numarası (tek satır)
 
@@ -42,15 +48,14 @@ zaman `config.js`'ten gelir).
 1. **Önce `customerCode` doldurulur.** KB numarası girilmeden `public_html`'e yüklenmez ve
    speakychat.cam/indirmeler'e örnek site olarak eklenmez. Numara gelmeden önizleme
    gerekirse site parola korumalı bir alt klasörde tutulur (cPanel › Directory Privacy).
-2. `public_html` içine şunlar yüklenir: `index.html`, `retro.css`, `logo.svg`, `logo.png`,
-   `favicon.svg`, `favicon.ico` ve `sohbet/` klasörünün tamamı (`images/` dahil). `README.md` ve `.git`
-   yüklenmez.
+2. `public_html` içine depodaki her şey yüklenir (`images/` ve `sohbet/` dahil); `README.md` ve
+   `.git` yüklenmez.
 3. SSL açılır (cPanel › SSL/TLS Status › AutoSSL) ve sertifika çıktıktan sonra
    **http → https yönlendirmesi** açılır: cPanel › Domains › retrosesler.com › *Force HTTPS
    Redirect*. Sohbet http:// ile açılan sayfada hiç açılmaz ("Sohbet yalnız https:// ile
    açılan sayfalarda çalışır"); WhatsApp gibi uygulamalar çıplak alan adını çoğu zaman
-   http:// bağlantısına çeviriyor. Giriş sayfası retrosesler.com'da kendisi de https'e geçer,
-   ama doğrudan paylaşılan `/sohbet/` bağlantısını yalnız sunucu yönlendirmesi kurtarır.
+   http:// bağlantısına çeviriyor. Ana sayfa retrosesler.com'da kendisi de https'e geçer,
+   ama başka bir yolla paylaşılan bağlantıyı yalnız sunucu yönlendirmesi kurtarır.
    cPanel'de o düğme yoksa `public_html/.htaccess` dosyasının başına şu eklenir:
 
    ```apache
@@ -65,33 +70,32 @@ zaman `config.js`'ten gelir).
 
 ### GitHub Pages ile yayınlanırsa
 
-- Ayarlar › Pages › **Enforce HTTPS** işaretlenir (aynı http sorunu).
+- Ayarlar › Pages › **Enforce HTTPS** işaretlenir (aynı http sorunu). 30 Eylül 2026: GitHub
+  retrosesler.com için sertifika hiç çıkarmamıştı (sayfa *.github.io sertifikasıyla geliyor,
+  tarayıcı https'i reddediyordu). Özel alan adı Pages ayarından boşaltılıp yeniden yazılınca
+  sertifika yeniden istendi; çıkınca Enforce HTTPS açıldı.
 - Pages depo kökünü olduğu gibi yayınlar; bu README de `/README.md` adresinden görünür.
-- Site bir alt yolda (`kullanici.github.io/retrosesler/`) da çalışır: bütün bağlantılar ve
-  panelin logosu (`../logo.svg`) göreli.
+- Bütün bağlantılar ve panelin logosu (`logo.svg`) göreli.
 
 ## Paket güncellenince
 
-Yeni sürüm çıktığında speakychat.cam/indirmeler'den yeni ZIP indirilir ve `sohbet/`
-klasöründe **`config.js` DIŞINDAKİ** bütün dosyalar yenileriyle değiştirilir. `config.js`'e
+Yeni sürüm çıktığında speakychat.cam/indirmeler'den yeni ZIP indirilir ve paketin dosyaları
+(kökteki panel dosyaları) **`config.js` DIŞINDA** yenileriyle değiştirilir; ZIP'in `index.html`'i
+alınırsa başındaki başlık, og: satırları ve https geçişi yeniden eklenir. `config.js`'e
 dokunulmaz. Yeni sürüm `config.js`'e yeni bir alan getirdiyse KURULUM.txt ve Panel
 Tasarımcısı bunu söyler; o zaman yalnız o alan eklenir.
 
-Giriş sayfası (`index.html`, `retro.css`, logolar) paketten bağımsızdır; paket güncellemesi
-onlara dokunmaz.
+Logolar ve favicon paketten bağımsızdır; paket güncellemesi onlara dokunmaz.
 
 ## Bilinen
 
 - Sohbet her zaman hesabın ilk girilecek odasında açılır (yeni hesapta listenin başı: Lobi).
-  Paket adresten oda okumuyor; bu yüzden giriş sayfasındaki oda listesi bilgi amaçlı, satırlar
-  bağlantı değil. Odalar arasında sohbet sayfasının üstündeki düğmelerle geçilir.
-- Panel sayfasında (`/sohbet/`) giriş sayfasına dönen bir bağlantı yok: paketin böyle bir
-  ayarı yok ve paket dosyaları değiştirilmiyor. Ziyaretçi tarayıcının geri tuşuyla döner.
+  Odalar arasında sayfanın üstündeki düğmelerle geçilir.
 - Yerelde denerken sayfayı `localhost` / `127.0.0.1` adıyla açmayın: panel o adlarda
   simülasyonu sitenin kendisinden ister (speakychat.cam'in yerel kopyası varsayılır) ve
   sohbet penceresi "yükleniyor" halkasında kalır. Bir ad bağlayarak açın, örneğin Edge'de
   `--host-resolver-rules="MAP retrosesler.test 127.0.0.1"` ile `http://retrosesler.test:<port>/`;
-  o zaman simülasyon gerçek sitedeki gibi speakychat.cam'den gelir. (Giriş sayfasının https
+  o zaman simülasyon gerçek sitedeki gibi speakychat.cam'den gelir. (Ana sayfanın https
   geçişi yalnız retrosesler.com adında çalışır, yerel denemeyi etkilemez.)
 
 ## Metin kuralları
