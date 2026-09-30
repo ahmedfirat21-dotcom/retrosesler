@@ -138,12 +138,21 @@ html[dir=rtl] .sp-all-ad { text-align: right; }
     body.customer-panel { padding: 0; }
     .sp-page { border-width: 0; }
     .sp-head { padding: 10px 14px; }
-    .sp-brand img { width: 130px; }
+    .customer-panel .sp-head { flex-wrap: nowrap; gap: 10px; min-height: 44px; }
+    .sp-brand { flex: none; }
+    .sp-brand img { width: 86px; }
+    .sp-title { flex: 1 1 auto; gap: 8px; padding-left: 0; border-left: 0; }
+    .sp-title > div { min-width: 0; }
+    .sp-logo { max-width: 96px; max-height: 24px; }
+    .sp-title h1 { font-size: 15px; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; overflow-wrap: normal; unicode-bidi: plaintext; }
+    #welcomeText { display: none; }
+    .customer-panel .sp-head .site-language { flex: none; }
+    .customer-panel .sp-head .site-language label { gap: 0; font-size: 0; }
+    .customer-panel .sp-head .site-language select { min-width: 0; padding: 3px 4px; font-size: 12px; }
     .sp-menu > * { font-size: 11px; letter-spacing: 0; padding-inline: 4px; }
     .sp-main { padding: 12px; gap: 12px; }
     .sp-box { padding: 16px; }
     .sp-box.sp-chat { padding: 0; }
-    .sp-title { order: 3; flex-basis: 100%; padding-left: 0; border-left: 0; }
     .sp-rooms { grid-template-columns: repeat(min(var(--sp-cols, 3), 2), minmax(0, 1fr)); }
     .sp-rooms--list { grid-template-columns: minmax(0, 1fr); }
     .sp-chat-bar { gap: 8px; padding: 0 8px 0 5px; }
