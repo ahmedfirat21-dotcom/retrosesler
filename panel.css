@@ -58,6 +58,14 @@ body.customer-panel { margin: 0; padding: 0 12px 28px; color: var(--sp-ink); fon
 .sp-chat-help { margin: 0; padding: 7px 14px; font-size: 12px; color: #4a4d63; background: #f5f6f9; }
 #roomHost { background: var(--sp-bg); }
 .customer-panel #roomHost { --sc-telefon-ust: 40px; }
+.customer-panel #roomHost .sc-w.sc-telefon .sc-frame,
+.customer-panel #roomHost .sc-w.sc-telefonda[data-oturum=hazirlaniyor] .sc-stage {
+    height: max(300px, calc(100vh - var(--sp-oda-pay, 40px))) !important; height: max(300px, calc(100dvh - var(--sp-oda-pay, 40px))) !important; }
+@media (max-height: 500px) {
+    .customer-panel #roomHost .sc-w.sc-telefon .sc-frame,
+    .customer-panel #roomHost .sc-w.sc-telefonda[data-oturum=hazirlaniyor] .sc-stage {
+        height: max(260px, calc(100vh - var(--sc-telefon-ust, 40px))) !important; height: max(260px, calc(100dvh - var(--sc-telefon-ust, 40px))) !important; }
+}
 .sp-foot { position: relative; padding: 10px 20px 14px; color: var(--sp-foot-ink, #e9e9f3); font: 11px/16px Tahoma, Arial, sans-serif; }
 .sp-foot a { color: inherit; font-weight: bold; text-decoration: none; }
 .sp-foot a:hover, .sp-foot a:focus-visible { text-decoration: underline; }
@@ -187,5 +195,8 @@ html.sp-preview .sp-page { box-shadow: none; }
 .sp-has-logo .sp-title { padding-left: 0; border-left: 0; }
 .sp-kod-cerceve { display: block; width: 100%; height: 640px; border: 0; background: #202020; }
 @media (max-width: 650px) {
-    .sp-kod-cerceve { height: calc(100vh - var(--sc-telefon-ust, 0px)); height: calc(100svh - var(--sc-telefon-ust, 0px)); min-height: 420px; }
+    .sp-kod-cerceve { height: max(300px, calc(100vh - var(--sp-oda-pay, 40px))); height: max(300px, calc(100dvh - var(--sp-oda-pay, 40px))); }
+}
+@media (max-width: 650px) and (max-height: 500px) {
+    .sp-kod-cerceve { height: max(260px, calc(100vh - var(--sc-telefon-ust, 40px))); height: max(260px, calc(100dvh - var(--sc-telefon-ust, 40px))); }
 }
