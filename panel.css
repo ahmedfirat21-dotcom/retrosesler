@@ -47,8 +47,6 @@ body.customer-panel { margin: 0; padding: 0 12px 28px; color: var(--sp-ink); fon
 .sp-title h1 { margin: 0; color: var(--sp-head-ink, #fff); font: bold clamp(18px, 2.4vw, 23px)/1.2 Tahoma, Verdana, sans-serif; text-shadow: 0 1px 2px rgba(0, 0, 0, .4); overflow-wrap: anywhere; }
 #welcomeText { margin: 2px 0 0; color: var(--sp-head-ink, #fff); opacity: .78; font-size: 12px; overflow-wrap: anywhere; }
 #welcomeText:empty { display: none; }
-.sp-notice h2 { color: #3b2f7a; }
-.sp-notice { background: #efeaff; border-color: #b9aee0; }
 .sp-preview-note { padding: 10px 16px; border-radius: 8px; color: #1f2f63; background: #e6ecff; }
 .sp-chat { padding: 0; overflow: hidden; scroll-margin: 10px; }
 .sp-chat-bar { position: relative; display: flex; align-items: center; flex-wrap: nowrap; gap: 10px; min-height: 40px; padding: 0 12px 0 9px; border-bottom: 1px solid #8a8a8a;
@@ -149,7 +147,10 @@ html[dir=rtl] .sp-all-ad { text-align: right; }
     .customer-panel .sp-head .site-language { flex: none; }
     .customer-panel .sp-head .site-language label { gap: 0; font-size: 0; }
     .customer-panel .sp-head .site-language select { min-width: 0; padding: 3px 4px; font-size: 12px; }
-    .sp-menu > * { font-size: 11px; letter-spacing: 0; padding-inline: 4px; }
+    .sp-menu { flex-wrap: nowrap; }
+    .sp-menu > * { flex: 1 1 0; min-width: 0; min-height: 44px; padding: 9px 2px 5px; font-size: 10px; line-height: 1.15; letter-spacing: 0;
+        text-align: center; white-space: normal; overflow-wrap: anywhere; -webkit-hyphens: auto; hyphens: auto; }
+    .sp-menu > *::before { top: 4px; margin-left: -4px; border-width: 4px 4px 0; }
     .sp-main { padding: 12px; gap: 12px; }
     .sp-box { padding: 16px; }
     .sp-box.sp-chat { padding: 0; }
@@ -157,8 +158,6 @@ html[dir=rtl] .sp-all-ad { text-align: right; }
     .sp-rooms--list { grid-template-columns: minmax(0, 1fr); }
     .sp-chat-bar { gap: 8px; padding: 0 8px 0 5px; }
     .sp-online { display: none; }
-    .sp-menu { flex-wrap: wrap; }
-    .sp-menu > * { flex: 1 1 33%; }
     .sp-chat-bar a { font-size: 11px; }
     .sp-rooms--bar { gap: 5px; }
     .sp-rooms--bar .sp-room { padding: 4px 11px; }
@@ -182,9 +181,11 @@ html.sp-preview .sp-page { box-shadow: none; }
 .sp-custom-head .sp-all-rooms { border-color: rgba(255, 255, 255, .4); background: rgba(255, 255, 255, .14); box-shadow: none; color: var(--sp-head-ink); text-shadow: none; }
 .sp-custom-head .sp-all-rooms:hover { background: rgba(255, 255, 255, .22); }
 .sp-custom-head .sp-all-rooms[aria-expanded="true"] { background: rgba(0, 0, 0, .18); }
-[data-sp-theme=gece] .sp-notice { background: #2e2a4a; border-color: #5b5391; color: #e3defa; }
-[data-sp-theme=gece] .sp-notice h2 { color: #c9bff5; }
 [data-sp-theme=gece] .sp-preview-note { background: #2c3150; color: #dfe3ff; }
 .sp-custom-head .sp-page { border-color: color-mix(in srgb, var(--sp-bg) 70%, #ffffff); }
 .sp-has-logo .sp-brand { display: none; }
 .sp-has-logo .sp-title { padding-left: 0; border-left: 0; }
+.sp-kod-cerceve { display: block; width: 100%; height: 640px; border: 0; background: #202020; }
+@media (max-width: 650px) {
+    .sp-kod-cerceve { height: calc(100vh - var(--sc-telefon-ust, 0px)); height: calc(100svh - var(--sc-telefon-ust, 0px)); min-height: 420px; }
+}
